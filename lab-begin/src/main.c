@@ -1,3 +1,6 @@
 #include <stdlib.h>
 
-int main(void) { return EXIT_SUCCESS; }
+int main(void) {
+  int a = 0;
+  return EXIT_SUCCESS;
+}
