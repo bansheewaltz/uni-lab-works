@@ -45,9 +45,10 @@ int main(void) {
       if (char_is_digit(input)) {
         int number = 0;
         ungetc(input, stdin);
-        scanf("%d", &number);
-        array[i++] = number;
-        sum += number;
+        if (scanf("%d", &number)) {
+          array[i++] = number;
+          sum += number;
+        }
 
         if (overflow_check(i, number_of_elements)) error = true;
       }
