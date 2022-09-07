@@ -21,7 +21,7 @@ bool read_number_of_elements(int *n) {
 }
 void read_elements(int *array);
 bool char_is_digit(char input) {
-  return '1' <= input && input <= '9' || input == '-';
+  return ('1' <= input && input <= '9') || input == '-';
 }
 bool element_is_good(char input) {
   return (char_is_digit(input) || input == ' ');
