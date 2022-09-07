@@ -16,6 +16,12 @@ bool clear_input_buffer(void) {
 }
 bool overflow_check(int current_n, int limit) { return current_n > limit; }
 bool underflow_check(int current_n, int limit) { return current_n < limit; }
+bool sum_overflow_check(int a, int b) {
+  int sum = a + b;
+  if (a > 0 && b > 0 && sum < 0) return true;
+  if (a < 0 && b < 0 && sum > 0) return true;
+  return false;
+}
 bool read_number_of_elements(int *n) {
   return int_read(n) && in_bounds(n, 1, 10) && clear_input_buffer();
 }
@@ -49,7 +55,10 @@ int main(void) {
         ungetc(input, stdin);
         if (scanf("%d", &number)) {
           array[i++] = number;
-          sum += number;
+          if (sum_overflow_check(sum, number))
+            error = true;
+          else
+            sum += number;
         }
 
         if (overflow_check(i, number_of_elements)) error = true;
