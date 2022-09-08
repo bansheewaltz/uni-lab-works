@@ -27,13 +27,26 @@ bool underflow_check(int current_n, int limit) { return current_n < limit; }
 //   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
 // }
 
-bool sum_overflow_check(int a, int b) {
-  int larger_num = a >= b ? a : b;
-  int smaller_num = a < b ? a : b;
-  a = larger_num;
-  b = smaller_num;
+// bool sum_overflow_check(int a, int b) {
+//   int larger_num = a >= b ? a : b;
+//   int smaller_num = a < b ? a : b;
+//   a = larger_num;
+//   b = smaller_num;
 
-  return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
+//   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
+// }
+
+bool sum_overflow_check(int a, int b) {
+  // int larger_num = a >= b ? a : b;
+  // int smaller_num = a < b ? a : b;
+  // a = larger_num;
+  // b = smaller_num;
+
+  if (a > 0 && b > INT_MAX - a) return 1;
+  if (a < 0 && b < INT_MIN - a)
+    return 1;
+  else
+    return 0;
 }
 
 bool read_number_of_elements(long long *n) {
