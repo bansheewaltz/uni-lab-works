@@ -23,9 +23,9 @@ bool underflow_check(int current_n, int limit) { return current_n < limit; }
 //   return false;
 // }
 
-// bool sum_overflow_check(int a, int b) {
-//   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
-// }
+bool sum_overflow_check(int a, int b) {
+  return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
+}
 
 // bool sum_overflow_check(int a, int b) {
 //   int larger_num = a >= b ? a : b;
@@ -36,18 +36,14 @@ bool underflow_check(int current_n, int limit) { return current_n < limit; }
 //   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
 // }
 
-bool sum_overflow_check(int a, int b) {
-  // int larger_num = a >= b ? a : b;
-  // int smaller_num = a < b ? a : b;
-  // a = larger_num;
-  // b = smaller_num;
+// bool sum_overflow_check(int a, int b) {
 
-  if (a > 0 && b > INT_MAX - a) return 1;
-  if (a < 0 && b < INT_MIN - a)
-    return 1;
-  else
-    return 0;
-}
+//   if (a > 0 && b > INT_MAX - a) return 1;
+//   if (a < 0 && b < INT_MIN - a)
+//     return 1;
+//   else
+//     return 0;
+// }
 
 bool read_number_of_elements(long long *n) {
   return int_read(n) && in_bounds(n, 1, 10) && clear_input_buffer();
@@ -70,6 +66,7 @@ int main(void) {
   bool error = false;
   int *array = NULL;
   int sum = 0;
+  bool error_outputed = false;
 
   if (read_number_of_elements(&number_of_elements)) {
     array = malloc(sizeof(int) * number_of_elements);
@@ -82,14 +79,20 @@ int main(void) {
         ungetc(input, stdin);
         if (int_read(&number) && in_bounds(&number, INT_MIN, INT_MAX)) {
           array[i++] = number;
-          if (sum_overflow_check(sum, number))
+          if (sum_overflow_check(sum, number)) {
             error = true;
+            printf("overflow");
+            error_outputed = true;
+          }
+
           else
             sum += number;
         } else
           error = true;
 
-        if (overflow_check(i, number_of_elements)) error = true;
+        if (overflow_check(i, number_of_elements)) {
+          error = true;
+        }
       }
     }
 
@@ -98,10 +101,12 @@ int main(void) {
     error = true;
   }
 
-  if (error)
-    print_error();
-  else
-    printf("%d", sum);
+  if (!error_outputed) {
+    if (error)
+      print_error();
+    else
+      printf("%d", sum);
+  }
 
   free(array);
   array = 0;
