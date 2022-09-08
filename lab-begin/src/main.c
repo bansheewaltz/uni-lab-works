@@ -16,13 +16,13 @@ bool clear_input_buffer(void) {
 }
 bool overflow_check(int current_n, int limit) { return current_n > limit; }
 bool underflow_check(int current_n, int limit) { return current_n < limit; }
-// bool larger_than_max_check(int n) {}
-bool sum_overflow_check(int a, int b) {
-  int sum = a + b;
-  if (a >= 0 && b > 0 && sum < 0) return true;
-  if (a <= 0 && b < 0 && sum > 0) return true;
-  return false;
-}
+// bool sum_overflow_check(int a, int b) {
+//   int sum = a + b;
+//   if (a >= 0 && b > 0 && sum < 0) return true;
+//   if (a <= 0 && b < 0 && sum > 0) return true;
+//   return false;
+// }
+bool sum_overflow_check(int a, int b) { return a > INT_MAX - b; }
 bool read_number_of_elements(long long *n) {
   return int_read(n) && in_bounds(n, 1, 10) && clear_input_buffer();
 }
@@ -54,7 +54,7 @@ int main(void) {
       if (char_is_digit(input)) {
         long long number = 0;
         ungetc(input, stdin);
-        if (scanf("%lld", &number) && in_bounds(&number, INT_MIN, INT_MAX)) {
+        if (int_read(&number) && in_bounds(&number, INT_MIN, INT_MAX)) {
           array[i++] = number;
           if (sum_overflow_check(sum, number))
             error = true;
@@ -74,14 +74,10 @@ int main(void) {
 
   if (error)
     print_error();
-  else {
-    // array_print(array, number_of_elements);
-    // printf("\n");
-    if (overflow_check(sum, INT_MAX))
-      printf("overflow");
-    else
-      printf("%d", sum);
-  }
+  else
+    printf("%d", sum);
 
+  free(array);
+  array = 0;
   return 0;
 }
