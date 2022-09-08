@@ -16,16 +16,10 @@ bool clear_input_buffer(void) {
 }
 bool overflow_check(int current_n, int limit) { return current_n > limit; }
 bool underflow_check(int current_n, int limit) { return current_n < limit; }
-// bool sum_overflow_check(int a, int b) {
-//   int sum = a + b;
-//   if (a >= 0 && b > 0 && sum < 0) return true;
-//   if (a <= 0 && b < 0 && sum > 0) return true;
-//   return false;
-// }
 
-bool sum_overflow_check(int a, int b) {
-  return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
-}
+// bool sum_overflow_check(int a, int b) {
+//   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
+// }
 
 // bool sum_overflow_check(int a, int b) {
 //   int larger_num = a >= b ? a : b;
@@ -36,14 +30,13 @@ bool sum_overflow_check(int a, int b) {
 //   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
 // }
 
-// bool sum_overflow_check(int a, int b) {
-
-//   if (a > 0 && b > INT_MAX - a) return 1;
-//   if (a < 0 && b < INT_MIN - a)
-//     return 1;
-//   else
-//     return 0;
-// }
+bool sum_overflow_check(int a, int b) {
+  if (a > 0 && b > INT_MAX - a) return 1;
+  if (a <= 0 && b < INT_MIN - a)
+    return 1;
+  else
+    return 0;
+}
 
 bool read_number_of_elements(long long *n) {
   return int_read(n) && in_bounds(n, 1, 10) && clear_input_buffer();
