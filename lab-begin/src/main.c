@@ -31,10 +31,7 @@ bool underflow_check(int current_n, int limit) { return current_n < limit; }
 // }
 
 bool sum_overflow_check(int a, int b) {
-  if ((a > 0 && b > INT_MAX - a) || (a <= 0 && b < INT_MIN - a))
-    return true;
-  else
-    return false;
+  return ((a > 0 && b > INT_MAX - a) || (a <= 0 && b < INT_MIN - a));
 }
 
 bool read_number_of_elements(long long *n) {
