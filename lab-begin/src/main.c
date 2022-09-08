@@ -47,11 +47,11 @@ bool char_is_digit(char input) {
 bool element_is_good(char input) {
   return (char_is_digit(input) || input == ' ');
 }
-void array_print(int *array, int array_size) {
-  for (int i = 0; i < array_size; ++i) {
-    printf("%d%s", array[i], i == array_size - 1 ? "" : " ");
-  }
-}
+// void array_print(int *array, int array_size) {
+//   for (int i = 0; i < array_size; ++i) {
+//     printf("%d%s", array[i], i == array_size - 1 ? "" : " ");
+//   }
+// }
 
 int main(void) {
   long long number_of_elements = 0;
