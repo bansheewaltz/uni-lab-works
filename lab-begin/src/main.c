@@ -3,10 +3,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-bool int_read(long long *n) { return scanf("%lld", n); }
 bool char_read(char *c) { return scanf("%c", c); }
-bool in_bounds(long long *n, int a, int b) { return a <= *n && *n <= b; }
-void print_error(void) { printf("bad input"); }
+bool char_is_digit(char input) {
+  return ('1' <= input && input <= '9') || input == '-';
+}
+bool int_read(long long *n) { return scanf("%lld", n); }
 bool clear_input_buffer(void) {
   int c;
 
@@ -14,33 +15,17 @@ bool clear_input_buffer(void) {
     ;
   return true;
 }
-bool overflow_check(int current_n, int limit) { return current_n > limit; }
+bool in_bounds(long long *n, int a, int b) { return a <= *n && *n <= b; }
 bool underflow_check(int current_n, int limit) { return current_n < limit; }
-
-// bool sum_overflow_check(int a, int b) {
-//   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
-// }
-
-// bool sum_overflow_check(int a, int b) {
-//   int larger_num = a >= b ? a : b;
-//   int smaller_num = a < b ? a : b;
-//   a = larger_num;
-//   b = smaller_num;
-
-//   return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
-// }
-
+bool overflow_check(int current_n, int limit) { return current_n > limit; }
 bool sum_overflow_check(int a, int b) {
   return ((a > 0 && b > INT_MAX - a) || (a <= 0 && b < INT_MIN - a));
 }
-
+void print_error(void) { printf("bad input"); }
 bool read_number_of_elements(long long *n) {
   return int_read(n) && in_bounds(n, 1, 10) && clear_input_buffer();
 }
 void read_elements(int *array);
-bool char_is_digit(char input) {
-  return ('1' <= input && input <= '9') || input == '-';
-}
 bool element_is_good(char input) {
   return (char_is_digit(input) || input == ' ');
 }
@@ -66,16 +51,18 @@ int main(void) {
       if (char_is_digit(input)) {
         long long number = 0;
         ungetc(input, stdin);
+
         if (int_read(&number) && in_bounds(&number, INT_MIN, INT_MAX)) {
           array[i++] = number;
+
           if (sum_overflow_check(sum, number)) {
             error = true;
             printf("overflow");
             error_outputed = true;
+          } else {
+            sum += number;
           }
 
-          else
-            sum += number;
         } else
           error = true;
 
