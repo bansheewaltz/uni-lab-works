@@ -22,7 +22,9 @@ bool underflow_check(int current_n, int limit) { return current_n < limit; }
 //   if (a <= 0 && b < 0 && sum > 0) return true;
 //   return false;
 // }
-bool sum_overflow_check(int a, int b) { return a > INT_MAX - b; }
+bool sum_overflow_check(int a, int b) {
+  return b > 0 ? a > INT_MAX - b : a > INT_MAX + b;
+}
 bool read_number_of_elements(long long *n) {
   return int_read(n) && in_bounds(n, 1, 10) && clear_input_buffer();
 }
