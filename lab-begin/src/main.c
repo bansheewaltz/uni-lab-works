@@ -29,16 +29,17 @@ bool read_number_of_elements(int *n) {
 
 int main(void) {
     int n_elements_expected = 0;
+    bool result_is_given = false;
 
     if (read_number_of_elements(&n_elements_expected)) {
         int sum = 0;
         int n_elements_read = 0;
         long long number = 0;
 
-        while (long_long_read(&number) && int_overflow_check(&number, INT_MIN, INT_MAX)) {
+        while (long_long_read(&number) && int_overflow_check(&number, INT_MIN, INT_MAX) && !result_is_given) {
             if (!sum_overflow_check(sum, number)) {
                 printf("overflow");
-                return -1;
+                result_is_given = true;
             } else {
                 sum += number;
                 n_elements_read++;
@@ -47,12 +48,14 @@ int main(void) {
                 }
             }
         }
-        if (n_elements_expected == n_elements_read) {
+        if (!result_is_given && n_elements_expected == n_elements_read) {
             printf("%d", sum);
-            return 0;
+            result_is_given = true;
         }
     }
 
-    print_error();
-    return -1;
+    if (!result_is_given) {
+        print_error();
+    }
+    return 0;
 }
