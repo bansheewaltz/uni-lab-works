@@ -2,81 +2,58 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#define MIN_N_OF_ELEMENTS 1
+#define MAX_N_OF_ELEMENTS 10
 
-bool char_read(char *c) {
-    return scanf("%c", c);
+bool int_read(int *n) {
+    return scanf("%d", n);
 }
-bool char_is_digit(char input) {
-    return ('1' <= input && input <= '9') || input == '-';
+bool int_in_bounds(int *n, int l, int r) {
+    return l <= *n && *n <= r;
 }
-bool int_read(long long *n) {
+bool long_long_read(long long *n) {
     return scanf("%lld", n);
 }
-bool clear_input_buffer(void) {
-    while (getchar() != '\n') {
-        ;
-    }
-    return true;
-}
-bool in_bounds(long long *n, int a, int b) {
+bool int_overflow_check(long long *n, int a, int b) {
     return a <= *n && *n <= b;
 }
-bool underflow_check(int current_n, int limit) {
-    return current_n < limit;
-}
-bool overflow_check(int current_n, int limit) {
-    return current_n > limit;
-}
 bool sum_overflow_check(int a, int b) {
-    return ((a > 0 && b > INT_MAX - a) || (a <= 0 && b < INT_MIN - a));
+    return !((a > 0 && b > INT_MAX - a) || (a <= 0 && b < INT_MIN - a));
 }
 void print_error(void) {
     printf("bad input");
 }
-bool read_number_of_elements(long long *n) {
-    return int_read(n) && in_bounds(n, 1, 10) && clear_input_buffer();
-}
-bool element_is_good(char input) {
-    return (char_is_digit(input) || input == ' ');
+bool read_number_of_elements(int *n) {
+    return int_read(n) && int_in_bounds(n, MIN_N_OF_ELEMENTS, MAX_N_OF_ELEMENTS);
 }
 
 int main(void) {
-    long long number_of_elements = 0;
+    int n_elements_expected = 0;
     bool error = false;
-    int sum = 0;
     bool error_outputed = false;
+    int sum = 0;
 
-    if (read_number_of_elements(&number_of_elements)) {
-        char input = 0;
-        int i = 0;
-        int array[10];
+    if (read_number_of_elements(&n_elements_expected)) {
+        int n_elements_read = 0;
+        long long number = 0;
 
-        while (char_read(&input) && element_is_good(input) && !error) {
-            if (char_is_digit(input)) {
-                long long number = 0;
-                ungetc(input, stdin);
-
-                if (int_read(&number) && in_bounds(&number, INT_MIN, INT_MAX)) {
-                    array[i++] = number;
-
-                    if (sum_overflow_check(sum, number)) {
-                        error = true;
-                        printf("overflow");
-                        error_outputed = true;
-                    } else {
-                        sum += number;
-                    }
-                } else {
-                    error = true;
-                }
-
-                if (overflow_check(i, number_of_elements)) {
-                    error = true;
+        while (long_long_read(&number) && int_overflow_check(&number, INT_MIN, INT_MAX) && !error) {
+            if (!sum_overflow_check(sum, number)) {
+                error = true;
+                printf("overflow");
+                error_outputed = true;
+            } else if (n_elements_read > n_elements_expected) {
+                error = true;
+            } else {
+                sum += number;
+                n_elements_read++;
+                if (getchar() == '\n') {
+                    break;
                 }
             }
         }
 
-        if (underflow_check(i, number_of_elements)) {
+        if (!error && n_elements_read < n_elements_expected) {
             error = true;
         }
     } else {
