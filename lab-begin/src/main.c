@@ -13,9 +13,7 @@ bool int_read(long long *n) {
     return scanf("%lld", n);
 }
 bool clear_input_buffer(void) {
-    int c;
-
-    while ((c = getchar()) != '\n') {
+    while (getchar() != '\n') {
         ;
     }
     return true;
@@ -45,12 +43,11 @@ bool element_is_good(char input) {
 int main(void) {
     long long number_of_elements = 0;
     bool error = false;
-    int *array = NULL;
+    int array[10];
     int sum = 0;
     bool error_outputed = false;
 
     if (read_number_of_elements(&number_of_elements)) {
-        array = malloc(sizeof(int) * number_of_elements);
         char input = 0;
         int i = 0;
 
@@ -94,7 +91,5 @@ int main(void) {
         }
     }
 
-    free(array);
-    array = 0;
     return 0;
 }
