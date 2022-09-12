@@ -8,13 +8,13 @@
 bool int_read(int *n) {
     return scanf("%d", n);
 }
-bool int_in_bounds(int *n, int l, int r) {
+bool int_in_bounds(const int *n, int l, int r) {
     return l <= *n && *n <= r;
 }
 bool long_long_read(long long *n) {
     return scanf("%lld", n);
 }
-bool int_overflow_check(long long *n, int a, int b) {
+bool int_overflow_check(const long long *n, int a, int b) {
     return a <= *n && *n <= b;
 }
 bool sum_overflow_check(int a, int b) {
@@ -29,21 +29,16 @@ bool read_number_of_elements(int *n) {
 
 int main(void) {
     int n_elements_expected = 0;
-    bool error = false;
-    bool error_outputed = false;
-    int sum = 0;
 
     if (read_number_of_elements(&n_elements_expected)) {
+        int sum = 0;
         int n_elements_read = 0;
         long long number = 0;
 
-        while (long_long_read(&number) && int_overflow_check(&number, INT_MIN, INT_MAX) && !error) {
+        while (long_long_read(&number) && int_overflow_check(&number, INT_MIN, INT_MAX)) {
             if (!sum_overflow_check(sum, number)) {
-                error = true;
                 printf("overflow");
-                error_outputed = true;
-            } else if (n_elements_read > n_elements_expected) {
-                error = true;
+                return -1;
             } else {
                 sum += number;
                 n_elements_read++;
@@ -52,21 +47,12 @@ int main(void) {
                 }
             }
         }
-
-        if (!error && n_elements_read < n_elements_expected) {
-            error = true;
-        }
-    } else {
-        error = true;
-    }
-
-    if (!error_outputed) {
-        if (error) {
-            print_error();
-        } else {
+        if (n_elements_expected == n_elements_read) {
             printf("%d", sum);
+            return 0;
         }
     }
 
-    return 0;
+    print_error();
+    return -1;
 }
