@@ -43,13 +43,13 @@ bool element_is_good(char input) {
 int main(void) {
     long long number_of_elements = 0;
     bool error = false;
-    int array[10];
     int sum = 0;
     bool error_outputed = false;
 
     if (read_number_of_elements(&number_of_elements)) {
         char input = 0;
         int i = 0;
+        int array[10];
 
         while (char_read(&input) && element_is_good(input) && !error) {
             if (char_is_digit(input)) {
