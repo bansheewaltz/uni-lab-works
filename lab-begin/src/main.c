@@ -20,33 +20,34 @@ bool read_number_of_elements(long long *n) {
 
 int main(void) {
     long long n_elements_expected = 0;
-    bool result_is_given = false;
 
-    if (read_number_of_elements(&n_elements_expected)) {
-        long long sum = 0;
-        long long n_elements_read = 0;
-        long long number = 0;
+    if (!read_number_of_elements(&n_elements_expected)) {
+        print_error();
+        return 0;
+    }
 
-        while (int_read(&number) && in_bounds(number, INT_MIN, INT_MAX) && !result_is_given) {
-            if (!in_bounds(sum + number, INT_MIN, INT_MAX)) {
-                printf("overflow");
-                result_is_given = true;
-            } else {
-                sum += number;
-                n_elements_read++;
-                if (getchar() == '\n') {
-                    break;
-                }
+    long long sum = 0;
+    long long n_elements_read = 0;
+    long long number = 0;
+
+    while (int_read(&number) && in_bounds(number, INT_MIN, INT_MAX)) {
+        if (!in_bounds(sum + number, INT_MIN, INT_MAX)) {
+            printf("overflow");
+            return 0;
+        } else {
+            sum += number;
+            n_elements_read++;
+            if (getchar() == '\n') {
+                break;
             }
         }
-        if (!result_is_given && n_elements_expected == n_elements_read) {
-            printf("%lld", sum);
-            result_is_given = true;
-        }
     }
 
-    if (!result_is_given) {
+    if (n_elements_expected != n_elements_read) {
         print_error();
+        return 0;
     }
+
+    printf("%lld", sum);
     return 0;
 }
