@@ -5,39 +5,33 @@
 #define MIN_N_OF_ELEMENTS 1
 #define MAX_N_OF_ELEMENTS 10
 
-bool int_read(int *n) {
-    return scanf("%d", n);
-}
-bool int_in_bounds(const int *n, int l, int r) {
-    return l <= *n && *n <= r;
-}
-bool long_long_read(long long *n) {
+bool int_read(long long *n) {
     return scanf("%lld", n);
 }
-bool int_overflow_check(const long long *n, int a, int b) {
-    return a <= *n && *n <= b;
+bool in_bounds(long long n, int l, int r) {
+    return l <= n && n <= r;
 }
-bool sum_overflow_check(int a, int b) {
-    return !((a > 0 && b > INT_MAX - a) || (a <= 0 && b < INT_MIN - a));
+bool int_overflow_check(long long n, int a, int b) {
+    return a <= n && n <= b;
 }
 void print_error(void) {
     printf("bad input");
 }
-bool read_number_of_elements(int *n) {
-    return int_read(n) && int_in_bounds(n, MIN_N_OF_ELEMENTS, MAX_N_OF_ELEMENTS);
+bool read_number_of_elements(long long *n) {
+    return int_read(n) && in_bounds(*n, MIN_N_OF_ELEMENTS, MAX_N_OF_ELEMENTS);
 }
 
 int main(void) {
-    int n_elements_expected = 0;
+    long long n_elements_expected = 0;
     bool result_is_given = false;
 
     if (read_number_of_elements(&n_elements_expected)) {
-        int sum = 0;
-        int n_elements_read = 0;
+        long long sum = 0;
+        long long n_elements_read = 0;
         long long number = 0;
 
-        while (long_long_read(&number) && int_overflow_check(&number, INT_MIN, INT_MAX) && !result_is_given) {
-            if (!sum_overflow_check(sum, number)) {
+        while (int_read(&number) && in_bounds(number, INT_MIN, INT_MAX) && !result_is_given) {
+            if (!in_bounds(sum + number, INT_MIN, INT_MAX)) {
                 printf("overflow");
                 result_is_given = true;
             } else {
@@ -49,7 +43,7 @@ int main(void) {
             }
         }
         if (!result_is_given && n_elements_expected == n_elements_read) {
-            printf("%d", sum);
+            printf("%lld", sum);
             result_is_given = true;
         }
     }
