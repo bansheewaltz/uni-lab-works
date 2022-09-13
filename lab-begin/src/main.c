@@ -11,9 +11,6 @@ bool int_read(long long *n) {
 bool in_bounds(long long n, int l, int r) {
     return l <= n && n <= r;
 }
-bool int_overflow_check(long long n, int a, int b) {
-    return a <= n && n <= b;
-}
 void print_error(void) {
     printf("bad input");
 }
