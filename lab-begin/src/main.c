@@ -1,7 +1,6 @@
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #define MIN_N_OF_ELEMENTS 1
 #define MAX_N_OF_ELEMENTS 10
 #define N_OF_ELEMENTS_LIMITS MIN_N_OF_ELEMENTS, MAX_N_OF_ELEMENTS
@@ -10,8 +9,8 @@
 bool int_read(long long *n) {
     return scanf("%lld", n);
 }
-bool int_in_bounds(long long n, int l, int r) {
-    return l <= n && n <= r;
+bool int_in_bounds(long long n, int left_bound, int right_bound) {
+    return left_bound <= n && n <= right_bound;
 }
 bool read_number_of_elements(long long *n) {
     return int_read(n) && int_in_bounds(*n, N_OF_ELEMENTS_LIMITS);
