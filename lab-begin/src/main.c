@@ -34,12 +34,12 @@ int main(void) {
         if (!in_bounds(sum + number, INT_MIN, INT_MAX)) {
             printf("overflow");
             return 0;
-        } else {
-            sum += number;
-            n_elements_read++;
-            if (getchar() == '\n') {
-                break;
-            }
+        }
+
+        sum += number;
+        n_elements_read++;
+        if (getchar() == '\n') {
+            break;
         }
     }
 
