@@ -87,6 +87,7 @@ int main(void) {
         return 0;
     }
     if (b1 == b2) {
+        input_buffer[strlen(input_buffer) - 1] = '\0';
         printf("%s", input_buffer);
         return 0;
     }
