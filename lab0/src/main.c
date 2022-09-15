@@ -50,7 +50,6 @@ bool digits_check(const char *input, int base) {
 }
 void clear_input_buffer(void) {
     while (getchar() != '\n') {
-        ;
     }
 }
 int main(void) {
@@ -100,6 +99,6 @@ int main(void) {
     char part2[15];
     decimal_to_base(part1, b2, whole_part);
     decimal_to_base(part2, b2, fractional_part);
-    printf("%s.%s\n", part1, part2);
+    printf("%s.%s", part1, part2);
     // printf("%d.%d", whole_part, fractional_part);
 }
