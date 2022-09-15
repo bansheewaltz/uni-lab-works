@@ -77,7 +77,10 @@ int main(void) {
 
     fflush(stdin);
     char input_buffer[MAX_BUFFER];
-    fgets(input_buffer, MAX_BUFFER, stdin);
+    if (fgets(input_buffer, MAX_BUFFER, stdin) == NULL) {
+        print_input_error();
+        return 0;
+    }
 
     if (!digits_check(input_buffer, b1)) {
         print_input_error();
