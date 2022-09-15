@@ -1,4 +1,3 @@
-#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -6,7 +5,6 @@
 #define MIN_BASE 1
 #define MAX_BASE 16
 #define BASE_LIMITS MIN_BASE, MAX_BASE
-#define INT_LIMITS INT_MIN, INT_MAX
 #define MAX_BUFFER 13
 
 bool int_in_bounds(long long n, int left_bound, int right_bound) {
@@ -69,7 +67,7 @@ int main(void) {
     int b1 = 0;
     int b2 = 0;
 
-    if (!(scanf("%d %d", &b1, &b2) == 2 && int_in_bounds(b1, BASE_LIMITS) && int_in_bounds(b2, INT_LIMITS))) {
+    if (!(scanf("%d %d", &b1, &b2) == 2 && int_in_bounds(b1, BASE_LIMITS) && int_in_bounds(b2, BASE_LIMITS))) {
         print_input_error();
         return 0;
     }
