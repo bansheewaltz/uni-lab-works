@@ -3,70 +3,24 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define MIN_BASE 1
+#define MAX_BASE 16
+#define BASE_LIMITS MIN_BASE, MAX_BASE
+#define INT_LIMITS INT_MIN, INT_MAX
+#define MAX_BUFFER 13
 
-bool char_read(char *c) {
-    return scanf("%c", c);
+bool int_read(long long *n) {
+    return scanf("%lld", n);
 }
-bool char_is_digit(char input) {
-    return '0' <= input && input <= '9';
+bool int_in_bounds(long long n, int left_bound, int right_bound) {
+    return left_bound <= n && n <= right_bound;
 }
-bool clear_input_buffer(void) {
-    int c;
-
-    while ((c = getchar()) != '\n') {
-        ;
-    }
-    return true;
+bool read_number_of_elements(long long *n) {
+    return int_read(n) && int_in_bounds(*n, BASE_LIMITS);
 }
-bool in_bounds(int *n, int a, int b) {
-    return a <= *n && *n <= b;
-}
-bool underflow_check(int current_n, int limit) {
-    return current_n < limit;
-}
-bool overflow_check(int current_n, int limit) {
-    return current_n > limit;
-}
-bool sum_overflow_check(int a, int b) {
-    return ((a > 0 && b > INT_MAX - a) || (a <= 0 && b < INT_MIN - a));
-}
-void print_error(void) {
+void print_input_error(void) {
     printf("bad input");
 }
-void read_elements(int *array);
-bool element_is_good(char input, int b1, bool *comma_met) {
-    bool status = false;
-
-    if (char_is_digit(input)) {
-        int digit = (int)input - 48;
-        if (digit < b1) {
-            status = true;
-        } else {
-            status = false;
-        }
-    } else if (input == '.' && !*comma_met) {
-        *comma_met = true;
-        status = true;
-    } else {
-        status = false;
-    }
-
-    return status;
-}
-
-bool b1b2_input_check(int *b1, int *b2) {
-    return scanf("%d %d", b1, b2) == 2 && in_bounds(b1, 2, 16) &&
-           in_bounds(b2, 2, 16) && clear_input_buffer();
-}
-
-int char_to_int(char c) {
-    if (c >= '0' && c <= '9') {
-        return (int)c - '0';
-    } else {
-        return (int)c - 'A' + 10;
-    }
-}
-
 char int_to_char(int num) {
     if (num >= 0 && num <= 9) {
         return (char)(num + '0');
@@ -74,20 +28,6 @@ char int_to_char(int num) {
         return (char)(num - 10 + 'A');
     }
 }
-
-int base_to_decimal(char *string, int base) {
-    int len = strlen(string);
-    int power = 1;
-    int result = 0;
-
-    for (int i = len - 1; i >= 0; i--) {
-        result += char_to_int(string[i]) * power;
-        power *= base;
-    }
-
-    return result;
-}
-
 void string_reverse(char *string) {
     int len = strlen(string);
 
@@ -97,7 +37,6 @@ void string_reverse(char *string) {
         string[len - i - 1] = temp;
     }
 }
-
 void decimal_to_base(char result[], int base, int decimal_num) {
     int i = 0;
 
@@ -109,62 +48,56 @@ void decimal_to_base(char result[], int base, int decimal_num) {
     result[i] = '\0';
     string_reverse(result);
 }
-
-void print_result_string(char *string) {
-    printf("%s", string);
+bool digits_check(const char *input, int base) {
+    for (int i = 0; i < (int)strlen(input); i++) {
+        if (input[i] - 48 >= base) {
+            return false;
+        }
+    }
+    return true;
 }
-
-void slice(const char *str, char *result, int start, int end) {
-    strncpy(result, str + start, end - start);
-}
-
 int main(void) {
-    int b1 = 0, b2 = 0;
-    bool error = false;
-    bool comma_met = false;
-    int comma_position = 0;
-    char string[13];
+    // char input_buffer[MAX_BUFFER];
+    // fgets(input_buffer, MAX_BUFFER, stdin);
+    // char *cursor = input_buffer;
+    // int b1 = strtol(cursor, &cursor, 10);
+    // int b2 = strtol(cursor, &cursor, 10);
+    // if (!int_in_bounds(b1, MIN_BASE, MAX_BASE) || !int_in_bounds(b2, MIN_BASE, MAX_BASE)) {
+    //     print_input_error();
+    //     return 0;
+    // }
+    // printf("%d %d", b1, b2);
+    int b1 = 0;
+    int b2 = 0;
 
-    if (b1b2_input_check(&b1, &b2)) {
-        char input = 0;
-        int i = 0;
-
-        while (char_read(&input) && input != '\n' && !error) {
-            if (element_is_good(input, b1, &comma_met)) {
-                comma_position = i;
-                string[i++] = input;
-            } else {
-                error = true;
-            }
-        }
-        string[i] = '\0';
-    } else {
-        error = true;
+    if (!(scanf("%d %d", &b1, &b2) == 2 && int_in_bounds(b1, BASE_LIMITS) && int_in_bounds(b2, INT_LIMITS))) {
+        print_input_error();
+        return 0;
     }
 
-    if (error) {
-        print_error();
-    } else {
-        if (b1 == b2) {
-            print_result_string(string);
-        } else if (comma_met) {
-            int whole_part = base_to_decimal(string, b1);
-            int fractional_part = base_to_decimal(string, b1);
-            char whole_part_str[11];
-            char fractional_part_str[11];
+    fflush(stdin);
+    char input_buffer[MAX_BUFFER];
+    fgets(input_buffer, MAX_BUFFER, stdin);
 
-            decimal_to_base(whole_part_str, b2, whole_part);
-            slice(string, fractional_part_str, comma_position, strlen(string));
-            decimal_to_base(fractional_part_str, b2, fractional_part);
-            strcpy(string, whole_part_str);
-            //   string[comma_position] = '.';
-            //   strcat(string, fractional_part_str);
-            print_result_string(string);
-        } else {
-            int decimal_form = base_to_decimal(string, b1);
-            printf("%d\n", decimal_form);
-            decimal_to_base(string, b2, decimal_form);
-            print_result_string(string);
-        }
+    if (!digits_check(input_buffer, b1)) {
+        print_input_error();
+        return 0;
     }
+    if (b1 == b2) {
+        printf("%s", input_buffer);
+        return 0;
+    }
+
+    char *cursor = input_buffer;
+    int whole_part = strtol(cursor, &cursor, b1);
+    int fractional_part = 0;
+    if (*cursor == '.') {
+        fractional_part = strtol(cursor + 1, &cursor, b2);
+    }
+    char part1[15];
+    char part2[15];
+    decimal_to_base(part1, b2, whole_part);
+    decimal_to_base(part2, b2, fractional_part);
+    printf("%s.%s", part1, part2);
+    // printf("%d.%d", whole_part, fractional_part);
 }
