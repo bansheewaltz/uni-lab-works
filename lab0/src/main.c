@@ -50,6 +50,11 @@ bool digits_check(const char *input, int base) {
     }
     return true;
 }
+void clear_input_buffer(void) {
+    while (getchar() != '\n') {
+        ;
+    }
+}
 int main(void) {
     // char input_buffer[MAX_BUFFER];
     // fgets(input_buffer, MAX_BUFFER, stdin);
@@ -69,7 +74,8 @@ int main(void) {
         return 0;
     }
 
-    fflush(stdin);
+    // fflush(stdin);
+    clear_input_buffer();
     char input_buffer[MAX_BUFFER];
     if (fgets(input_buffer, MAX_BUFFER, stdin) == NULL) {
         print_input_error();
