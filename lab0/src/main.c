@@ -9,14 +9,8 @@
 #define INT_LIMITS INT_MIN, INT_MAX
 #define MAX_BUFFER 13
 
-bool int_read(long long *n) {
-    return scanf("%lld", n);
-}
 bool int_in_bounds(long long n, int left_bound, int right_bound) {
     return left_bound <= n && n <= right_bound;
-}
-bool read_number_of_elements(long long *n) {
-    return int_read(n) && int_in_bounds(*n, BASE_LIMITS);
 }
 void print_input_error(void) {
     printf("bad input");
