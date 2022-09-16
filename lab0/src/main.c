@@ -9,7 +9,7 @@
 #define BASE_LIMITS MIN_BASE, MAX_BASE
 #define MAX_BUFFER (13 + 1)
 #define EXIT_SUCCESS 0
-// #define EXIT_FAILURE 0
+#define EXIT_ERROR 0
 
 bool int_in_bounds(long long n, int left_bound, int right_bound) {
     return left_bound <= n && n <= right_bound;
@@ -86,14 +86,14 @@ int main(void) {
 
     if (!(scanf("%d %d", &b1, &b2) == 2 && int_in_bounds(b1, BASE_LIMITS) && int_in_bounds(b2, BASE_LIMITS))) {
         print_input_error();
-        return EXIT_FAILURE;
+        return EXIT_ERROR;
     }
 
     clear_input_buffer();
     char input_buffer[MAX_BUFFER];
     if (fgets(input_buffer, MAX_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1)) {
         print_input_error();
-        return EXIT_FAILURE;
+        return EXIT_ERROR;
     }
 
     if (b1 == b2) {
