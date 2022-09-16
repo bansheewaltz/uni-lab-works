@@ -57,19 +57,19 @@ void clear_input_buffer(void) {
     while (getchar() != '\n') {
     }
 }
-int binary_power(int number, int power) {
-    int result = 1;
+// int binary_power(int number, int power) {
+//     int result = 1;
 
-    while (power) {
-        if (power & 1) {
-            result *= number;
-        }
-        number *= number;
-        power >>= 1;
-    }
+//     while (power) {
+//         if (power & 1) {
+//             result *= number;
+//         }
+//         number *= number;
+//         power >>= 1;
+//     }
 
-    return result;
-}
+//     return result;
+// }
 int main(void) {
     // char input_buffer[MAX_BUFFER];
     // fgets(input_buffer, MAX_BUFFER, stdin);
@@ -106,9 +106,9 @@ int main(void) {
     char *cursor = input_buffer;
     int whole_part = strtol(cursor, &cursor, b1);
     // int fractional_part = 0;
-    float f = 0;
-    char result[13];
+    char result[13] = "";
     if (*cursor == '.') {
+        float f = 0;
         cursor++;
         char n[2] = {0};
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
