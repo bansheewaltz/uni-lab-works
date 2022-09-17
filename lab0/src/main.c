@@ -57,30 +57,10 @@ void clear_input_buffer(void) {
     while (getchar() != '\n') {
     }
 }
-// int binary_power(int number, int power) {
-//     int result = 1;
-
-//     while (power) {
-//         if (power & 1) {
-//             result *= number;
-//         }
-//         number *= number;
-//         power >>= 1;
-//     }
-
-//     return result;
-// }
+bool is_digit(char cursor) {
+    return '0' <= cursor && cursor <= '9';
+}
 int main(void) {
-    // char input_buffer[MAX_BUFFER];
-    // fgets(input_buffer, MAX_BUFFER, stdin);
-    // char *cursor = input_buffer;
-    // int b1 = strtol(cursor, &cursor, 10);
-    // int b2 = strtol(cursor, &cursor, 10);
-    // if (!int_in_bounds(b1, MIN_BASE, MAX_BASE) || !int_in_bounds(b2, MIN_BASE, MAX_BASE)) {
-    //     print_input_error();
-    //     return 0;
-    // }
-    // printf("%d %d", b1, b2);
     int b1 = 0;
     int b2 = 0;
 
@@ -97,7 +77,10 @@ int main(void) {
     }
 
     if (b1 == b2) {
-        // input_buffer[strlen(input_buffer) - 1] = '\0';
+        if (!is_digit(input_buffer[strcspn(input_buffer, ".") + 1])) {
+            print_input_error();
+            return EXIT_ERROR;
+        }
         input_buffer[strcspn(input_buffer, "\n")] = '\0';
         printf("%s", input_buffer);
         return EXIT_SUCCESS;
@@ -105,7 +88,6 @@ int main(void) {
 
     char *cursor = input_buffer;
     int whole_part = strtol(cursor, &cursor, b1);
-    // int fractional_part = 0;
     char result[13] = "";
     if (*cursor == '.') {
         float f = 0;
@@ -113,7 +95,6 @@ int main(void) {
         char n[2] = {0};
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
             n[0] = cursor[i];
-            // f += strtol(n, 0, b1) * binary_power(b1, -i - 1);  // converting the fraction part
             f += strtol(n, 0, b1) * pow(b1, -(i + 1));  // converting the fraction part
         }
         int j = 0;
@@ -125,11 +106,7 @@ int main(void) {
         }
     }
     char part1[15];
-    // char part2[15];
-    // printf("%d %s\n", whole_part, result);
-    // printf("%d %f\n", whole_part, f);
     decimal_to_base(part1, b2, whole_part);
-    // decimal_to_base(part2, b2, fractional_part);
     printf("%s.%s", part1, result);
     return EXIT_SUCCESS;
 }
