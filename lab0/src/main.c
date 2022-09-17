@@ -50,7 +50,7 @@ bool digits_check(const char *input, int base) {
             return false;
         } else if ('A' <= input[i] && input[i] <= 'F' && input[i] - 'A' >= base - 10) {
             return false;
-        } else if (input[i] - '0' >= base) {
+        } else if ('0' <= input[i] && input[i] <= '9' >= base) {
             return false;
         }
     }
