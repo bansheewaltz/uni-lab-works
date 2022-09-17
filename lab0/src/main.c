@@ -77,7 +77,8 @@ int main(void) {
     }
 
     if (b1 == b2) {
-        if (!is_digit(input_buffer[strcspn(input_buffer, ".") + 1])) {
+        if (!is_digit(input_buffer[strcspn(input_buffer, ".") + 1]) ||
+            !is_digit(input_buffer[strcspn(input_buffer, ".") - 1])) {
             print_input_error();
             return EXIT_ERROR;
         }
