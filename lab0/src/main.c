@@ -46,7 +46,11 @@ void decimal_to_base(char result[], int base, int decimal_num) {
 }
 bool digits_check(const char *input, int base) {
     for (int i = 0; i < (int)strlen(input); i++) {
-        if (input[i] - 48 >= base) {
+        if ('a' <= input[i] && input[i] <= 'f' && input[i] - 'a' >= base - 10) {
+            return false;
+        } else if ('A' <= input[i] && input[i] <= 'F' && input[i] - 'A' >= base - 10) {
+            return false;
+        } else if (input[i] - 'a' >= base) {
             return false;
         }
     }
@@ -57,8 +61,8 @@ void clear_input_buffer(void) {
     while (getchar() != '\n') {
     }
 }
-bool is_digit(char cursor) {
-    return '0' <= cursor && cursor <= '9';
+bool is_number(char cursor) {
+    return ('0' <= cursor && cursor <= '9') || ('a' <= cursor && cursor <= 'f') || ('A' <= cursor && cursor <= 'F');
 }
 int main(void) {
     int b1 = 0;
@@ -77,8 +81,8 @@ int main(void) {
     }
 
     if (b1 == b2) {
-        if (!is_digit(input_buffer[strcspn(input_buffer, ".") + 1]) ||
-            !is_digit(input_buffer[strcspn(input_buffer, ".") - 1])) {
+        if (!is_number(input_buffer[strcspn(input_buffer, ".") + 1]) ||
+            !is_number(input_buffer[strcspn(input_buffer, ".") - 1])) {
             print_input_error();
             return EXIT_ERROR;
         }
