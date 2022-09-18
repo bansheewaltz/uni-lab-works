@@ -10,6 +10,7 @@
 #define MAX_INPUT_BUFFER (13 + 1)
 #define MAX_INTEGER_OUTPUT_BUFFER (48 + 1)
 #define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1)
+#define DECIMAL_BASE 10
 #define EXIT_SUCCESS 0
 #define EXIT_ERROR 0
 
@@ -20,19 +21,17 @@ void print_input_error(void) {
     printf("bad input");
 }
 char int_to_char(int num) {
-    if (num >= 0 && num <= 9) {
+    if (num >= 0 && num <= DECIMAL_BASE - 1) {
         return (char)(num + '0');
     } else {
-        return (char)(num - 10 + 'a');
+        return (char)(num - DECIMAL_BASE + 'a');
     }
 }
 void string_reverse(char *string) {
-    int len = strlen(string);
-
-    for (int i = 0; i < len / 2; i++) {
-        char temp = string[i];
-        string[i] = string[len - i - 1];
-        string[len - i - 1] = temp;
+    for (char *p1 = string, *p2 = string + strlen(string) - 1; p2 > p1; ++p1, --p2) {
+        *p1 ^= *p2;
+        *p2 ^= *p1;
+        *p1 ^= *p2;
     }
 }
 void decimal_to_base(char str_integer_part[], int base_new, long long int_integer_part) {
@@ -49,18 +48,25 @@ void decimal_to_base(char str_integer_part[], int base_new, long long int_intege
 bool char_in_bounds(char input, char left_limit, char right_limit) {
     return left_limit <= input && input <= right_limit;
 }
-bool digits_check(char input[], int base, bool *comma_met) {
+bool digits_check(char input[], int base) {
     input[strcspn(input, "\n")] = '\0';
+    size_t string_length = strlen(input);
 
-    for (int i = 0; i < (int)strlen(input); i++) {
+    if (input[0] == '.' || input[string_length - 1] == '.') {
+        return false;
+    }
+
+    bool comma_met = false;
+    for (size_t i = 0; i < string_length; i++) {
         if (input[i] == '.') {
-            if (*comma_met == true || i == 0 || i == (int)strlen(input) - 1) {
+            if (comma_met == true) {
                 return false;
             }
-            *comma_met = true;
+            comma_met = true;
             continue;
-        } else if ((!char_in_bounds(input[i], '0', int_to_char(base) - 1) &&
-                    !char_in_bounds(input[i], 'a', int_to_char(base) - 1))) {
+        }
+        if ((!char_in_bounds(input[i], '0', int_to_char(base) - 1) &&
+             !char_in_bounds(input[i], 'a', int_to_char(base) - 1))) {
             return false;
         }
     }
@@ -82,8 +88,7 @@ int main(void) {
 
     clear_input_buffer();
     char input_buffer[MAX_INPUT_BUFFER];
-    bool comma_met = false;
-    if (fgets(input_buffer, MAX_INPUT_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1, &comma_met)) {
+    if (fgets(input_buffer, MAX_INPUT_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1)) {
         print_input_error();
         return EXIT_ERROR;
     }
