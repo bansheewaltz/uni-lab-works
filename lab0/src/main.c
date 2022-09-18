@@ -7,7 +7,10 @@
 #define MIN_BASE 2
 #define MAX_BASE 16
 #define BASE_LIMITS MIN_BASE, MAX_BASE
-#define MAX_BUFFER (13 + 1)
+#define MAX_INPUT_BUFFER (13 + 1)
+#define MAX_INTEGER_OUTPUT_BUFFER (48 + 1)
+#define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1)
+#define DECIMAL_BASE 10
 #define EXIT_SUCCESS 0
 #define EXIT_ERROR 0
 
@@ -21,7 +24,7 @@ char int_to_char(int num) {
     if (num >= 0 && num <= 9) {
         return (char)(num + '0');
     } else {
-        return (char)(num - 10 + 'A');
+        return (char)(num - 10 + 'a');
     }
 }
 void string_reverse(char *string) {
@@ -33,26 +36,39 @@ void string_reverse(char *string) {
         string[len - i - 1] = temp;
     }
 }
-void decimal_to_base(char result[], int base, int decimal_num) {
+void decimal_to_base(char str_fractional_part[], int base, long long decimal_num) {
     int i = 0;
 
     while (decimal_num > 0) {
-        result[i++] = int_to_char(decimal_num % base);
+        str_fractional_part[i++] = int_to_char(decimal_num % base);
         decimal_num /= base;
     }
 
-    result[i] = '\0';
-    string_reverse(result);
+    str_fractional_part[i] = '\0';
+    string_reverse(str_fractional_part);
 }
-bool digits_check(const char *input, int base) {
-    for (int i = 0; i < (int)strlen(input); i++) {
-        if ('a' <= input[i] && input[i] <= 'f' && input[i] - 'a' >= base - 10) {
-            return false;
-        } else if ('A' <= input[i] && input[i] <= 'F' && input[i] - 'A' >= base - 10) {
-            return false;
-        } else if ('0' <= input[i] && input[i] <= '9' && input[i] - '0' >= base) {
+bool char_in_bounds(char input, char left_limit, char right_limit) {
+    return left_limit <= input && input <= right_limit;
+}
+bool digits_check(const char *input, int base, bool *comma_met) {
+    for (int i = 0; i < (int)strlen(input) - 1; i++) {  // -1 to don't read the newline character
+        if (input[i] == '.') {
+            if (*comma_met == true) {
+                return false;
+            }
+            *comma_met = true;
+            continue;
+        } else if ((!char_in_bounds(input[i], '0', int_to_char(base)) &&
+                    !char_in_bounds(input[i], 'a', int_to_char(base)))) {
             return false;
         }
+        // if (is_lowercase_letter(input[i]) && input[i] - 'a' >= base - DECIMAL_BASE) {
+
+        // } else if ('A' <= input[i] && input[i] <= 'F' && input[i] - 'A' >= base - 10) {
+        //     return false;
+        // } else if ('0' <= input[i] && input[i] <= '9' && input[i] - '0' >= base) {
+        //     return false;
+        // }  // else if
     }
 
     return true;
@@ -60,9 +76,6 @@ bool digits_check(const char *input, int base) {
 void clear_input_buffer(void) {
     while (getchar() != '\n') {
     }
-}
-bool is_number(char cursor) {
-    return ('0' <= cursor && cursor <= '9') || ('a' <= cursor && cursor <= 'f') || ('A' <= cursor && cursor <= 'F');
 }
 int main(void) {
     int b1 = 0;
@@ -74,44 +87,47 @@ int main(void) {
     }
 
     clear_input_buffer();
-    char input_buffer[MAX_BUFFER];
-    if (fgets(input_buffer, MAX_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1)) {
+    char input_buffer[MAX_INPUT_BUFFER];
+    bool comma_met = false;
+    if (fgets(input_buffer, MAX_INPUT_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1, &comma_met)) {
         print_input_error();
         return EXIT_ERROR;
     }
 
     if (b1 == b2) {
-        if (!is_number(input_buffer[strcspn(input_buffer, ".") + 1]) ||
-            !is_number(input_buffer[strcspn(input_buffer, ".") - 1])) {
-            print_input_error();
-            return EXIT_ERROR;
-        }
         input_buffer[strcspn(input_buffer, "\n")] = '\0';
         printf("%s", input_buffer);
         return EXIT_SUCCESS;
     }
 
     char *cursor = input_buffer;
-    int whole_part = strtol(cursor, &cursor, b1);
-    char result[13] = "";
-    if (*cursor == '.') {
-        float f = 0;
-        cursor++;
+    long long int_integer_part = strtoll(cursor, &cursor, b1);
+    char str_fractional_part[14] = "";
+    float float_fractional_part = 0;
+    int j = 0;
+    if (*cursor++ == '.') {
+        str_fractional_part[j++] = '.';
         char n[2] = {0};
+
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
             n[0] = cursor[i];
-            f += strtol(n, 0, b1) * pow(b1, -(i + 1));  // converting the fraction part
+            float_fractional_part += strtol(n, 0, b1) * pow(b1, -(i + 1));  // converting the fraction part
         }
-        int j = 0;
-        while (f > 0)  // do multiply and get the int part until number is zero
+
+        while (float_fractional_part > 0)  // do multiply and get the int part until number is zero
         {
-            f *= b2;                    // do multiply by base and store it in number.
-            result[j++] = (int)f + 48;  // store the int part.
-            f -= (int)f;                // remove the int part.
+            float_fractional_part *= b2;                                 // do multiply by base and store it in number.
+            str_fractional_part[j++] = (int)float_fractional_part + 48;  // store the int part.
+            float_fractional_part -= (int)float_fractional_part;         // remove the int part.
+        }
+
+        for (int i = strlen(str_fractional_part); strlen(str_fractional_part) != 1 + 12; i++) {
+            str_fractional_part[i] = '0';
         }
     }
-    char part1[15];
-    decimal_to_base(part1, b2, whole_part);
-    printf("%s.%s", part1, result);
+    char str_integer_part[MAX_INTEGER_OUTPUT_BUFFER];
+    decimal_to_base(str_integer_part, b2, int_integer_part);
+    printf("%s%s", str_integer_part, str_fractional_part);
+
     return EXIT_SUCCESS;
 }
