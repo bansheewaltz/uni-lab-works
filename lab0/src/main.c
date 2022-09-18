@@ -98,19 +98,19 @@ int main(void) {
     char str_fractional_part[14] = "";
     if (*cursor++ == '.') {
         int j = 0;
-        float float_fractional_part = 0;
+        double double_fractional_part = 0;
         str_fractional_part[j++] = '.';
         char n[2] = {0};
 
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
             n[0] = cursor[i];
-            float_fractional_part += strtol(n, 0, b1) * pow(b1, -(i + 1));  // converting the fraction part
+            double_fractional_part += strtol(n, 0, b1) * pow(b1, -(i + 1));  // converting the fraction part
         }
 
         while (j < MAX_FRACTIONAL_OUTPUT_BUFFER) {  // do multiply and get the int part until number is zero
-            float_fractional_part *= b2;            // do multiply by base and store it in number.
-            str_fractional_part[j++] = int_to_char((int)float_fractional_part);  // store the int part.
-            float_fractional_part -= (int)float_fractional_part;                 // remove the int part.
+            double_fractional_part *= b2;           // do multiply by base and store it in number.
+            str_fractional_part[j++] = int_to_char((int)double_fractional_part);  // store the int part.
+            double_fractional_part -= (int)double_fractional_part;                // remove the int part.
         }
     }
 
