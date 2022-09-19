@@ -77,6 +77,23 @@ void clear_input_buffer(void) {
     while (getchar() != '\n') {
     }
 }
+double to_power(double number, int power) {
+    if (power < 0) {
+        return 1 / to_power(number, -power);
+    }
+
+    double result = 1;
+
+    while (power) {
+        if (power & 1) {
+            result *= number;
+        }
+        number *= number;
+        power >>= 1;
+    }
+
+    return result;
+}
 int main(void) {
     int b1 = 0;
     int b2 = 0;
@@ -105,11 +122,11 @@ int main(void) {
         int j = 0;
         double double_fractional_part = 0;
         str_fractional_part[j++] = '.';
-        char n[2] = {0};
 
+        char n[2] = {0};
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
             n[0] = cursor[i];
-            double_fractional_part += strtol(n, 0, b1) * pow(b1, -(i + 1));  // converting the fraction part
+            double_fractional_part += strtol(n, 0, b1) * to_power(b1, -(i + 1));
         }
 
         while (j < MAX_FRACTIONAL_OUTPUT_BUFFER) {  // do multiply and get the int part until number is zero
