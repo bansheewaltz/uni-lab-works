@@ -131,10 +131,8 @@ int main(void) {
         double double_fractional_part = 0;
         str_fractional_part[j++] = '.';
 
-        char n[2] = {0};
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
-            n[0] = cursor[i];
-            double_fractional_part += strtol(n, 0, b1) * to_power(b1, -(i + 1));
+            double_fractional_part += strtol(&cursor[i], 0, b1) * to_power(b1, -(i + 1));
         }
 
         while (j < MAX_FRACTIONAL_OUTPUT_BUFFER) {  // do multiply and get the int part until number is zero
