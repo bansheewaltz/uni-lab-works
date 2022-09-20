@@ -8,7 +8,7 @@
 #define BASE_LIMITS MIN_BASE, MAX_BASE
 #define MAX_INPUT_BUFFER (13 + 1)
 #define MAX_INTEGER_OUTPUT_BUFFER (48 + 1)
-#define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1 + 1)
+#define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1)
 #define MAX_OUTPUT_BUFFER (MAX_FRACTIONAL_OUTPUT_BUFFER + MAX_INTEGER_OUTPUT_BUFFER)
 #define DECIMAL_BASE 10
 #define EXIT_SUCCESS 0
@@ -102,16 +102,11 @@ double to_power(double number, int power) {
 
     return result;
 }
+
 void conversion(char input_buffer[], int b1, int b2, char result[]) {
     char *cursor = input_buffer;
     long long int_integer_part = strtoll(cursor, &cursor, b1);
-    char str_integer_part[MAX_INTEGER_OUTPUT_BUFFER] = "0";
-    if (int_integer_part) {
-        decimal_to_base(str_integer_part, b2, int_integer_part);
-    }
-    strcat(result, str_integer_part);
-
-    char str_fractional_part[MAX_FRACTIONAL_OUTPUT_BUFFER] = "";
+    char str_fractional_part[14] = "";
     if (*cursor++ == '.') {
         int j = 0;
         double double_fractional_part = 0;
@@ -129,6 +124,12 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
             double_fractional_part -= (int)double_fractional_part;                // remove the int part.
         }
     }
+
+    char str_integer_part[MAX_INTEGER_OUTPUT_BUFFER] = "0";
+    if (int_integer_part) {
+        decimal_to_base(str_integer_part, b2, int_integer_part);
+    }
+    strcat(result, str_integer_part);
     strcat(result, str_fractional_part);
 }
 
