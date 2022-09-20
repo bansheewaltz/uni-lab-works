@@ -127,7 +127,9 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
     if (int_integer_part) {
         decimal_to_base(str_integer_part, b2, int_integer_part);
     }
-    printf("%s%s", str_integer_part, str_fractional_part);
+    // printf("%s%s", str_integer_part, str_fractional_part);
+    strcat(result, str_integer_part);
+    strcat(result, str_fractional_part);
 }
 
 int main(void) {
