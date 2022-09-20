@@ -9,6 +9,7 @@
 #define MAX_INPUT_BUFFER (13 + 1)
 #define MAX_INTEGER_OUTPUT_BUFFER (48 + 1)
 #define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1)
+#define MAX_OUTPUT_BUFFER (MAX_FRACTIONAL_OUTPUT_BUFFER + MAX_INTEGER_OUTPUT_BUFFER)
 #define DECIMAL_BASE 10
 #define EXIT_SUCCESS 0
 #define EXIT_ERROR 0
@@ -127,7 +128,6 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
     if (int_integer_part) {
         decimal_to_base(str_integer_part, b2, int_integer_part);
     }
-    // printf("%s%s", str_integer_part, str_fractional_part);
     strcat(result, str_integer_part);
     strcat(result, str_fractional_part);
 }
