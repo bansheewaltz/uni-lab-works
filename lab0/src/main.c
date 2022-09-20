@@ -111,9 +111,10 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
         decimal_to_base(str_integer_part, b2, int_integer_part);
     }
     strcat(result, str_integer_part);
-    char str_fractional_part[14] = "";
+
     if (*cursor++ == '.') {
         int j = 0;
+        char str_fractional_part[14] = "";
         double double_fractional_part = 0;
         str_fractional_part[j++] = '.';
 
@@ -128,8 +129,8 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
             str_fractional_part[j++] = int_to_char((int)double_fractional_part);  // store the int part.
             double_fractional_part -= (int)double_fractional_part;                // remove the int part.
         }
+        strcat(result, str_fractional_part);
     }
-    strcat(result, str_fractional_part);
 }
 
 int main(void) {
