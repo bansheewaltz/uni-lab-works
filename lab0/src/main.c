@@ -8,7 +8,7 @@
 #define BASE_LIMITS MIN_BASE, MAX_BASE
 #define MAX_INPUT_BUFFER (13 + 1)
 #define MAX_INTEGER_OUTPUT_BUFFER (48 + 1)
-#define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1)
+#define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1 + 1)
 #define MAX_OUTPUT_BUFFER (MAX_FRACTIONAL_OUTPUT_BUFFER + MAX_INTEGER_OUTPUT_BUFFER)
 #define DECIMAL_BASE 10
 #define EXIT_SUCCESS 0
@@ -102,14 +102,21 @@ double to_power(double number, int power) {
 
     return result;
 }
+
 void conversion(char input_buffer[], int b1, int b2, char result[]) {
     char *cursor = input_buffer;
     long long int_integer_part = strtoll(cursor, &cursor, b1);
-    char str_fractional_part[14] = "";
+
+    char str_integer_part[MAX_INTEGER_OUTPUT_BUFFER] = "0";
+    if (int_integer_part) {
+        decimal_to_base(str_integer_part, b2, int_integer_part);
+    }
+    strcat(result, str_integer_part);
+
     if (*cursor++ == '.') {
-        int j = 0;
         double double_fractional_part = 0;
-        str_fractional_part[j++] = '.';
+        char str_fractional_part[MAX_FRACTIONAL_OUTPUT_BUFFER] = "";
+        str_fractional_part[0] = '.';
 
         char n[2] = {0};
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
@@ -117,19 +124,13 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
             double_fractional_part += strtol(n, 0, b1) * to_power(b1, -(i + 1));
         }
 
-        while (j < MAX_FRACTIONAL_OUTPUT_BUFFER) {  // do multiply and get the int part until number is zero
-            double_fractional_part *= b2;           // do multiply by base and store it in number.
-            str_fractional_part[j++] = int_to_char((int)double_fractional_part);  // store the int part.
-            double_fractional_part -= (int)double_fractional_part;                // remove the int part.
+        for (int j = 1; j < MAX_FRACTIONAL_OUTPUT_BUFFER; ++j) {
+            double_fractional_part *= b2;  // do multiply by base and store it in number.
+            str_fractional_part[j] = int_to_char((int)double_fractional_part);  // store the int part.
+            double_fractional_part -= (int)double_fractional_part;              // remove the int part.
         }
+        strcat(result, str_fractional_part);
     }
-
-    char str_integer_part[MAX_INTEGER_OUTPUT_BUFFER] = "0";
-    if (int_integer_part) {
-        decimal_to_base(str_integer_part, b2, int_integer_part);
-    }
-    strcat(result, str_integer_part);
-    strcat(result, str_fractional_part);
 }
 
 int main(void) {
@@ -151,7 +152,7 @@ int main(void) {
     if (b1 == b2) {
         printf("%s", input_buffer);
     } else {
-        char result[200] = "";
+        char result[MAX_OUTPUT_BUFFER] = "";
         conversion(input_buffer, b1, b2, result);
         printf("%s", result);
     }
