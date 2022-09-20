@@ -151,7 +151,7 @@ int main(void) {
     if (b1 == b2) {
         printf("%s", input_buffer);
     } else {
-        char result[MAX_OUTPUT_BUFFER] = "";
+        char result[MAX_OUTPUT_BUFFER + 1] = "";
         conversion(input_buffer, b1, b2, result);
         printf("%s", result);
     }
