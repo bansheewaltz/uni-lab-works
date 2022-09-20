@@ -116,10 +116,10 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
         char str_fractional_part[MAX_FRACTIONAL_OUTPUT_BUFFER + 1] = ".";
         double double_fractional_part = 0;
 
-        char n[2] = {0};
+        char buffer[2] = "";
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
-            n[0] = cursor[i];
-            double_fractional_part += strtol(n, 0, b1) * to_power(b1, -(i + 1));
+            buffer[0] = cursor[i];
+            double_fractional_part += strtol(buffer, 0, b1) * to_power(b1, -(i + 1));
         }
 
         for (int j = 1; j < MAX_FRACTIONAL_OUTPUT_BUFFER; ++j) {
