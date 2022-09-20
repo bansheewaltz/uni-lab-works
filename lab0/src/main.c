@@ -117,15 +117,15 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
         double double_fractional_part = 0;
 
         char buffer[2] = "";
-        for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
+        for (int i = 0; cursor[i]; i++) {
             buffer[0] = cursor[i];
             double_fractional_part += strtol(buffer, 0, b1) * to_power(b1, -(i + 1));
         }
 
         for (int j = 1; j < MAX_FRACTIONAL_OUTPUT_BUFFER; ++j) {
-            double_fractional_part *= b2;  // do multiply by base and store it in number.
-            str_fractional_part[j] = int_to_char((int)double_fractional_part);  // store the int part.
-            double_fractional_part -= (int)double_fractional_part;              // remove the int part.
+            double_fractional_part *= b2;
+            str_fractional_part[j] = int_to_char((int)double_fractional_part);
+            double_fractional_part -= (int)double_fractional_part;
         }
         strcat(result, str_fractional_part);
     }
@@ -150,7 +150,7 @@ int main(void) {
     if (b1 == b2) {
         printf("%s", input_buffer);
     } else {
-        char result[200] = "";
+        char result[MAX_OUTPUT_BUFFER] = "";
         conversion(input_buffer, b1, b2, result);
         printf("%s", result);
     }
