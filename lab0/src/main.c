@@ -101,28 +101,7 @@ double to_power(double number, int power) {
 
     return result;
 }
-
-int main(void) {
-    int b1 = 0;
-    int b2 = 0;
-
-    if (!(scanf("%d %d", &b1, &b2) == 2 && int_in_bounds(b1, BASE_LIMITS) && int_in_bounds(b2, BASE_LIMITS))) {
-        print_input_error();
-        return EXIT_ERROR;
-    }
-
-    clear_input_buffer();
-    char input_buffer[MAX_INPUT_BUFFER];
-    if (fgets(input_buffer, MAX_INPUT_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1)) {
-        print_input_error();
-        return EXIT_ERROR;
-    }
-
-    if (b1 == b2) {
-        printf("%s", input_buffer);
-        return EXIT_SUCCESS;
-    }
-
+void conversion(char input_buffer[], int b1, int b2, char result[]) {
     char *cursor = input_buffer;
     long long int_integer_part = strtoll(cursor, &cursor, b1);
     char str_fractional_part[14] = "";
@@ -149,6 +128,31 @@ int main(void) {
         decimal_to_base(str_integer_part, b2, int_integer_part);
     }
     printf("%s%s", str_integer_part, str_fractional_part);
+}
+
+int main(void) {
+    int b1 = 0;
+    int b2 = 0;
+
+    if (!(scanf("%d %d", &b1, &b2) == 2 && int_in_bounds(b1, BASE_LIMITS) && int_in_bounds(b2, BASE_LIMITS))) {
+        print_input_error();
+        return EXIT_ERROR;
+    }
+
+    clear_input_buffer();
+    char input_buffer[MAX_INPUT_BUFFER];
+    if (fgets(input_buffer, MAX_INPUT_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1)) {
+        print_input_error();
+        return EXIT_ERROR;
+    }
+
+    if (b1 == b2) {
+        printf("%s", input_buffer);
+    } else {
+        char result[200] = "";
+        conversion(input_buffer, b1, b2, result);
+        printf("%s", result);
+    }
 
     return EXIT_SUCCESS;
 }
