@@ -1,4 +1,3 @@
-#include <math.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -17,9 +16,11 @@
 bool int_in_bounds(long long n, int left_bound, int right_bound) {
     return left_bound <= n && n <= right_bound;
 }
+
 void print_input_error(void) {
     printf("bad input");
 }
+
 char int_to_char(int num) {
     if (num >= 0 && num <= DECIMAL_BASE - 1) {
         return (char)(num + '0');
@@ -27,6 +28,7 @@ char int_to_char(int num) {
         return (char)(num - DECIMAL_BASE + 'a');
     }
 }
+
 void string_reverse(char *string) {
     for (char *p1 = string, *p2 = string + strlen(string) - 1; p2 > p1; ++p1, --p2) {
         *p1 ^= *p2;
@@ -34,6 +36,7 @@ void string_reverse(char *string) {
         *p1 ^= *p2;
     }
 }
+
 void decimal_to_base(char str_integer_part[], int base_new, long long int_integer_part) {
     int i = 0;
 
@@ -45,9 +48,11 @@ void decimal_to_base(char str_integer_part[], int base_new, long long int_intege
     str_integer_part[i] = '\0';
     string_reverse(str_integer_part);
 }
+
 bool char_in_bounds(char input, char left_limit, char right_limit) {
     return left_limit <= input && input <= right_limit;
 }
+
 bool digits_check(char input[], int base) {
     input[strcspn(input, "\n")] = '\0';
     size_t string_length = strlen(input);
@@ -73,10 +78,12 @@ bool digits_check(char input[], int base) {
 
     return true;
 }
+
 void clear_input_buffer(void) {
     while (getchar() != '\n') {
     }
 }
+
 double to_power(double number, int power) {
     if (power < 0) {
         return 1 / to_power(number, -power);
@@ -94,6 +101,7 @@ double to_power(double number, int power) {
 
     return result;
 }
+
 int main(void) {
     int b1 = 0;
     int b2 = 0;
