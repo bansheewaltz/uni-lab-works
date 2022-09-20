@@ -115,7 +115,8 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
 
     if (*cursor++ == '.') {
         double double_fractional_part = 0;
-        char str_fractional_part[MAX_FRACTIONAL_OUTPUT_BUFFER] = ".";
+        char str_fractional_part[MAX_FRACTIONAL_OUTPUT_BUFFER] = "";
+        str_fractional_part[0] = '.';
 
         char n[2] = {0};
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
@@ -151,7 +152,7 @@ int main(void) {
     if (b1 == b2) {
         printf("%s", input_buffer);
     } else {
-        char result[MAX_OUTPUT_BUFFER + 1] = "";
+        char result[MAX_OUTPUT_BUFFER] = "";
         conversion(input_buffer, b1, b2, result);
         printf("%s", result);
     }
