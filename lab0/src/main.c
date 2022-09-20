@@ -111,11 +111,10 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
     }
     strcat(result, str_integer_part);
 
-    char str_fractional_part[MAX_FRACTIONAL_OUTPUT_BUFFER] = "";
     if (*cursor++ == '.') {
-        int j = 0;
+        char str_fractional_part[MAX_FRACTIONAL_OUTPUT_BUFFER] = "";
         double double_fractional_part = 0;
-        str_fractional_part[j++] = '.';
+        str_fractional_part[0] = '.';
 
         char n[2] = {0};
         for (int i = 0; cursor[i]; i++) {  // iterating the fraction string
@@ -123,6 +122,7 @@ void conversion(char input_buffer[], int b1, int b2, char result[]) {
             double_fractional_part += strtol(n, 0, b1) * to_power(b1, -(i + 1));
         }
 
+        int j = 0;
         while (j < MAX_FRACTIONAL_OUTPUT_BUFFER) {  // do multiply and get the int part until number is zero
             double_fractional_part *= b2;           // do multiply by base and store it in number.
             str_fractional_part[j++] = int_to_char((int)double_fractional_part);  // store the int part.
