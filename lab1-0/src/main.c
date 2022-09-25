@@ -37,7 +37,7 @@ void search(char *text, char *pattern) {
         else if (i < length_pattern - 1)
             shift += length_pattern - 1;
         else
-            shift += length_pattern - 1 - stop_symbols[text[shift + i]];
+            shift += length_pattern - 1 - stop_symbols[(int)text[shift + i]];
     }
 }
 
@@ -46,28 +46,19 @@ void clear_input_buffer(void) {
     }
 }
 
+void get_line(char line[], int line_length) {
+    if (fgets(line, line_length, stdin) == NULL) {
+        exit(EXIT_ERROR);
+    }
+    line[strcspn(line, "\n")] = '\0';
+}
+
 int main(void) {
     char pattern[PATTERN_MAX_LENGTH] = "";
-    // char buffer1;
-    // char buffer2;
-    // sscanf("%c", &buffer1, &buffer2);
-    // if (buffer1 == "\\" && buffer2 == "x") {
-    //     ungetc(buffer2, stdin);
-    //     ungetc(buffer1, stdin);
-    //     scanf("\\x%2hhx", &next)
-    // }
-    // ungetc(buffer2, stdin);
-    // ungetc(buffer1, stdin);
-    fgets(pattern, PATTERN_MAX_LENGTH, stdin);
-    // printf("%s", pattern);
-    // if (pattern[strlen(pattern) - 1] != '\n') {
-    //     clear_input_buffer();
-    // }
-    pattern[strcspn(pattern, "\n")] = '\0';
+    get_line(pattern, PATTERN_MAX_LENGTH);
 
     char text[TEXT_MAX_LENGTH] = "";
-    fgets(text, TEXT_MAX_LENGTH, stdin);
-    text[strcspn(text, "\n")] = '\0';
+    get_line(text, TEXT_MAX_LENGTH);
 
     search(text, pattern);
 
