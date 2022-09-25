@@ -41,11 +41,6 @@ void search(char *text, char *pattern) {
     }
 }
 
-void clear_input_buffer(void) {
-    while (getchar() != '\n') {
-    }
-}
-
 void get_line(char line[], int line_length) {
     if (fgets(line, line_length, stdin) == NULL) {
         exit(EXIT_ERROR);
