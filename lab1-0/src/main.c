@@ -50,7 +50,7 @@ bool get_line(char line[], int line_length) {
     line[strcspn(line, "\n")] = '\0';
     if (line[0] == '\\' && line[1] == 'x') {
         char buffer[17] = "";
-        for (int i = 0; i < strlen(line) / 4; i++) {
+        for (size_t i = 0; i < strlen(line) / 4; i++) {
             buffer[i] = (char)(line[i * 4 + 2] + line[i * 4 + 3]) % 128;
         }
         strcpy(line, buffer);
