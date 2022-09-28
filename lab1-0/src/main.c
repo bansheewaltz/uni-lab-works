@@ -1,6 +1,7 @@
 /* C Program for Bad Character Heuristic of Boyer
 Moore String Matching Algorithm */
 #include <limits.h>
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -19,8 +20,8 @@ void bad_char_heuristic(char *str, int pattern_size, int stop_symbols[]) {
 }
 
 void search(char *text, char *pattern) {
-    int length_pattern = strlen(pattern);
-    int length_text = strlen(text);
+    int length_pattern = strlen(pattern) / sizeof(pattern[0]);
+    int length_text = strlen(text) / sizeof(text[0]);
     int stop_symbols[NO_OF_CHARS];
     bad_char_heuristic(pattern, length_pattern, stop_symbols);
 
@@ -41,11 +42,21 @@ void search(char *text, char *pattern) {
     }
 }
 
-void get_line(char line[], int line_length) {
+bool get_line(char line[], int line_length) {
     if (fgets(line, line_length, stdin) == NULL) {
-        exit(EXIT_ERROR);
+        return false;
     }
+
     line[strcspn(line, "\n")] = '\0';
+    if (line[0] == '\\' && line[1] == 'x') {
+        char buffer[17] = "";
+        for (int i = 0; i < strlen(line) / 4; i++) {
+            buffer[i] = (char)(line[i * 4 + 2] + line[i * 4 + 3]) % 128;
+        }
+        strcpy(line, buffer);
+    }
+
+    return true;
 }
 
 int main(void) {
