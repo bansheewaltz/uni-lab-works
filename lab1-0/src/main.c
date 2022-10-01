@@ -29,7 +29,7 @@ void search(char *text, char *pattern) {
         int i = length_pattern - 1;
 
         while (i >= 0 && printf("%d ", shift + i + 1) && pattern[i] == text[shift + i]) {
-            fflush(stdout);
+            // fflush(stdout);
             --i;
         }
 
