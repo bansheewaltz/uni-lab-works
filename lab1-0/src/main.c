@@ -55,13 +55,13 @@ bool get_text(char line[], int line_length) {
     if (fread(line, 1, line_length, stdin) == 0) {
         return false;
     }
-    line[strlen(line) - 1] = '\0';
+    // line[strlen(line) - 1] = '\0';
 
     return true;
 }
 
 int main(void) {
-    // setbuf(stdout, NULL);  // for debugging purposes
+    setbuf(stdout, NULL);  // for debugging purposes
 
     char pattern[PATTERN_MAX_LENGTH] = "";
     if (!get_pattern(pattern, PATTERN_MAX_LENGTH)) {
