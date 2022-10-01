@@ -42,29 +42,45 @@ void search(char *text, char *pattern) {
     }
 }
 
-bool get_line(char line[], int line_length) {
+bool get_pattern(char line[], int line_length) {
     if (fgets(line, line_length, stdin) == NULL) {
         return false;
     }
+    line[strcspn(line, "\n")] = '\0';
+
+    return true;
+}
+
+bool get_text(char line[], int line_length) {
+    fread(line, 1, TEXT_MAX_LENGTH, stdin);
 
     line[strcspn(line, "\n")] = '\0';
-    if (line[0] == '\\' && line[1] == 'x') {
-        char buffer[17] = "";
-        for (size_t i = 0; i < strlen(line) / 4; i++) {
-            buffer[i] = (char)(line[i * 4 + 2] + line[i * 4 + 3]) % 128;
-        }
-        strcpy(line, buffer);
-    }
+    // if (line[0] == '\\' && line[1] == 'x') {
+    //     char buffer[PATTERN_MAX_LENGTH] = "";
+    //     int j = 0;
+    //     for (size_t i = 0; line[i];) {
+    //         if (line[i] == '\\' && line[i + 1] == 'x') {
+    //             i += 2;
+    //         } else if (line[i] == ' ') {
+    //             buffer[j++] = ' ';
+    //             i++;
+    //         } else {
+    //             buffer[j++] = (char)((line[i] + line[i + 1]) % 128);
+    //             i += 2;
+    //         }
+    //     }
+    //     strcpy(line, buffer);
+    // }
 
     return true;
 }
 
 int main(void) {
-    char pattern[PATTERN_MAX_LENGTH] = "";
-    get_line(pattern, PATTERN_MAX_LENGTH);
+    char pattern[PATTERN_MAX_LENGTH * 4] = "";
+    get_pattern(pattern, PATTERN_MAX_LENGTH * 4);
 
     char text[TEXT_MAX_LENGTH] = "";
-    get_line(text, TEXT_MAX_LENGTH);
+    get_text(text, TEXT_MAX_LENGTH);
 
     search(text, pattern);
 
