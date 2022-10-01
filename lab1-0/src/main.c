@@ -52,35 +52,23 @@ bool get_pattern(char line[], int line_length) {
 }
 
 bool get_text(char line[], int line_length) {
-    fread(line, 1, line_length, stdin);
-
-    line[strcspn(line, "\n")] = '\0';
-    // if (line[0] == '\\' && line[1] == 'x') {
-    //     char buffer[PATTERN_MAX_LENGTH] = "";
-    //     int j = 0;
-    //     for (size_t i = 0; line[i];) {
-    //         if (line[i] == '\\' && line[i + 1] == 'x') {
-    //             i += 2;
-    //         } else if (line[i] == ' ') {
-    //             buffer[j++] = ' ';
-    //             i++;
-    //         } else {
-    //             buffer[j++] = (char)((line[i] + line[i + 1]) % 128);
-    //             i += 2;
-    //         }
-    //     }
-    //     strcpy(line, buffer);
-    // }
+    if (fread(line, 1, line_length, stdin) == 0) {
+        return false;
+    }
 
     return true;
 }
 
 int main(void) {
-    char pattern[PATTERN_MAX_LENGTH * 4] = "";
-    get_pattern(pattern, PATTERN_MAX_LENGTH * 4);
+    char pattern[PATTERN_MAX_LENGTH] = "";
+    if (!get_pattern(pattern, PATTERN_MAX_LENGTH)) {
+        return EXIT_ERROR;
+    }
 
     char text[TEXT_MAX_LENGTH] = "";
-    get_text(text, TEXT_MAX_LENGTH);
+    if (!get_text(text, TEXT_MAX_LENGTH)) {
+        return EXIT_ERROR;
+    }
 
     search(text, pattern);
 
