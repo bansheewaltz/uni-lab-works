@@ -46,7 +46,7 @@ bool get_pattern(unsigned char line[], int line_length) {
     if (fgets(line, line_length, stdin) == NULL) {
         return false;
     }
-    line[strcspn(line, "\n")] = '\0';
+    line[strlen((char *)line) - 1] = '\0';
 
     return true;
 }
