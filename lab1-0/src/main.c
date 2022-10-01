@@ -33,7 +33,7 @@ void search(char *text, char *pattern) {
             --i;
         }
 
-        if (i < 0)
+        if (i <= 0)
             shift += length_pattern;
         else if (i < length_pattern - 1)
             shift += length_pattern - 1;
