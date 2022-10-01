@@ -29,7 +29,7 @@ void search(char *text, char *pattern) {
         int i = length_pattern - 1;
 
         while (i >= 0 && printf("%d ", shift + i + 1) && pattern[i] == text[shift + i]) {
-            // fflush(stdout);
+            fflush(stdout);
             --i;
         }
 
@@ -61,7 +61,7 @@ bool get_text(char line[], int line_length) {
 }
 
 int main(void) {
-    setbuf(stdout, NULL);  // for debugging purposes
+    // setbuf(stdout, NULL);  // for debugging purposes
 
     char pattern[PATTERN_MAX_LENGTH] = "";
     if (!get_pattern(pattern, PATTERN_MAX_LENGTH)) {
