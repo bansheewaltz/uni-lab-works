@@ -11,8 +11,6 @@
 #define MAX_FRACTIONAL_OUTPUT_BUFFER (12 + 1)
 #define MAX_OUTPUT_BUFFER (MAX_FRACTIONAL_OUTPUT_BUFFER + MAX_INTEGER_OUTPUT_BUFFER)
 #define DECIMAL_BASE 10
-#define EXIT_SUCCESS 0
-#define EXIT_ERROR 0
 
 bool int_in_bounds(long long n, int left_bound, int right_bound) {
     return left_bound <= n && n <= right_bound;
@@ -137,14 +135,14 @@ int main(void) {
 
     if (!(scanf("%d %d", &b1, &b2) == 2 && int_in_bounds(b1, BASE_LIMITS) && int_in_bounds(b2, BASE_LIMITS))) {
         print_input_error();
-        return EXIT_ERROR;
+        return EXIT_SUCCESS;
     }
 
     clear_input_buffer();
     char input_buffer[MAX_INPUT_BUFFER];
     if (fgets(input_buffer, MAX_INPUT_BUFFER, stdin) == NULL || !digits_check(input_buffer, b1)) {
         print_input_error();
-        return EXIT_ERROR;
+        return EXIT_SUCCESS;
     }
 
     if (b1 == b2) {
