@@ -43,7 +43,7 @@ void search(unsigned char *text, unsigned char *pattern) {
 }
 
 bool get_pattern(unsigned char line[], int line_length) {
-    if (fgets(line, line_length, stdin) == NULL) {
+    if (fgets((char *)line, line_length, stdin) == NULL) {
         return false;
     }
     line[strlen((char *)line) - 1] = '\0';
