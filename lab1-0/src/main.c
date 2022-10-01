@@ -52,7 +52,7 @@ bool get_pattern(char line[], int line_length) {
 }
 
 bool get_text(char line[], int line_length) {
-    fread(line, 1, TEXT_MAX_LENGTH, stdin);
+    fread(line, 1, line_length, stdin);
 
     line[strcspn(line, "\n")] = '\0';
     // if (line[0] == '\\' && line[1] == 'x') {
