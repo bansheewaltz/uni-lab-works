@@ -3,12 +3,11 @@ Moore String Matching Algorithm */
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
 #define PATTERN_MAX_LENGTH (16 + 1 + 1)  // 1 for '\n' and 1 for '\0'
 #define TEXT_MAX_LENGTH (100 + 1)
-#define NO_OF_CHARS 256
-#define EXIT_ERROR 0
+#define NO_OF_CHARS 128
+#define EXIT_SUCCESS 0
 
 void bad_char_heuristic(char *str, int pattern_size, int stop_symbols[]) {
     for (int i = 0; i < NO_OF_CHARS; i++) {
@@ -30,6 +29,7 @@ void search(char *text, char *pattern) {
         int i = length_pattern - 1;
 
         while (i >= 0 && printf("%d ", shift + i + 1) && pattern[i] == text[shift + i]) {
+            // fflush(stdout);
             --i;
         }
 
@@ -55,19 +55,22 @@ bool get_text(char line[], int line_length) {
     if (fread(line, 1, line_length, stdin) == 0) {
         return false;
     }
+    line[strlen(line) - 1] = '\0';
 
     return true;
 }
 
 int main(void) {
+    setbuf(stdout, NULL);  // for debugging purposes
+
     char pattern[PATTERN_MAX_LENGTH] = "";
     if (!get_pattern(pattern, PATTERN_MAX_LENGTH)) {
-        return EXIT_ERROR;
+        return EXIT_SUCCESS;  // ERROR
     }
 
     char text[TEXT_MAX_LENGTH] = "";
     if (!get_text(text, TEXT_MAX_LENGTH)) {
-        return EXIT_ERROR;
+        return EXIT_SUCCESS;  // ERROR
     }
 
     search(text, pattern);
