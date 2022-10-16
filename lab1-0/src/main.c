@@ -5,66 +5,74 @@ Moore String Matching Algorithm */
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
 #define PATTERN_INPUT_LIMIT 16
-#define TEXT_MAX_LENGTH 1000
-#define PATTERN_MAX_LENGTH (PATTERN_INPUT_LIMIT + 1 + 1)  // 1 for '\n' and 1 for '\0'
-#define ASCII_SET (UCHAR_MAX + 1)                         // 1 for '0' value
+#define PATTERN_SIZE (PATTERN_INPUT_LIMIT + 1 + 1)  // 1 for '\n' and 1 for '\0'
+#define TEXT_BUFFER_SIZE 1000
+#define ASCII_SET 256
+typedef unsigned char uchar;
 
-void bad_char_heuristic(unsigned char *str, int pattern_size, int stop_symbols[]) {
-    for (int i = 0; i < ASCII_SET; i++) {
-        stop_symbols[i] = -1;
+void bad_char_heuristic(uchar *pattern, int len_pattern, int shift_table[]) {
+    for (int i = 0; i < ASCII_SET; ++i) {
+        shift_table[i] = len_pattern;
     }
-    for (int i = 0; i < pattern_size; i++) {
-        stop_symbols[(int)str[i]] = i;
+    for (int i = 0; i < len_pattern - 1; ++i) {
+        shift_table[(int)pattern[i]] = len_pattern - i - 1;
     }
 }
 
-void search(unsigned char *text, unsigned char *pattern) {
-    int length_pattern = strlen((const char *)pattern);
-    int length_text = strlen((const char *)text);
-    int stop_symbols[ASCII_SET];
-    bad_char_heuristic(pattern, length_pattern, stop_symbols);
+void read_pattern(uchar line[], int len_line) {
+    if (fgets((char *)line, len_line, stdin) == NULL) {
+        exit(EXIT_SUCCESS);  // but actually ERROR
+    }
 
-    int shift = 0;
-    while (shift <= (length_text - length_pattern)) {
-        int i = length_pattern - 1;
+    int temp = strcspn((char *)line, "\n");
+    temp ? line[temp] = '\0' : exit(EXIT_SUCCESS);  // but actually ERROR
+}
 
-        for (; i >= 0 && printf("%d ", shift + i + 1) && pattern[i] == text[shift + i]; --i) {
+int update_buffer(uchar *buffer, bool *is_buffer_full) {
+    uchar *destination = (*is_buffer_full) ? buffer : buffer + TEXT_BUFFER_SIZE / 2;
+    *is_buffer_full ^= 1;
+    int n_chars_read = fread(destination, sizeof(uchar), TEXT_BUFFER_SIZE / 2, stdin);
+    return n_chars_read;
+}
+
+void search_substring(uchar text[], uchar pattern[], int *n_chars_to_process, bool *is_buffer_full) {
+    int len_pattern = strlen((const char *)pattern);
+    int shift_table[ASCII_SET];
+    bad_char_heuristic(pattern, len_pattern, shift_table);
+
+    int len_text = *n_chars_to_process;
+    int shift = len_pattern - 1;
+    while (shift < len_text) {
+        for (int i = 0; i < len_pattern; ++i) {
+            printf("%d ", shift - i + 1);
+            if (pattern[len_pattern - i - 1] != text[(shift - i) % TEXT_BUFFER_SIZE]) {
+                break;
+            }
         }
 
-        if (i <= 0) {
-            shift += length_pattern;
-        } else if (i < length_pattern - 1) {
-            shift += length_pattern - 1;
-        } else {
-            shift += length_pattern - 1 - stop_symbols[(int)text[shift + i]];
+        shift += shift_table[(int)text[shift % TEXT_BUFFER_SIZE]];
+        if (shift >= len_text) {
+            len_text += (*n_chars_to_process = update_buffer(text, is_buffer_full));
         }
-    }
-}
-
-void get_pattern(unsigned char line[], int line_length) {
-    if (fgets((char *)line, line_length, stdin) == NULL) {
-        exit(EXIT_SUCCESS);  // ERROR
-    }
-    line[strlen((char *)line) - 1] = '\0';
-}
-
-void get_text(unsigned char line[], int line_length) {
-    if (fread(line, 1, line_length, stdin) == 0) {
-        exit(EXIT_SUCCESS);  // ERROR
     }
 }
 
 int main(void) {
-    setbuf(stdout, NULL);  // for debugging purposes
+    // setbuf(stdout, NULL);  // for debugging purposes
+    uchar pattern[PATTERN_SIZE] = "";
+    read_pattern(pattern, PATTERN_SIZE);
 
-    unsigned char pattern[PATTERN_MAX_LENGTH] = "";
-    get_pattern(pattern, PATTERN_MAX_LENGTH);
+    uchar text[TEXT_BUFFER_SIZE] = "";
+    bool is_buffer_full = true;
+    int n_chars_to_process = fread(text, sizeof(uchar), TEXT_BUFFER_SIZE, stdin);
 
-    unsigned char text[TEXT_MAX_LENGTH] = "";
-    get_text(text, TEXT_MAX_LENGTH);
+    if (n_chars_to_process == 0) {
+        return EXIT_SUCCESS;
+    }
 
-    search(text, pattern);
+    search_substring(text, pattern, &n_chars_to_process, &is_buffer_full);
 
     return EXIT_SUCCESS;
 }
