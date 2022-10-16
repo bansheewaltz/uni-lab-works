@@ -28,7 +28,7 @@ void read_pattern(uchar line[], int len_line) {
 
     int temp = strcspn((char *)line, "\n");
     if (temp == 0) {
-        exit(EXIT_SUCCESS);  // but actually ERROR}
+        exit(EXIT_SUCCESS);  // but actually ERROR
     }
 
     line[temp] = '\0';
