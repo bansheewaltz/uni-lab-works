@@ -25,6 +25,7 @@ void read_pattern(uchar line[], int len_line) {
     if (fgets((char *)line, len_line, stdin) == NULL || !strcspn((char *)line, "\n")) {
         exit(EXIT_SUCCESS);  // but actually ERROR
     }
+
     line[strlen((const char *)line) - 1] = '\0';
 }
 
