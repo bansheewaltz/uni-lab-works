@@ -22,16 +22,10 @@ void bad_char_heuristic(uchar *pattern, int len_pattern, int shift_table[]) {
 }
 
 void read_pattern(uchar line[], int len_line) {
-    if (fgets((char *)line, len_line, stdin) == NULL) {
+    if (fgets((char *)line, len_line, stdin) == NULL || !strcspn((char *)line, "\n")) {
         exit(EXIT_SUCCESS);  // but actually ERROR
     }
-
-    int temp = strcspn((char *)line, "\n");
-    if (temp == 0) {
-        exit(EXIT_SUCCESS);  // but actually ERROR
-    }
-
-    line[temp] = '\0';
+    line[strlen((const char *)line) - 1] = '\0';
 }
 
 int update_buffer(uchar *buffer, bool *is_buffer_full) {
