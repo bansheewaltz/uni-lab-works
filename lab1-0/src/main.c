@@ -27,7 +27,11 @@ void read_pattern(uchar line[], int len_line) {
     }
 
     int temp = strcspn((char *)line, "\n");
-    temp ? line[temp] = '\0' : exit(EXIT_SUCCESS);  // but actually ERROR
+    if (temp == 0) {
+        exit(EXIT_SUCCESS);  // but actually ERROR}
+    }
+
+    line[temp] = '\0';
 }
 
 int update_buffer(uchar *buffer, bool *is_buffer_full) {
