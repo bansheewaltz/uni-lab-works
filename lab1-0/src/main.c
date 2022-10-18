@@ -1,5 +1,4 @@
-/* C Program for Bad Character Heuristic of Boyer
-Moore String Matching Algorithm */
+/* C Program for Bad Character Heuristic of BoyerMoore String Matching Algorithm */
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -7,7 +6,7 @@ Moore String Matching Algorithm */
 #include <string.h>
 
 #define PATTERN_INPUT_LIMIT 16
-#define PATTERN_SIZE (PATTERN_INPUT_LIMIT + 1 + 1)  // 1 for '\n' and 1 for '\0'
+#define PATTERN_SIZE (PATTERN_INPUT_LIMIT + 1 + 1)  // 1 for '\n' and 1 for '\0' chars
 #define TEXT_BUFFER_SIZE 1000
 #define ASCII_SET 256
 typedef unsigned char uchar;
@@ -21,39 +20,42 @@ void bad_char_heuristic(uchar *pattern, int len_pattern, int shift_table[]) {
     }
 }
 
-void read_pattern(uchar line[], int len_line) {
-    if (fgets((char *)line, len_line, stdin) == NULL || !strcspn((char *)line, "\n")) {
+int read_pattern(uchar line[], int len_limit) {
+    line = (uchar *)fgets((char *)line, len_limit, stdin);
+    int len_pattern = strlen((char *)line);
+    if (line == NULL || !strcspn((char *)line, "\n")) {
         exit(EXIT_SUCCESS);  // but actually ERROR
     }
 
-    line[strlen((const char *)line) - 1] = '\0';
+    line[len_pattern - 1] = '\0';  // deleting '\n' char
+    return --len_pattern;
 }
 
 int update_buffer(uchar *buffer, bool *is_buffer_full) {
-    uchar *destination = (*is_buffer_full) ? buffer : buffer + TEXT_BUFFER_SIZE / 2;
+    uchar *buffer_half = (*is_buffer_full) ? buffer : buffer + TEXT_BUFFER_SIZE / 2;
     *is_buffer_full ^= 1;
-    int n_chars_read = fread(destination, sizeof(uchar), TEXT_BUFFER_SIZE / 2, stdin);
+    int n_chars_read = fread(buffer_half, sizeof(uchar), TEXT_BUFFER_SIZE / 2, stdin);
+
     return n_chars_read;
 }
 
-void search_substring(uchar text[], uchar pattern[], int *n_chars_to_process, bool *is_buffer_full) {
-    int len_pattern = strlen((const char *)pattern);
+void search_substring(uchar text[], uchar pattern[], int len_pattern, int *n_chars_to_process, bool *is_buffer_full) {
     int shift_table[ASCII_SET];
     bad_char_heuristic(pattern, len_pattern, shift_table);
 
     int len_text = *n_chars_to_process;
-    int shift = len_pattern - 1;
-    while (shift < len_text) {
+    int char_ndx = len_pattern - 1;  // index of the comparison character in the text
+    while (char_ndx <= len_text - 1) {
         for (int i = 0; i < len_pattern; ++i) {
-            printf("%d ", shift - i + 1);
-            if (pattern[len_pattern - i - 1] != text[(shift - i) % TEXT_BUFFER_SIZE]) {
+            printf("%d ", char_ndx - i + 1);
+            if (pattern[len_pattern - i - 1] != text[(char_ndx - i) % TEXT_BUFFER_SIZE]) {
                 break;
             }
         }
 
-        shift += shift_table[(int)text[shift % TEXT_BUFFER_SIZE]];
-        if (shift >= len_text) {
-            len_text += (*n_chars_to_process = update_buffer(text, is_buffer_full));
+        char_ndx += shift_table[(int)text[char_ndx % TEXT_BUFFER_SIZE]];
+        if (char_ndx > len_text - 1) {
+            len_text += update_buffer(text, is_buffer_full);
         }
     }
 }
@@ -61,17 +63,17 @@ void search_substring(uchar text[], uchar pattern[], int *n_chars_to_process, bo
 int main(void) {
     // setbuf(stdout, NULL);  // for debugging purposes
     uchar pattern[PATTERN_SIZE] = "";
-    read_pattern(pattern, PATTERN_SIZE);
+    int len_pattern = read_pattern(pattern, PATTERN_SIZE);
 
     uchar text[TEXT_BUFFER_SIZE] = "";
     bool is_buffer_full = true;
     int n_chars_to_process = fread(text, sizeof(uchar), TEXT_BUFFER_SIZE, stdin);
 
-    if (n_chars_to_process == 0) {
-        return EXIT_SUCCESS;
+    if (len_pattern > n_chars_to_process) {
+        return EXIT_SUCCESS;  // but actually ERROR
     }
 
-    search_substring(text, pattern, &n_chars_to_process, &is_buffer_full);
+    search_substring(text, pattern, len_pattern, &n_chars_to_process, &is_buffer_full);
 
     return EXIT_SUCCESS;
 }
