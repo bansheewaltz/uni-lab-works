@@ -9,8 +9,8 @@
 #define TEXT_BUFFER_SIZE 500
 typedef unsigned char uchar;
 
-int update_buffer(void* buffer, size_t window_pos) {
-    void* buffer_half = window_pos ? buffer + TEXT_BUFFER_SIZE / 2 : buffer;
+int update_buffer(char* buffer, size_t window_pos) {
+    char* buffer_half = window_pos ? buffer + TEXT_BUFFER_SIZE / 2 : buffer;
     return fread(buffer_half, sizeof(char), TEXT_BUFFER_SIZE / 2, stdin);
 }
 
@@ -58,7 +58,7 @@ int main(void) {
     char text[TEXT_BUFFER_SIZE] = "";
     int len_text_buf = fread(text, sizeof(char), TEXT_BUFFER_SIZE, stdin);
     if (len_pattern > len_text_buf || !len_pattern) {  // only '\n' pattern check
-        len_text_buf ?: printf("0");  // check if text is empty
+        len_text_buf ? len_text_buf : printf("0");  // check if text is empty
         return EXIT_SUCCESS;  // but actually ERROR
     }
 
