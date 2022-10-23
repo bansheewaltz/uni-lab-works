@@ -58,7 +58,7 @@ int main(void) {
     char text[TEXT_BUFFER_SIZE] = "";
     int len_text_buf = fread(text, sizeof(char), TEXT_BUFFER_SIZE, stdin);
     if (len_pattern > len_text_buf || !len_pattern) {  // only '\n' pattern check
-        len_text_buf ? len_text_buf : printf("0");  // check if text is empty
+        len_text_buf ? 0 : printf("0");  // check if text is empty
         return EXIT_SUCCESS;  // but actually ERROR
     }
 
