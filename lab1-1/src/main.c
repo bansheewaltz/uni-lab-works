@@ -6,7 +6,7 @@
 
 #define PATTERN_INPUT_LIMIT 16
 #define PATTERN_SIZE (PATTERN_INPUT_LIMIT + 1 + 1)  // 1 for '\n' and 1 for '\0' because of fgets and strlen use
-#define TEXT_BUFFER_SIZE 500
+#define TEXT_BUFFER_SIZE 500  // min = PATTERN_SIZE / 2
 typedef unsigned char uchar;
 
 int update_buffer(char* buffer, size_t window_pos) {
