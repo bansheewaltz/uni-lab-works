@@ -31,12 +31,12 @@ void reverse(char str[], int s, int e) {  // 's' for the "start", 'e' for the "e
 
 bool generate_next_perm(char str[], int len_str) {
     int i = len_str - 2;
-    for (; i >= 0 && str[i + 1] <= str[i]; i--) {
+    for (; i > 0 && str[i + 1] <= str[i]; i--) {
     }
 
     if (str[i + 1] > str[i] && i >= 0) {
         int j = len_str - 1;
-        for (; j >= 0 && str[j] <= str[i]; --j) {
+        for (; j > 0 && str[j] <= str[i]; --j) {
         }
 
         swap(&str[i], &str[j]);
