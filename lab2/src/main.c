@@ -24,8 +24,8 @@ void swap(char* a, char* b) {
     *a ^= *b;
 }
 
-void reverse(char* s, char* e) {  // 's' for the "start", 'e' for the "end"
-    for (; s < e; swap(s, e), ++s, --e) {
+void reverse(char str[], int s, int e) {  // 's' for the "start", 'e' for the "end"
+    for (; s < e; swap(&str[s], &str[e]), ++s, --e) {
     }
 }
 
@@ -40,7 +40,7 @@ bool generate_next_perm(char str[], int len_str) {
         }
 
         swap(&str[i], &str[j]);
-        reverse(&str[i + 1], &str[len_str - 1]);
+        reverse(str, i + 1, len_str - 1);
         return true;
     }
 
