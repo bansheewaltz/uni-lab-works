@@ -58,7 +58,7 @@ int main() {
         return EXIT_SUCCESS;  // but actually ERROR
     }
 
-    for (int i = 0; generate_next_perm(input, len_input) && i < count; ++i) {
+    for (int i = 0; len_input > 1 && generate_next_perm(input, len_input) && i < count; ++i) {
         printf("%s", input);
     }
 
