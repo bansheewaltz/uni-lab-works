@@ -36,7 +36,7 @@ bool generate_next_perm(char str[], int len_str) {
 
     if (str[i + 1] > str[i] && i >= 0) {
         int j = len_str - 1;
-        for (; str[j] <= str[i]; --j) {
+        for (; j >= 0 && str[j] <= str[i]; --j) {
         }
 
         swap(&str[i], &str[j]);
