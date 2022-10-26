@@ -18,14 +18,14 @@ bool check_occurrences(const char input[], int len_input) {
     return true;
 }
 
-void swap(char* a, char* b) {
+void swap_string_elements(char* a, char* b) {
     *a ^= *b;
     *b = *a ^ *b;
     *a ^= *b;
 }
 
-void reverse(char str[], int s, int e) {  // 's' for the "start", 'e' for the "end"
-    for (; s < e; swap(&str[s], &str[e]), ++s, --e) {
+void reverse_substring(char str[], int s, int e) {  // 's' for the "start", 'e' for the "end"
+    for (; s < e; swap_string_elements(&str[s], &str[e]), ++s, --e) {
     }
 }
 
@@ -39,8 +39,8 @@ bool generate_next_perm(char str[], int len_str) {
         for (; j > 0 && str[j] <= str[i]; --j) {
         }
 
-        swap(&str[i], &str[j]);
-        reverse(str, i + 1, len_str - 1);
+        swap_string_elements(&str[i], &str[j]);
+        reverse_substring(str, i + 1, len_str - 1);
         return true;
     }
 
