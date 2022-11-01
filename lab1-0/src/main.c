@@ -24,14 +24,14 @@ int read_pattern(uchar line[], int len_limit) {
     line = (uchar *)fgets((char *)line, len_limit, stdin);
     int len_pattern = strlen((char *)line);
     if (line == NULL || !strcspn((char *)line, "\n")) {
-        exit(EXIT_SUCCESS);  // but actually ERROR
+        exit(EXIT_SUCCESS);  // but actually FAILURE
     }
 
     line[len_pattern - 1] = '\0';  // deleting '\n' char
     return --len_pattern;
 }
 
-int update_buffer(uchar *buffer, bool *is_buffer_full) {
+int update_buffer(uchar buffer[], bool *is_buffer_full) {
     uchar *buffer_half = (*is_buffer_full) ? buffer : buffer + TEXT_BUFFER_SIZE / 2;
     *is_buffer_full ^= 1;
     int n_chars_read = fread(buffer_half, sizeof(uchar), TEXT_BUFFER_SIZE / 2, stdin);
@@ -70,7 +70,7 @@ int main(void) {
     int n_chars_to_process = fread(text, sizeof(uchar), TEXT_BUFFER_SIZE, stdin);
 
     if (len_pattern > n_chars_to_process) {
-        return EXIT_SUCCESS;  // but actually ERROR
+        return EXIT_SUCCESS;  // but actually FAILURE
     }
 
     search_substring(text, pattern, len_pattern, &n_chars_to_process, &is_buffer_full);
