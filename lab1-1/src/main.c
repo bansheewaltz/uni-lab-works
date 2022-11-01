@@ -17,14 +17,14 @@ int update_buffer(char buffer[], size_t window_pos) {
 void search_substring(const char pattern[], int len_pattern, char text[], int len_text_buf) {
     int hash_pattern = 0;
     int hash_window = 0;  // window as in 'sliding window technique'
-    int pow_max = 1;
+    int scalar_max = 1;
 
     for (int i = 0; i < len_pattern; ++i) {  // hashing
-        hash_pattern += ((uchar)pattern[i] % 3) * pow_max;
-        hash_window += ((uchar)text[i] % 3) * pow_max;
-        pow_max *= 3;
+        hash_pattern += ((uchar)pattern[i] % 3) * scalar_max;
+        hash_window += ((uchar)text[i] % 3) * scalar_max;
+        scalar_max *= 3;
     }
-    pow_max /= 3;
+    scalar_max /= 3;
     printf("%d ", hash_pattern);
 
     size_t len_text = len_text_buf;
@@ -39,7 +39,7 @@ void search_substring(const char pattern[], int len_pattern, char text[], int le
         }
 
         hash_window = (hash_window - (uchar)text[window_pos % TEXT_BUFFER_SIZE] % 3) / 3 +  // hash update
-                      (uchar)text[(window_pos + len_pattern) % TEXT_BUFFER_SIZE] % 3 * pow_max;
+                      (uchar)text[(window_pos + len_pattern) % TEXT_BUFFER_SIZE] % 3 * scalar_max;
         if (window_pos + len_pattern == len_text - 1) {  // buffer update
             len_text += update_buffer(text, len_text % TEXT_BUFFER_SIZE);
         }
