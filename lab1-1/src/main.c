@@ -10,7 +10,7 @@
 typedef unsigned char uchar;
 
 int update_buffer(char buffer[], size_t window_pos) {
-    char* buffer_half = window_pos ? buffer + TEXT_BUFFER_SIZE / 2 : buffer;
+    char *buffer_half = window_pos ? buffer + TEXT_BUFFER_SIZE / 2 : buffer;
     return fread(buffer_half, sizeof(char), TEXT_BUFFER_SIZE / 2, stdin);
 }
 
