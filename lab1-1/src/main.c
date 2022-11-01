@@ -1,4 +1,4 @@
-/* Rabin-Karp algorithm protocol printing*/
+/* Rabin-Karp algorithm protocol printing program*/
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
