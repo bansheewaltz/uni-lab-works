@@ -1,4 +1,4 @@
-/* Rabin-Karp algorithm protocol printing program*/
+/* Rabin-Karp algorithm protocol printing program */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -50,15 +50,15 @@ int main(void) {
     setbuf(stdout, NULL);  // for debugging purposes
 
     char pattern[PATTERN_SIZE] = "";
-    if (!fgets(pattern, PATTERN_SIZE, stdin) || !strchr(pattern, '\n')) {  // emptiness and overflow check
+    if (!fgets(pattern, PATTERN_SIZE, stdin) || !strchr(pattern, '\n')) {  // *emptiness* and *overflow* check
         return EXIT_SUCCESS;  // but actually FAILURE
     }
     int len_pattern = strlen(pattern) - 1;  // to ignore '\n' char
 
     char text[TEXT_BUFFER_SIZE] = "";
     int len_text_buf = fread(text, sizeof(char), TEXT_BUFFER_SIZE, stdin);
-    if (len_pattern > len_text_buf || !len_pattern) {  // only '\n' pattern check
-        len_text_buf ? 0 : printf("0");  // check if text is empty
+    if (len_pattern > len_text_buf || !len_pattern) {  // *only '\n' pattern* check
+        len_text_buf ? 0 : printf("0");  // *text is empty* check
         return EXIT_SUCCESS;  // but actually FAILURE
     }
 
