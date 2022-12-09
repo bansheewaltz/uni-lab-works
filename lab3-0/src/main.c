@@ -45,13 +45,13 @@ void heap_sort(int arr[], int n) {
 int main(void) {
     int n = 0;
     if (!scanf("%d", &n)) {
-        return EXIT_SUCCESS;  // but actually ERROR
+        return EXIT_SUCCESS;  // but actually FAILURE
     }
 
     int *arr = calloc(n, sizeof(int));
     for (int i = 0; i < n; ++i) {
         if (!scanf("%d", &arr[i])) {
-            return EXIT_SUCCESS;  // but actually ERROR
+            return EXIT_SUCCESS;  // but actually FAILURE
         }
     }
 
