@@ -1,9 +1,10 @@
+/* stack-based caclulator program utilizing infix-to-postfix notation conversion*/
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #define INPUT_LIMIT 1000
-#define INPUT_MAX_LEN (INPUT_LIMIT + 1)  // because of '\n'
+#define INPUT_MAX_LEN (INPUT_LIMIT + 1 + 1)  // for "\n\0" because of fgets and strlen use
 
 typedef struct stack {
     int items[INPUT_LIMIT];
@@ -71,59 +72,59 @@ int stack_peek(stack *st) {
 void infix_to_postfix(char *input_string, char *postfix_string) {
     stack st_operators;
     stack_init(&st_operators);
-    int i = 0;
-    int RPN_str_len = 0;
 
-    while (input_string[i] != '\0') {
-        if (is_digit(input_string[i])) {
-            while (!is_operator(input_string[i])) {
-                postfix_string[RPN_str_len] = input_string[i];
-                RPN_str_len++;
-                i++;
-                if (input_string[i] == '\0')
+    char *char_p = input_string;
+    int postfix_str_len = 0;
+    while (*char_p != '\0') {
+        if (is_digit(*char_p)) {
+            while (!is_operator(*char_p)) {
+                postfix_string[postfix_str_len] = *char_p;
+                postfix_str_len++;
+                ++char_p;
+                if (*char_p == '\0')
                     break;
             }
-            postfix_string[RPN_str_len] = ' ';
-            RPN_str_len++;
+            postfix_string[postfix_str_len] = ' ';
+            postfix_str_len++;
         }
 
-        if (is_operator(input_string[i])) {
-            if (input_string[i] == '(') {
-                stack_push(&st_operators, (int)input_string[i]);
-                i++;
-            } else if (input_string[i] == ')') {
-                if (i == 0 || input_string[i - 1] == '(') {
+        if (is_operator(*char_p)) {
+            if (*char_p == '(') {
+                stack_push(&st_operators, (int)*char_p);
+                ++char_p;
+            } else if (*char_p == ')') {
+                if (char_p == input_string || *(char_p - 1) == '(') {
                     syntax_error();
                 }
                 char tmp = (char)stack_pop(&st_operators);
                 while (tmp != '(') {
-                    postfix_string[RPN_str_len] = tmp;
-                    postfix_string[RPN_str_len + 1] = ' ';
-                    RPN_str_len += 2;
+                    postfix_string[postfix_str_len] = tmp;
+                    postfix_string[postfix_str_len + 1] = ' ';
+                    postfix_str_len += 2;
                     tmp = (char)stack_pop(&st_operators);
                 }
-                i++;
+                ++char_p;
             } else {
-                if (st_operators.size > 0 &&
-                    get_op_precedence((char)stack_peek(&st_operators)) >=
-                        get_op_precedence(input_string[i])) {
-                    postfix_string[RPN_str_len] =
-                        (char)stack_pop(&st_operators);
-                    postfix_string[RPN_str_len + 1] = ' ';
-                    RPN_str_len += 2;
+                if (st_operators.size > 0 && get_op_precedence((char)stack_peek(&st_operators)) >=
+                                                 get_op_precedence(*char_p)) {
+                    postfix_string[postfix_str_len] = (char)stack_pop(&st_operators);
+                    postfix_string[postfix_str_len + 1] = ' ';
+                    postfix_str_len += 2;
                 }
-                stack_push(&st_operators, (int)input_string[i]);
-                i++;
+                stack_push(&st_operators, (int)*char_p);
+                ++char_p;
             }
         }
     }
 
     while (st_operators.size > 0) {
-        postfix_string[RPN_str_len] = (char)stack_pop(&st_operators);
-        postfix_string[RPN_str_len + 1] = ' ';
-        RPN_str_len += 2;
+        postfix_string[postfix_str_len] = (char)stack_pop(&st_operators);
+        postfix_string[postfix_str_len + 1] = ' ';
+        postfix_str_len += 2;
     }
-    postfix_string[RPN_str_len] = '\0';
+    postfix_string[postfix_str_len] = '\0';
+    // puts(postfix_string);
+    // exit;
 }
 
 int apply_op(int a, int b, char op) {
