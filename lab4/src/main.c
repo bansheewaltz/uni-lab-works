@@ -185,7 +185,7 @@ int main(void) {
 
     input_read(input_string);
     input_validate(input_string);
-    char postfix_string[INPUT_LIMIT * 2] = "";
+    char postfix_string[INPUT_LIMIT * 3] = "";
 
     infix_to_postfix(input_string, postfix_string);
     printf("%d", eval_expr(postfix_string));
