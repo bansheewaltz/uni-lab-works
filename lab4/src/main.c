@@ -119,7 +119,7 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
     }
 
     while (!stack_is_empty(&st_operators)) {
-        postfix_string[postfix_str_ndx++] = (char)stack_pop(&st_operators);
+        postfix_string[postfix_str_ndx++] = stack_pop(&st_operators);
         postfix_string[postfix_str_ndx++] = ' ';
     }
     postfix_string[postfix_str_ndx] = '\0';
@@ -185,7 +185,7 @@ int main(void) {
 
     input_read(input_string);
     input_validate(input_string);
-    char postfix_string[INPUT_LIMIT] = "";
+    char postfix_string[INPUT_LIMIT * 2] = "";
 
     infix_to_postfix(input_string, postfix_string);
     printf("%d", eval_expr(postfix_string));
