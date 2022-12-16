@@ -135,6 +135,7 @@ int apply_op(int a, int b, char op) {
                 error_terminate("division by zero");
             }
             return a / b;
+        default: return 0;
     }
 }
 
