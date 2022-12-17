@@ -45,8 +45,10 @@ int get_op_precedence(char op) {
         case '+': return 2;
         case '*': return 3;
         case '/': return 3;
-        default: error_terminate(""); return;
+        default: error_terminate("not an operator");
     }
+
+    return -1;
 }
 
 void stack_init(s_stack *st) {
@@ -134,8 +136,10 @@ int apply_op(int a, int b, char op) {
                 error_terminate("division by zero");
             }
             return a / b;
-        default: error_terminate(""); return;
+        default: error_terminate("not an operation");
     }
+
+    return -1;
 }
 
 int eval_expr(char *postfix_string) {
