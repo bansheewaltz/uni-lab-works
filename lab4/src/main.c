@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#define ERROR -1
 #define INPUT_LIMIT 1000
 #define INPUT_MAX_LEN (INPUT_LIMIT + 1 + 1)  // for "\n\0" because of fgets and strlen use
 
@@ -48,7 +49,7 @@ int get_op_precedence(char op) {
         default: error_terminate("not an operator");
     }
 
-    return -1;
+    return ERROR;
 }
 
 void stack_init(s_stack *st) {
@@ -139,7 +140,7 @@ int apply_op(int a, int b, char op) {
         default: error_terminate("not an operation");
     }
 
-    return -1;
+    return ERROR;
 }
 
 int eval_expr(char *postfix_string) {
