@@ -122,9 +122,8 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
 
     while (!stack_is_empty(&st_operators)) {
         postfix_string[postfix_str_ndx++] = stack_pop(&st_operators);
-        postfix_string[postfix_str_ndx++] = ' ';
+        postfix_string[postfix_str_ndx++] = *(st_operators.size == 0 ? "" : " ");
     }
-    postfix_string[postfix_str_ndx] = '\0';
 }
 
 int apply_op(int a, int b, char op) {
