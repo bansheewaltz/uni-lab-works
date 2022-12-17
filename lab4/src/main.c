@@ -45,7 +45,7 @@ int get_op_precedence(char op) {
         case '+': return 2;
         case '*': return 3;
         case '/': return 3;
-        default: error_terminate("");
+        default: error_terminate(""); return;
     }
 }
 
@@ -134,7 +134,7 @@ int apply_op(int a, int b, char op) {
                 error_terminate("division by zero");
             }
             return a / b;
-        default: error_terminate("");
+        default: error_terminate(""); return;
     }
 }
 
