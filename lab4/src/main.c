@@ -109,13 +109,13 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
     s_stack st_operators;
     stack_init(&st_operators);
 
-    int postfix_str_ndx = 0;
+    int postfix_cur_ndx = 0;
     char *char_p = infix_string;
     while (*char_p != '\0') {
         if (is_digit(*char_p)) {
-            postfix_string[postfix_str_ndx++] = *char_p;
+            postfix_string[postfix_cur_ndx++] = *char_p;
             if (!is_digit(*(char_p + 1))) {
-                postfix_string[postfix_str_ndx++] = ' ';
+                postfix_string[postfix_cur_ndx++] = ' ';
             }
         } else if (*char_p == '(') {
             stack_push(&st_operators, (int)*char_p);
@@ -125,14 +125,14 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
             }
             char tmp;
             while ((tmp = stack_pop(&st_operators)) != '(') {
-                postfix_string[postfix_str_ndx++] = tmp;
-                postfix_string[postfix_str_ndx++] = ' ';
+                postfix_string[postfix_cur_ndx++] = tmp;
+                postfix_string[postfix_cur_ndx++] = ' ';
             }
         } else {
             while (!stack_is_empty(&st_operators) &&
                    get_op_precedence(stack_peek(&st_operators)) >= get_op_precedence(*char_p)) {
-                postfix_string[postfix_str_ndx++] = stack_pop(&st_operators);
-                postfix_string[postfix_str_ndx++] = ' ';
+                postfix_string[postfix_cur_ndx++] = stack_pop(&st_operators);
+                postfix_string[postfix_cur_ndx++] = ' ';
             }
             stack_push(&st_operators, (int)*char_p);
         }
@@ -140,8 +140,8 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
     }
 
     while (!stack_is_empty(&st_operators)) {
-        postfix_string[postfix_str_ndx++] = stack_pop(&st_operators);
-        postfix_string[postfix_str_ndx++] = *(st_operators.size == 0 ? "" : " ");
+        postfix_string[postfix_cur_ndx++] = stack_pop(&st_operators);
+        postfix_string[postfix_cur_ndx++] = *(st_operators.size == 0 ? "" : " ");
     }
 }
 
