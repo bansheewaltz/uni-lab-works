@@ -1,4 +1,5 @@
 /* stack-based caclulator program utilizing infix-to-postfix notation conversion */
+#include <stdarg.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -12,8 +13,23 @@ typedef struct s_stack {
     int size;
 } s_stack;
 
+bool is_in(char c, int n, ...) {
+    va_list args;
+    va_start(args, n);
+    for (int i = 0; i < n; ++i) {
+        if (c == va_arg(args, int)) {
+            return true;
+        }
+    }
+    va_end(args);
+
+    return false;
+}
+
 bool is_operator(char c) {
-    return c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')';
+    return is_in(c, 6, '+', '-', '*', '/', '(', ')');
+    // return strchr("+-*/()", c);
+    // return c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')';
 }
 
 bool is_digit(char c) {
@@ -40,11 +56,11 @@ void error_terminate(char *message) {
 
 int get_op_precedence(char op) {
     switch (op) {
-        case '(': return 1;
+        case '(':
         case ')': return 1;
-        case '-': return 2;
+        case '-':
         case '+': return 2;
-        case '*': return 3;
+        case '*':
         case '/': return 3;
         default: error_terminate("not an operator");
     }
