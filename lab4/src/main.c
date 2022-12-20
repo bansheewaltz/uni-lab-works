@@ -41,19 +41,21 @@ bool is_digit(char c) {
     return c >= '0' && c <= '9';
 }
 
-bool is_unary_minus(char *char_p) {
-    return *char_p == '-' &&  //
-           is_digit(*(char_p + 1));
+bool is_unary_minus(char *ptr) {
+    return !is_digit(*(ptr - 1)) &&  //
+           *ptr == '-' &&            //
+           is_digit(*(ptr + 1)) &&   //
+           *(ptr - 1) != '-';        // just for the testsystem
 }
 
 bool symbol_validate(char c) {
-    return is_operator(c) ||     //
-           is_digit(c) ||        //
+    return is_digit(c) ||        //
+           is_operator(c) ||     //
            is_parenthesis(c) ||  //
            c == '\n';            //
 }
 
-void error_terminate(char *message) {
+void error_terminate(char message[]) {
     puts(message);
     exit(EXIT_SUCCESS);  // but actually FAILURE
 }
@@ -88,6 +90,7 @@ int stack_pop(s_stack *st) {
     if (stack_is_empty(st)) {
         error_terminate("stack is empty");
     }
+
     st->size--;
     return st->items[st->size];
 }
@@ -96,6 +99,7 @@ void stack_push(s_stack *st, const int val) {
     if (stack_is_full(st)) {
         error_terminate("stack overflow");
     }
+
     st->items[st->size++] = val;
 }
 
@@ -103,6 +107,7 @@ int stack_peek(s_stack *st) {
     if (stack_is_empty(st)) {
         error_terminate("stack is empty");
     }
+
     return st->items[st->size - 1];
 }
 
@@ -113,7 +118,9 @@ void infix_to_postfix(char *infix_string, char *postfix_str) {
     int postfix_cur_ndx = 0;
     char *char_p = infix_string;
     while (*char_p != '\0') {
-        if (is_digit(*char_p)) {
+        if (is_digit(*char_p) ||     //
+            is_unary_minus(char_p))  //
+        {
             postfix_str[postfix_cur_ndx++] = *char_p;
             if (!is_digit(*(char_p + 1))) {
                 postfix_str[postfix_cur_ndx++] = ' ';
@@ -167,7 +174,6 @@ int eval_expr(char *postfix_str) {
     while (*char_p != '\0') {
         if (is_digit(*char_p) || is_unary_minus(char_p)) {
             int number = strtol(char_p, &char_p, 10);
-
             stack_push(&st_operands, number);
             continue;
         }
@@ -175,8 +181,8 @@ int eval_expr(char *postfix_str) {
             char op = *char_p;
             int b = (int)stack_pop(&st_operands);
             int a = (int)stack_pop(&st_operands);
-            int res = apply_op(a, b, op);
 
+            int res = apply_op(a, b, op);
             stack_push(&st_operands, res);
         }
         ++char_p;
@@ -193,16 +199,12 @@ void input_read(char *string) {
 }
 
 bool two_operators_in_a_row(char *c) {
-    return is_operator(*c) && is_operator(*(c + 1));
+    return is_operator(*c) && is_operator(*(c + 1)) && !is_unary_minus(c + 1);
 }
 
 bool empty_parenthesis(char *c) {
-    return *c == '(' && *(c + 1) == ')' ||  //
-           *(c - 1) == '(' && !is_digit(*c) && *(c + 1) == ')';
-}
-
-bool last_is_operator(char *c) {
-    return is_operator(*c);
+    return *c == '(' && *(c + 1) == ')' ||                       //
+           *(c - 1) == '(' && !is_digit(*c) && *(c + 1) == ')';  //
 }
 
 void input_validate(char string[]) {
@@ -214,8 +216,7 @@ void input_validate(char string[]) {
     int c_close_parenthesis = 0;
 
     char *char_ptr = string;
-    for (int i = 0; string[i] != '\0'; ++i) {
-        char_ptr = &string[i];
+    while (*char_ptr != '\0') {
         if (!symbol_validate(*char_ptr) ||               //
             c_close_parenthesis > c_open_parenthesis ||  //
             two_operators_in_a_row(char_ptr) ||          //
@@ -229,10 +230,11 @@ void input_validate(char string[]) {
         } else if (*char_ptr == ')') {
             ++c_close_parenthesis;
         }
+        ++char_ptr;
     }
 
     if (c_open_parenthesis != c_close_parenthesis ||  //
-        last_is_operator(char_ptr))                   //
+        is_operator(*(char_ptr - 1)))                 // *last was operator* check
     {
         error_terminate("syntax error");
     }
