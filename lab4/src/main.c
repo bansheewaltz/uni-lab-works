@@ -30,9 +30,11 @@ bool is_in(char c, int n, ...) {
 }
 
 bool is_operator(char c) {
-    return is_in(c, 6, '+', '-', '*', '/', '(', ')');
-    // return strchr("+-*/()", c);
-    // return c == '+' || c == '-' || c == '*' || c == '/' || c == '(' || c == ')';
+    return is_in(c, 4, '+', '-', '*', '/');
+}
+
+bool is_parenthesis(char c) {
+    return is_in(c, 2, '(', ')');
 }
 
 bool is_digit(char c) {
@@ -40,11 +42,15 @@ bool is_digit(char c) {
 }
 
 bool is_unary_minus(char *char_p) {
-    return *char_p == '-' && is_digit(*++char_p);
+    return *char_p == '-' &&  //
+           is_digit(*(char_p + 1));
 }
 
 bool symbol_validate(char c) {
-    return is_operator(c) || is_digit(c) || c == '\n';
+    return is_operator(c) ||     //
+           is_digit(c) ||        //
+           is_parenthesis(c) ||  //
+           c == '\n';            //
 }
 
 void error_terminate(char *message) {
@@ -52,7 +58,7 @@ void error_terminate(char *message) {
     exit(EXIT_SUCCESS);  // but actually FAILURE
 }
 
-int get_op_precedence(char op) {
+int get_op_OP(char op) {
     switch (op) {
         case '(':
         case ')': return 1;
@@ -79,8 +85,8 @@ bool stack_is_empty(s_stack *st) {
 }
 
 int stack_pop(s_stack *st) {
-    if (st->size == 0) {
-        error_terminate("syntax error");
+    if (stack_is_empty(st)) {
+        error_terminate("stack is empty");
     }
     st->size--;
     return st->items[st->size];
@@ -94,13 +100,13 @@ void stack_push(s_stack *st, const int val) {
 }
 
 int stack_peek(s_stack *st) {
-    if (st->size == 0) {
+    if (stack_is_empty(st)) {
         error_terminate("stack is empty");
     }
     return st->items[st->size - 1];
 }
 
-void infix_to_postfix(char *infix_string, char *postfix_string) {
+void infix_to_postfix(char *infix_string, char *postfix_str) {
     s_stack st_operators;
     stack_init(&st_operators);
 
@@ -108,26 +114,23 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
     char *char_p = infix_string;
     while (*char_p != '\0') {
         if (is_digit(*char_p)) {
-            postfix_string[postfix_cur_ndx++] = *char_p;
+            postfix_str[postfix_cur_ndx++] = *char_p;
             if (!is_digit(*(char_p + 1))) {
-                postfix_string[postfix_cur_ndx++] = ' ';
+                postfix_str[postfix_cur_ndx++] = ' ';
             }
         } else if (*char_p == '(') {
             stack_push(&st_operators, (int)*char_p);
         } else if (*char_p == ')') {
-            if (char_p == infix_string || *(char_p - 1) == '(') {
-                error_terminate("syntax error");
-            }
             char tmp;
             while ((tmp = stack_pop(&st_operators)) != '(') {
-                postfix_string[postfix_cur_ndx++] = tmp;
-                postfix_string[postfix_cur_ndx++] = ' ';
+                postfix_str[postfix_cur_ndx++] = tmp;
+                postfix_str[postfix_cur_ndx++] = ' ';
             }
         } else {
-            while (!stack_is_empty(&st_operators) &&
-                   get_op_precedence(stack_peek(&st_operators)) >= get_op_precedence(*char_p)) {
-                postfix_string[postfix_cur_ndx++] = stack_pop(&st_operators);
-                postfix_string[postfix_cur_ndx++] = ' ';
+            while (!stack_is_empty(&st_operators) &&                              //
+                   get_op_OP(stack_peek(&st_operators)) >= get_op_OP(*char_p)) {  //
+                postfix_str[postfix_cur_ndx++] = stack_pop(&st_operators);
+                postfix_str[postfix_cur_ndx++] = ' ';
             }
             stack_push(&st_operators, (int)*char_p);
         }
@@ -135,8 +138,8 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
     }
 
     while (!stack_is_empty(&st_operators)) {
-        postfix_string[postfix_cur_ndx++] = stack_pop(&st_operators);
-        postfix_string[postfix_cur_ndx++] = *(st_operators.size == 0 ? "" : " ");
+        postfix_str[postfix_cur_ndx++] = stack_pop(&st_operators);
+        postfix_str[postfix_cur_ndx++] = *(st_operators.size == 0 ? "" : " ");
     }
 }
 
@@ -156,11 +159,11 @@ int apply_op(int a, int b, char op) {
     return ERROR;
 }
 
-int eval_expr(char *postfix_string) {
+int eval_expr(char *postfix_str) {
     s_stack st_operands;
     stack_init(&st_operands);
 
-    char *char_p = postfix_string;
+    char *char_p = postfix_str;
     while (*char_p != '\0') {
         if (is_digit(*char_p) || is_unary_minus(char_p)) {
             int number = strtol(char_p, &char_p, 10);
@@ -184,16 +187,54 @@ int eval_expr(char *postfix_string) {
 
 void input_read(char *string) {
     if (fgets(string, INPUT_MAX_LEN, stdin) == NULL) {
-        error_terminate("syntax error");
+        error_terminate("input error");
     }
     string[strcspn(string, "\n")] = '\0';
 }
 
+bool two_operators_in_a_row(char *c) {
+    return is_operator(*c) && is_operator(*(c + 1));
+}
+
+bool empty_parenthesis(char *c) {
+    return *c == '(' && *(c + 1) == ')' ||  //
+           *(c - 1) == '(' && !is_digit(*c) && *(c + 1) == ')';
+}
+
+bool last_is_operator(char *c) {
+    return is_operator(*c);
+}
+
 void input_validate(char string[]) {
+    if (is_in(string[0], 3, ')', '\n', '\0')) {
+        error_terminate("syntax error");
+    }
+
+    int c_open_parenthesis = 0;
+    int c_close_parenthesis = 0;
+
+    char *char_ptr = string;
     for (int i = 0; string[i] != '\0'; ++i) {
-        if (!symbol_validate(string[i])) {
+        char_ptr = &string[i];
+        if (!symbol_validate(*char_ptr) ||               //
+            c_close_parenthesis > c_open_parenthesis ||  //
+            two_operators_in_a_row(char_ptr) ||          //
+            empty_parenthesis(char_ptr))                 //
+        {
             error_terminate("syntax error");
         }
+
+        if (*char_ptr == '(') {
+            ++c_open_parenthesis;
+        } else if (*char_ptr == ')') {
+            ++c_close_parenthesis;
+        }
+    }
+
+    if (c_open_parenthesis != c_close_parenthesis ||  //
+        last_is_operator(char_ptr))                   //
+    {
+        error_terminate("syntax error");
     }
 }
 
@@ -202,10 +243,10 @@ int main(void) {
 
     input_read(input_string);
     input_validate(input_string);
-    char postfix_string[INPUT_LIMIT * 2 + 1] = "";
+    char postfix_str[INPUT_LIMIT * 2 + 1] = "";
 
-    infix_to_postfix(input_string, postfix_string);
-    printf("%d", eval_expr(postfix_string));
+    infix_to_postfix(input_string, postfix_str);
+    printf("%d", eval_expr(postfix_str));
 
     return EXIT_SUCCESS;
 }
