@@ -47,11 +47,6 @@ bool symbol_validate(char c) {
     return is_operator(c) || is_digit(c) || c == '\n';
 }
 
-void syntax_error(void) {
-    puts("syntax error");
-    exit(EXIT_SUCCESS);  // but actually FAILURE
-}
-
 void error_terminate(char *message) {
     puts(message);
     exit(EXIT_SUCCESS);  // but actually FAILURE
@@ -85,7 +80,7 @@ bool stack_is_empty(s_stack *st) {
 
 int stack_pop(s_stack *st) {
     if (st->size == 0) {
-        syntax_error();
+        error_terminate("syntax error");
     }
     st->size--;
     return st->items[st->size];
@@ -121,7 +116,7 @@ void infix_to_postfix(char *infix_string, char *postfix_string) {
             stack_push(&st_operators, (int)*char_p);
         } else if (*char_p == ')') {
             if (char_p == infix_string || *(char_p - 1) == '(') {
-                syntax_error();
+                error_terminate("syntax error");
             }
             char tmp;
             while ((tmp = stack_pop(&st_operators)) != '(') {
@@ -189,7 +184,7 @@ int eval_expr(char *postfix_string) {
 
 void input_read(char *string) {
     if (fgets(string, INPUT_MAX_LEN, stdin) == NULL) {
-        syntax_error();
+        error_terminate("syntax error");
     }
     string[strcspn(string, "\n")] = '\0';
 }
@@ -197,7 +192,7 @@ void input_read(char *string) {
 void input_validate(char string[]) {
     for (int i = 0; string[i] != '\0'; ++i) {
         if (!symbol_validate(string[i])) {
-            syntax_error();
+            error_terminate("syntax error");
         }
     }
 }
