@@ -14,16 +14,19 @@ typedef struct s_stack {
 } s_stack;
 
 bool is_in(char c, int n, ...) {
+    bool result = false;
+
     va_list args;
     va_start(args, n);
     for (int i = 0; i < n; ++i) {
         if (c == va_arg(args, int)) {
-            return true;
+            result = true;
+            break;
         }
     }
     va_end(args);
 
-    return false;
+    return result;
 }
 
 bool is_operator(char c) {
