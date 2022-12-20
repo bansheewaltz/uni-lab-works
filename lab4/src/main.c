@@ -203,8 +203,8 @@ bool two_operators_in_a_row(char *c) {
 }
 
 bool empty_parenthesis(char *c) {
-    return *c == '(' && *(c + 1) == ')' ||                       //
-           *(c - 1) == '(' && !is_digit(*c) && *(c + 1) == ')';  //
+    return (*c == '(' && *(c + 1) == ')') ||                       //
+           (*(c - 1) == '(' && !is_digit(*c) && *(c + 1) == ')');  //
 }
 
 void input_validate(char string[]) {
