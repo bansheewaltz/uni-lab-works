@@ -92,7 +92,7 @@ bool scan_num_of_vertices(int *N) {
   return false;
 }
 
-bool scan_src_dst(int *S, int *F, int N) {
+bool scan_path(int *S, int *F, int N) {
   if ((scanf("%d", S) && CLOSED_INTERVAL(1, *S, N)) &&
       (scanf("%d", F) && CLOSED_INTERVAL(1, *F, N))) {
     return true;
@@ -121,7 +121,7 @@ bool scan_edge_len(int *length) {
 }
 
 int scan_edge(int *src, int *dst, int N, int *length) {
-  if (scan_src_dst(src, dst, N) && scan_edge_len(length)) {
+  if (scan_path(src, dst, N) && scan_edge_len(length)) {
     return SUCCESS;
   }
 
@@ -130,7 +130,7 @@ int scan_edge(int *src, int *dst, int N, int *length) {
 
 bool validate_parameters(int *N, int *S, int *F, int *M) {
   return scan_num_of_vertices(N) &&  //
-         scan_src_dst(S, F, *N) &&   //
+         scan_path(S, F, *N) &&      //
          scan_num_of_edges(M, *N);
 }
 
@@ -144,10 +144,10 @@ bool validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
     print_error_terminate("heap buffer overflow");
   }
 
-  bool ret = SUCCESS;
   int i;
-
+  bool ret = SUCCESS;
   for (i = 0; i < *M && ret == SUCCESS; ++i) {
+    (*edges)[i] = (struct Edge *)malloc(sizeof(struct Edge));
     ret = scan_edge(&(*edges)[i]->src, &(*edges)[i]->dst, *N,
                     &(*edges)[i]->length);
   }
