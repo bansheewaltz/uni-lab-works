@@ -1,4 +1,6 @@
 // Dijkstra algorithm for undirected weighted graph
+// goal: find the shortest path's length between two vertices
+
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -11,7 +13,7 @@
 /* utility stuff */
 #define SUCCESS 1
 #define FAILURE 0
-#define CLOSED_INTERVAL(l, value, r) (l <= value && value <= r)
+#define IS_IN_BOUNDS(l, value, r) (l <= value && value <= r)
 
 typedef struct Graph Graph;
 typedef struct AdjListNode AdjListNode;
@@ -40,6 +42,10 @@ void print_error_terminate(char message[]) {
 }
 
 void add_node(Graph *graph, int src, int dst, int length) {
+  if (graph == NULL) {
+    return;
+  }
+
   AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
   if (new_node == NULL) {
     print_error_terminate("heap buffer overflow");
@@ -48,20 +54,30 @@ void add_node(Graph *graph, int src, int dst, int length) {
   new_node->dst = dst;
   new_node->length = length;
   new_node->next = graph->adjacency_lists[src];
+
   graph->adjacency_lists[src] = new_node;
 }
 
 void initialise_lists(AdjListNode *adjacency_lists[], int N) {
+  if (adjacency_lists == NULL) {
+    return;
+  }
+
   for (int i = 0; i < N; i++) {
     adjacency_lists[i] = NULL;
   }
 }
 
 Graph *create_graph(struct Edge *edges[], int N, int M) {
+  if (edges == NULL) {
+    print_error_terminate("edges pointer is NULL");
+  }
+
   Graph *graph = (Graph *)malloc(sizeof(Graph));
+
   graph->num_of_vertices = N;
   graph->num_of_edges = M;
-  graph->adjacency_lists =  // N + 1 because 0 node will be ingored
+  graph->adjacency_lists =  // N + 1 because idx 0 node will be ingored
       (AdjListNode **)malloc((N + 1) * sizeof(AdjListNode *));
 
   initialise_lists(graph->adjacency_lists, N + 1);
@@ -79,8 +95,13 @@ Graph *create_graph(struct Edge *edges[], int N, int M) {
 }
 
 void print_graph(Graph *graph, int M) {
+  if (graph == NULL) {
+    return;
+  }
+
   for (int i = 1; i < M + 1; i++) {
     AdjListNode *ptr = graph->adjacency_lists[i];
+
     while (ptr != NULL) {
       printf("%d —> %d (%d)\t", i, ptr->dst, ptr->length);
       ptr = ptr->next;
@@ -90,8 +111,8 @@ void print_graph(Graph *graph, int M) {
   }
 }
 
-bool scan_num_of_vertices(int *N) {
-  if (scanf("%i", N) && CLOSED_INTERVAL(0, *N, MAX_VERTICES_NUM)) {
+bool scan_validate_num_of_vertices(int *N) {
+  if (scanf("%i", N) && IS_IN_BOUNDS(0, *N, MAX_VERTICES_NUM)) {
     return true;
   }
 
@@ -99,9 +120,9 @@ bool scan_num_of_vertices(int *N) {
   return false;
 }
 
-bool scan_path(int *S, int *F, int N) {
-  if ((scanf("%d", S) && CLOSED_INTERVAL(1, *S, N)) &&
-      (scanf("%d", F) && CLOSED_INTERVAL(1, *F, N))) {
+bool scan_validate_path(int *S, int *F, int N) {
+  if ((scanf("%d", S) && IS_IN_BOUNDS(1, *S, N)) &&
+      (scanf("%d", F) && IS_IN_BOUNDS(1, *F, N))) {
     return true;
   }
 
@@ -109,8 +130,8 @@ bool scan_path(int *S, int *F, int N) {
   return false;
 }
 
-bool scan_num_of_edges(int *M, int N) {
-  if (scanf("%d", M) && CLOSED_INTERVAL(0, *M, MAX_EDGES_NUM)) {
+bool scan_validate_num_of_edges(int *M, int N) {
+  if (scanf("%d", M) && IS_IN_BOUNDS(0, *M, MAX_EDGES_NUM)) {
     return true;
   }
 
@@ -118,8 +139,8 @@ bool scan_num_of_edges(int *M, int N) {
   return false;
 }
 
-bool scan_edge_len(int *length) {
-  if (scanf("%d", length) && CLOSED_INTERVAL(0, *length, MAX_EDGE_LEN)) {
+bool scan_validate_edge_len(int *length) {
+  if (scanf("%d", length) && IS_IN_BOUNDS(0, *length, MAX_EDGE_LEN)) {
     return true;
   }
 
@@ -127,22 +148,22 @@ bool scan_edge_len(int *length) {
   return false;
 }
 
-int scan_edge(int *src, int *dst, int N, int *length) {
-  if (scan_path(src, dst, N) && scan_edge_len(length)) {
+int scan_validate_edge(int *src, int *dst, int N, int *length) {
+  if (scan_validate_path(src, dst, N) && scan_validate_edge_len(length)) {
     return SUCCESS;
   }
 
   return FAILURE;
 }
 
-bool validate_parameters(int *N, int *S, int *F, int *M) {
-  return scan_num_of_vertices(N) &&  //
-         scan_path(S, F, *N) &&      //
-         scan_num_of_edges(M, *N);   //
+bool scan_validate_parameters(int *N, int *S, int *F, int *M) {
+  return scan_validate_num_of_vertices(N) &&  //
+         scan_validate_path(S, F, *N) &&      //
+         scan_validate_num_of_edges(M, *N);   //
 }
 
-bool validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
-  if (!validate_parameters(N, S, F, M)) {
+bool scan_validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
+  if (scan_validate_parameters(N, S, F, M) == FAILURE) {
     return FAILURE;
   }
 
@@ -153,8 +174,11 @@ bool validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
 
   for (int i = 0; i < *M; ++i) {
     (*edges)[i] = (struct Edge *)malloc(sizeof(struct Edge));
-    bool ret = scan_edge(&(*edges)[i]->src, &(*edges)[i]->dst, *N,
-                         &(*edges)[i]->length);
+    int *src = &(*edges)[i]->src;
+    int *dst = &(*edges)[i]->dst;
+    int *len = &(*edges)[i]->length;
+
+    bool ret = scan_validate_edge(src, dst, *N, len);
     if (ret != SUCCESS) {
       print_error_terminate("bad number of lines");
     }
@@ -173,6 +197,7 @@ void destroy_graph(Graph *graph) {
 
     if (list_head != NULL) {
       AdjListNode *tmp_next = list_head->next;
+
       while (tmp_next != NULL) {
         free(list_head);
         list_head = tmp_next;
@@ -187,25 +212,29 @@ void destroy_graph(Graph *graph) {
 }
 
 void deallocate_temporary_storage(struct Edge **edges, int M) {
+  if (edges == NULL) {
+    return;
+  }
+
   for (int i = 0; i < M; ++i) {
     free(edges[i]);
   }
   free(edges);
 }
 
+// the graph is not being built until all the input data is checked
 int main(void) {
-  int N;  // number of vertices
-  int S;  // source
-  int F;  // destination
-  int M;  // number of edges
-  // the graph is not being built until all the input data is checked
-  struct Edge **edges_temporary_storage = NULL;
+  int N;  // number of vertices in the graph
+  int S;  // path source
+  int F;  // path destination
+  int M;  // number of edges in the graph
+  struct Edge **edges_temp_storage = NULL;
 
-  if (validate_input(&N, &S, &F, &M, &edges_temporary_storage) == SUCCESS) {
-    Graph *graph = create_graph(edges_temporary_storage, N, M);
-    deallocate_temporary_storage(edges_temporary_storage, M);
+  if (scan_validate_input(&N, &S, &F, &M, &edges_temp_storage) == SUCCESS) {
+    Graph *graph = create_graph(edges_temp_storage, N, M);
+    deallocate_temporary_storage(edges_temp_storage, M);
 
-    print_graph(graph, N);
+    // print_graph(graph, N);
     destroy_graph(graph);
   }
 
