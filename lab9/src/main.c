@@ -1,26 +1,31 @@
-// Topological sort of unlabeled undirected weighted graph
+// Dijkstra algorithm for undirected weighted graph
 #include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-#define SUCCESS 1
-#define FAILURE 0
-#define CLOSED_INTERVAL(l, value, r) (l <= value && value <= r)
+
 /* changable variables */
 #define MAX_VERTICES_NUM 5000
 #define MAX_EDGES_NUM (N * (N - 1) / 2)
 #define MAX_EDGE_LEN INT_MAX
+/* utility stuff */
+#define SUCCESS 1
+#define FAILURE 0
+#define CLOSED_INTERVAL(l, value, r) (l <= value && value <= r)
+
+typedef struct Graph Graph;
+typedef struct AdjListNode AdjListNode;
 
 struct Graph {
   int num_of_vertices;
   int num_of_edges;
-  struct Node **adjacency_lists;
+  AdjListNode **adjacency_lists;
 };
 
-struct Node {  // adjacency list node
+struct AdjListNode {
   int dst;
   int length;
-  struct Node *next;
+  AdjListNode *next;
 };
 
 struct Edge {
@@ -34,8 +39,8 @@ void print_error_terminate(char message[]) {
   exit(EXIT_SUCCESS);  // but actually FAILURE
 }
 
-void add_node(struct Graph *graph, int src, int dst, int length) {
-  struct Node *new_node = (struct Node *)malloc(sizeof(struct Node));
+void add_node(Graph *graph, int src, int dst, int length) {
+  AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
   if (new_node == NULL) {
     print_error_terminate("heap buffer overflow");
   }
@@ -46,23 +51,25 @@ void add_node(struct Graph *graph, int src, int dst, int length) {
   graph->adjacency_lists[src] = new_node;
 }
 
-void initialise_lists(struct Node *adjacency_lists[], int N) {
+void initialise_lists(AdjListNode *adjacency_lists[], int N) {
   for (int i = 0; i < N; i++) {
     adjacency_lists[i] = NULL;
   }
 }
 
-struct Graph *create_graph(struct Edge *edges[], int N, int M) {
-  struct Graph *graph = (struct Graph *)malloc(sizeof(struct Graph));
+Graph *create_graph(struct Edge *edges[], int N, int M) {
+  Graph *graph = (Graph *)malloc(sizeof(Graph));
   graph->num_of_vertices = N;
   graph->num_of_edges = M;
-  graph->adjacency_lists = (struct Node **)malloc(N * sizeof(struct Node *));
-  initialise_lists(graph->adjacency_lists, N);
+  graph->adjacency_lists =  // N + 1 because 0 node will be ingored
+      (AdjListNode **)malloc((N + 1) * sizeof(AdjListNode *));
+
+  initialise_lists(graph->adjacency_lists, N + 1);
 
   for (int i = 0; i < M; ++i) {
-    int src = (*edges)[i].src;
-    int dst = (*edges)[i].dst;
-    int length = (*edges)[i].length;
+    int src = edges[i]->src;
+    int dst = edges[i]->dst;
+    int length = edges[i]->length;
 
     add_node(graph, src, dst, length);
     add_node(graph, dst, src, length);
@@ -71,9 +78,9 @@ struct Graph *create_graph(struct Edge *edges[], int N, int M) {
   return graph;
 }
 
-void print_graph(struct Graph *graph, int M) {
-  for (int i = 0; i < M; i++) {
-    struct Node *ptr = graph->adjacency_lists[i];
+void print_graph(Graph *graph, int M) {
+  for (int i = 1; i < M + 1; i++) {
+    AdjListNode *ptr = graph->adjacency_lists[i];
     while (ptr != NULL) {
       printf("%d —> %d (%d)\t", i, ptr->dst, ptr->length);
       ptr = ptr->next;
@@ -131,7 +138,7 @@ int scan_edge(int *src, int *dst, int N, int *length) {
 bool validate_parameters(int *N, int *S, int *F, int *M) {
   return scan_num_of_vertices(N) &&  //
          scan_path(S, F, *N) &&      //
-         scan_num_of_edges(M, *N);
+         scan_num_of_edges(M, *N);   //
 }
 
 bool validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
@@ -144,18 +151,46 @@ bool validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
     print_error_terminate("heap buffer overflow");
   }
 
-  int i;
-  bool ret = SUCCESS;
-  for (i = 0; i < *M && ret == SUCCESS; ++i) {
+  for (int i = 0; i < *M; ++i) {
     (*edges)[i] = (struct Edge *)malloc(sizeof(struct Edge));
-    ret = scan_edge(&(*edges)[i]->src, &(*edges)[i]->dst, *N,
-                    &(*edges)[i]->length);
-  }
-  if (i != *M || ret != SUCCESS) {
-    print_error_terminate("bad number of lines");
+    bool ret = scan_edge(&(*edges)[i]->src, &(*edges)[i]->dst, *N,
+                         &(*edges)[i]->length);
+    if (ret != SUCCESS) {
+      print_error_terminate("bad number of lines");
+    }
   }
 
   return SUCCESS;
+}
+
+void destroy_graph(Graph *graph) {
+  if (graph == NULL) {
+    return;
+  }
+
+  for (int i = 0; i < graph->num_of_vertices + 1; ++i) {
+    AdjListNode *list_head = graph->adjacency_lists[i];
+
+    if (list_head != NULL) {
+      AdjListNode *tmp_next = list_head->next;
+      while (tmp_next != NULL) {
+        free(list_head);
+        list_head = tmp_next;
+        tmp_next = list_head->next;
+      }
+      free(list_head);
+    }
+  }
+
+  free(graph->adjacency_lists);
+  free(graph);
+}
+
+void deallocate_temporary_storage(struct Edge **edges, int M) {
+  for (int i = 0; i < M; ++i) {
+    free(edges[i]);
+  }
+  free(edges);
 }
 
 int main(void) {
@@ -163,12 +198,15 @@ int main(void) {
   int S;  // source
   int F;  // destination
   int M;  // number of edges
-  struct Edge **edges = NULL;
+  // the graph is not being built until all the input data is checked
+  struct Edge **edges_temporary_storage = NULL;
 
-  if (validate_input(&N, &S, &F, &M, &edges) == SUCCESS) {
-    struct Graph *graph = create_graph(edges, N, M);
+  if (validate_input(&N, &S, &F, &M, &edges_temporary_storage) == SUCCESS) {
+    Graph *graph = create_graph(edges_temporary_storage, N, M);
+    deallocate_temporary_storage(edges_temporary_storage, M);
 
-    print_graph(graph, M);
+    print_graph(graph, N);
+    destroy_graph(graph);
   }
 
   return EXIT_SUCCESS;
