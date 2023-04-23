@@ -22,8 +22,8 @@ typedef struct AdjListNode AdjListNode;
 typedef struct PathInfo PathInfo;
 
 struct Graph {
-  int num_of_vertices;
-  int num_of_edges;
+  int n_vertices;
+  int n_edges;
   AdjListNode **adjacency_lists;
 };
 
@@ -40,7 +40,7 @@ struct Edge {
 };
 
 struct PathInfo {
-  int num_of_vertices;
+  int n_vertices;
   int src;
   int dst;
   int64_t *distances;
@@ -86,8 +86,8 @@ Graph *create_graph(struct Edge *edges[], int N, int M) {
 
   Graph *graph = (Graph *)malloc(sizeof(Graph));
 
-  graph->num_of_vertices = N;
-  graph->num_of_edges = M;
+  graph->n_vertices = N;
+  graph->n_edges = M;
   graph->adjacency_lists =  // N + 1 because idx 0 node will be ingored
       (AdjListNode **)malloc((N + 1) * sizeof(AdjListNode *));
 
@@ -122,7 +122,7 @@ void print_graph(Graph *graph, int M) {
   }
 }
 
-bool scan_validate_num_of_vertices(int *N) {
+bool scan_validate_n_vertices(int *N) {
   if (scanf("%i", N) && IS_IN_BOUNDS(0, *N, MAX_VERTICES_NUM)) {
     return true;
   }
@@ -141,7 +141,7 @@ bool scan_validate_path(int *S, int *F, int N) {
   return false;
 }
 
-bool scan_validate_num_of_edges(int *M, int N) {
+bool scan_validate_n_edges(int *M, int N) {
   if (scanf("%d", M) && IS_IN_BOUNDS(0, *M, MAX_EDGES_NUM)) {
     return true;
   }
@@ -168,9 +168,9 @@ int scan_validate_edge(int *src, int *dst, int N, int64_t *length) {
 }
 
 bool scan_validate_parameters(int *N, int *S, int *F, int *M) {
-  return scan_validate_num_of_vertices(N) &&  //
-         scan_validate_path(S, F, *N) &&      //
-         scan_validate_num_of_edges(M, *N);   //
+  return scan_validate_n_vertices(N) &&   //
+         scan_validate_path(S, F, *N) &&  //
+         scan_validate_n_edges(M, *N);    //
 }
 
 bool scan_validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
@@ -203,7 +203,7 @@ void destroy_graph(Graph *graph) {
     return;
   }
 
-  for (int i = 0; i < graph->num_of_vertices + 1; ++i) {
+  for (int i = 0; i < graph->n_vertices + 1; ++i) {
     AdjListNode *list_head = graph->adjacency_lists[i];
 
     if (list_head != NULL) {
@@ -233,27 +233,37 @@ void deallocate_temporary_storage(struct Edge **edges, int M) {
   free(edges);
 }
 
-PathInfo find_shortest_path_by_dijkstra(Graph *graph, int S, int F) {
-  int num_of_vertices = graph->num_of_vertices;
+void find_next_unvisited(int n_vertices, bool const *visited, int *min_dist_v) {
+  for (int i = 1; i < n_vertices; ++i) {
+    if (!visited[i]) {
+      *min_dist_v = i;
+      break;
+    }
+  }
+}
+
+PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
+  int n_vertices = graph->n_vertices;
+  int arr_size = n_vertices + 1;
 
   // initialize distances and previous arrays
-  int *previous_v = (int *)malloc(sizeof(int) * num_of_vertices);
-  int64_t *known_dist = (int64_t *)malloc(sizeof(int64_t) * num_of_vertices);
-  for (int i = 0; i < num_of_vertices; ++i) {
+  int *previous_v = (int *)malloc(sizeof(int) * arr_size);
+  int64_t *known_dist = (int64_t *)malloc(sizeof(int64_t) * arr_size);
+  for (int i = 0; i <= n_vertices; ++i) {
     known_dist[i] = INFINITY;
     previous_v[i] = -1;
   }
   known_dist[S] = 0;
 
   // initialize visited
-  bool *visited = (bool *)calloc(num_of_vertices, sizeof(bool));
+  bool *visited = (bool *)calloc(arr_size, sizeof(bool));
 
   // algorithm
   int visited_num = 0;
   int min_dist_v = S;
-  while (visited_num < num_of_vertices) {
+  while (visited_num < n_vertices) {
     // find vertex with smallest known_dist
-    for (int i = 1; i < num_of_vertices; ++i) {
+    for (int i = 1; i <= n_vertices; ++i) {
       if (!visited[i] && known_dist[i] < known_dist[min_dist_v]) {
         min_dist_v = i;
       }
@@ -262,8 +272,9 @@ PathInfo find_shortest_path_by_dijkstra(Graph *graph, int S, int F) {
     /// get adjacency_list for min_dist_v
     AdjListNode *neighbour_node = graph->adjacency_lists[min_dist_v];
     /// iterate over neighbour_node
-    while (neighbour_node->next != NULL) {
+    while (neighbour_node != NULL) {
       if (visited[neighbour_node->dst] == true) {
+        neighbour_node = neighbour_node->next;
         continue;
       }
 
@@ -275,13 +286,16 @@ PathInfo find_shortest_path_by_dijkstra(Graph *graph, int S, int F) {
         known_dist[neighbour_v] = calculated_distance;
         previous_v[neighbour_v] = min_dist_v;
       }
+
+      neighbour_node = neighbour_node->next;
     }
     visited[min_dist_v] = true;
     ++visited_num;
+    find_next_unvisited(n_vertices, visited, &min_dist_v);
   }
 
   free(visited);
-  return (PathInfo){.num_of_vertices = num_of_vertices,
+  return (PathInfo){.n_vertices = n_vertices,
                     .src = S,
                     .dst = F,
                     .distances = known_dist,
@@ -293,31 +307,52 @@ void deallocate_path_info(PathInfo *pathInfo) {
   free(pathInfo->previous_arr);
 }
 
+// void print_path(int *previous_arr, int n_vertices){
+//   for (int i = 0; i < n_vertices; ++i){
+//     printf("%d ", previous_arr[])
+//   }
+// }
+
 void print_path_info(PathInfo *pathInfo, FILE *output) {
-  for (int i = 1; i <= pathInfo->num_of_vertices; ++i) {
+  int overflow_counter = 0;
+  for (int i = 1; i <= pathInfo->n_vertices; ++i) {
     int64_t distance_from_source = pathInfo->distances[i];
     if (distance_from_source == INFINITY) {
       fprintf(output, "oo ");
       continue;
     }
+    if (distance_from_source >= INT_MAX) {
+      ++overflow_counter;
+    }
     if (distance_from_source > INT_MAX) {
       fprintf(output, "INT_MAX+ ");
       continue;
     }
-    fprintf(output, "% " PRId64, distance_from_source);
+    fprintf(output, "%" PRId64 " ", distance_from_source);
   }
   fprintf(output, "\n");
 
   int64_t src_to_dst_len = pathInfo->distances[pathInfo->dst];
-  if (src_to_dst_len > INT_MAX) {
+  if (src_to_dst_len == INFINITY) {
     fprintf(output, "no path");
+  } else if (src_to_dst_len > INT_MAX && overflow_counter > 2) {
+    fprintf(output, "overflow");
   } else {
-    fprintf(output, "%" PRId64, src_to_dst_len);
+    // fprintf(output, "%" PRId64, src_to_dst_len);
+    // print_path(pathInfo->previous_arr);
+    int temp = pathInfo->dst;
+    while (temp != -1) {
+      printf("%d ", temp);
+      temp = pathInfo->previous_arr[temp];
+    }
   }
 }
 
 // the graph is not being built until all the input data is checked
 int main(void) {
+#ifdef DEBUG
+  setbuf(stdout, NULL);
+#endif
   int N;  // number of vertices in the graph
   int S;  // path source
   int F;  // path destination
@@ -329,7 +364,7 @@ int main(void) {
     deallocate_temporary_storage(edges_temp_storage, M);
     // print_graph(graph, N);
 
-    PathInfo pathInfo = find_shortest_path_by_dijkstra(graph, S, F);
+    PathInfo pathInfo = dijkstra_naive_adj_list(graph, S, F);
     print_path_info(&pathInfo, stdout);
 
     destroy_graph(graph);

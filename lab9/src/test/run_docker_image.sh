@@ -7,7 +7,7 @@ RST="\033[0m"
 # start docker if is not running yet
 if ! docker ps >/dev/null; then
   if [ "$OS" = 'macOS' ]; then
-    echo "Starting Docker app..."
+    echo "Starting Docker app... Delay is 15 sec"
     open -a Docker
     sleep 10
   else

@@ -19,6 +19,8 @@ FILES := main.c
 EXE := a.out
 all: static
 	gcc -g $(CFLAGS) $(FILES)
+nr:
+	gcc -g $(CFLAGS) $(FILES) && ./$(EXE)
 r: run
 run:
 	./$(EXE)
