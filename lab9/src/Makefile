@@ -20,8 +20,8 @@ FILES := main.c
 EXE := a.out
 all: static
 	gcc -g $(CFLAGS) $(FILES)
-nr:
-	gcc -g $(CFLAGS) $(FILES) && ./$(EXE)
+n:
+	gcc -g $(CFLAGS) $(FILES)
 r: run
 run:
 	./$(EXE)
@@ -29,6 +29,7 @@ d: debug
 debug:
 	$(CC) -g -DDEBUG $(CFLAGS) $(FILES)
 t: test
+test: n
 	./test$(LAB) $(EXE)
 static: clear
 	cppcheck --enable=all --suppress=missingIncludeSystem *.[ch]

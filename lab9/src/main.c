@@ -242,11 +242,34 @@ void find_next_unvisited(int n_vertices, bool const *visited, int *min_dist_v) {
   }
 }
 
+int get_min_dist_v(bool visited[], int64_t known_dist[], int n_vertices,
+                   int min_dist_v) {
+  for (int i = min_dist_v; i <= n_vertices; ++i) {
+    if (!visited[i] && known_dist[i] < known_dist[min_dist_v]) {
+      min_dist_v = i;
+    }
+  }
+
+  return min_dist_v;
+}
+
+void relaxate_set_previous(AdjListNode *neighbour_node, int64_t known_dist[],
+                           int previous_v[], int min_dist_v) {
+  int neighbour_v = neighbour_node->dst;
+  int neighbour_dist = neighbour_node->length;
+  int64_t calculated_distance = known_dist[min_dist_v] + neighbour_dist;
+
+  if (calculated_distance < known_dist[neighbour_v]) {
+    known_dist[neighbour_v] = calculated_distance;
+    previous_v[neighbour_v] = min_dist_v;
+  }
+}
+
 PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   int n_vertices = graph->n_vertices;
   int arr_size = n_vertices + 1;
 
-  // initialize distances and previous arrays
+  bool *visited = (bool *)calloc(arr_size, sizeof(bool));
   int *previous_v = (int *)malloc(sizeof(int) * arr_size);
   int64_t *known_dist = (int64_t *)malloc(sizeof(int64_t) * arr_size);
   for (int i = 0; i <= n_vertices; ++i) {
@@ -255,43 +278,21 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   }
   known_dist[S] = 0;
 
-  // initialize visited
-  bool *visited = (bool *)calloc(arr_size, sizeof(bool));
-
-  // algorithm
   int visited_num = 0;
   int min_dist_v = S;
   while (visited_num < n_vertices) {
-    // find vertex with smallest known_dist
-    for (int i = min_dist_v; i <= n_vertices; ++i) {
-      if (!visited[i] && known_dist[i] < known_dist[min_dist_v]) {
-        min_dist_v = i;
-      }
-    }
-    // find known_dist to neighbour
-    /// get adjacency_list for min_dist_v
+    min_dist_v = get_min_dist_v(visited, known_dist, n_vertices, min_dist_v);
     AdjListNode *neighbour_node = graph->adjacency_lists[min_dist_v];
-    /// iterate over neighbour_node
-    while (neighbour_node != NULL) {
-      if (visited[neighbour_node->dst] == true ||
-          min_dist_v == neighbour_node->dst) {
-        neighbour_node = neighbour_node->next;
-        continue;
-      }
-
-      int neighbour_v = neighbour_node->dst;
-      int neighbour_dist = neighbour_node->length;
-      int64_t calculated_distance = known_dist[min_dist_v] + neighbour_dist;
-
-      if (calculated_distance < known_dist[neighbour_v]) {
-        known_dist[neighbour_v] = calculated_distance;
-        previous_v[neighbour_v] = min_dist_v;
-      }
-
-      neighbour_node = neighbour_node->next;
-    }
     visited[min_dist_v] = true;
     ++visited_num;
+
+    while (neighbour_node != NULL) {
+      if (!visited[neighbour_node->dst]) {
+        relaxate_set_previous(neighbour_node, known_dist, previous_v,
+                              min_dist_v);
+      }
+      neighbour_node = neighbour_node->next;
+    }
     find_next_unvisited(n_vertices, visited, &min_dist_v);
   }
 
