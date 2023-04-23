@@ -263,7 +263,7 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   int min_dist_v = S;
   while (visited_num < n_vertices) {
     // find vertex with smallest known_dist
-    for (int i = 1; i <= n_vertices; ++i) {
+    for (int i = min_dist_v; i <= n_vertices; ++i) {
       if (!visited[i] && known_dist[i] < known_dist[min_dist_v]) {
         min_dist_v = i;
       }
@@ -308,12 +308,6 @@ void deallocate_path_info(PathInfo *pathInfo) {
   free(pathInfo->previous_arr);
 }
 
-// void print_path(int *previous_arr, int n_vertices){
-//   for (int i = 0; i < n_vertices; ++i){
-//     printf("%d ", previous_arr[])
-//   }
-// }
-
 void print_path_info(PathInfo *pathInfo, FILE *output) {
   int overflow_counter = 0;
   for (int i = 1; i <= pathInfo->n_vertices; ++i) {
@@ -339,8 +333,6 @@ void print_path_info(PathInfo *pathInfo, FILE *output) {
   } else if (src_to_dst_len > INT_MAX && overflow_counter > 2) {
     fprintf(output, "overflow");
   } else {
-    // fprintf(output, "%" PRId64, src_to_dst_len);
-    // print_path(pathInfo->previous_arr);
     int temp = pathInfo->dst;
     while (temp != -1) {
       printf("%d ", temp);
