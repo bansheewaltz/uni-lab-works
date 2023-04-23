@@ -15,6 +15,7 @@
 #define SUCCESS 1
 #define FAILURE 0
 #define INFINITY INT64_MAX
+#define UNDEFINED -1
 #define IS_IN_BOUNDS(l, value, r) (l <= value && value <= r)
 
 typedef struct Graph Graph;
@@ -40,7 +41,6 @@ struct Edge {
 };
 
 struct PathInfo {
-  int n_vertices;
   int src;
   int dst;
   int64_t *distances;
@@ -242,10 +242,13 @@ void find_next_unvisited(int n_vertices, bool const *visited, int *min_dist_v) {
   }
 }
 
-int get_min_dist_v(bool visited[], int64_t known_dist[], int n_vertices,
+int get_min_dist_v(bool visited[], int64_t dist[], int n_vertices,
                    int min_dist_v) {
+  min_dist_v = UNDEFINED;
+
   for (int i = min_dist_v; i <= n_vertices; ++i) {
-    if (!visited[i] && known_dist[i] < known_dist[min_dist_v]) {
+    if (!visited[i] &&
+        (min_dist_v == UNDEFINED || dist[i] < dist[min_dist_v])) {
       min_dist_v = i;
     }
   }
@@ -253,14 +256,14 @@ int get_min_dist_v(bool visited[], int64_t known_dist[], int n_vertices,
   return min_dist_v;
 }
 
-void relaxate_set_previous(AdjListNode *neighbour, int64_t known_dist[],
+void relaxate_set_previous(AdjListNode *neighbour, int64_t dist[],
                            int previous_v[], int min_dist_v) {
   int neighbour_v = neighbour->dst;
   int neighbour_dist = neighbour->length;
-  int64_t calculated_distance = known_dist[min_dist_v] + neighbour_dist;
+  int64_t calculated_distance = dist[min_dist_v] + neighbour_dist;
 
-  if (calculated_distance < known_dist[neighbour_v]) {
-    known_dist[neighbour_v] = calculated_distance;
+  if (calculated_distance < dist[neighbour_v]) {
+    dist[neighbour_v] = calculated_distance;
     previous_v[neighbour_v] = min_dist_v;
   }
 }
@@ -269,38 +272,34 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   int n_vertices = graph->n_vertices;
   int arr_size = n_vertices + 1;
   bool *visited = (bool *)calloc(arr_size, sizeof(bool));
-  int64_t *known_dist = (int64_t *)malloc(sizeof(int64_t) * arr_size);
+
+  int64_t *dist = (int64_t *)malloc(sizeof(int64_t) * arr_size);
   int *previous_v = (int *)malloc(sizeof(int) * arr_size);
-
   for (int i = 0; i <= n_vertices; ++i) {
-    known_dist[i] = INFINITY;
-    previous_v[i] = -1;
+    dist[i] = INFINITY;
+    previous_v[i] = UNDEFINED;
   }
-  known_dist[S] = 0;
+  dist[S] = 0;
 
-  int visited_num = 0;
   int min_dist_v = S;
-  while (visited_num < n_vertices) {
-    min_dist_v = get_min_dist_v(visited, known_dist, n_vertices, min_dist_v);
-    AdjListNode *neighbour = graph->adjacency_lists[min_dist_v];
-    visited[min_dist_v] = true;
-    ++visited_num;
+  for (int n_visited = 0; n_visited < n_vertices; ++n_visited) {
+    min_dist_v = get_min_dist_v(visited, dist, n_vertices, min_dist_v);
+    if (dist[min_dist_v] == INFINITY) {
+      break;
+    }
 
+    visited[min_dist_v] = true;
+    AdjListNode *neighbour = graph->adjacency_lists[min_dist_v];
     while (neighbour != NULL) {
       if (!visited[neighbour->dst]) {
-        relaxate_set_previous(neighbour, known_dist, previous_v, min_dist_v);
+        relaxate_set_previous(neighbour, dist, previous_v, min_dist_v);
       }
       neighbour = neighbour->next;
     }
-    find_next_unvisited(n_vertices, visited, &min_dist_v);
   }
 
   free(visited);
-  return (PathInfo){.n_vertices = n_vertices,
-                    .src = S,
-                    .dst = F,
-                    .distances = known_dist,
-                    .previous_arr = previous_v};
+  return (PathInfo){S, F, dist, previous_v};
 }
 
 void deallocate_path_info(PathInfo *pathInfo) {
@@ -308,22 +307,24 @@ void deallocate_path_info(PathInfo *pathInfo) {
   free(pathInfo->previous_arr);
 }
 
-void print_path_info(PathInfo *pathInfo, FILE *output) {
+void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
   int overflow_counter = 0;
-  for (int i = 1; i <= pathInfo->n_vertices; ++i) {
+
+  for (int i = 1; i <= n_vertices; ++i) {
     int64_t distance_from_source = pathInfo->distances[i];
     if (distance_from_source == INFINITY) {
       fprintf(output, "oo ");
       continue;
     }
+
     if (distance_from_source >= INT_MAX) {
       ++overflow_counter;
     }
     if (distance_from_source > INT_MAX) {
       fprintf(output, "INT_MAX+ ");
-      continue;
+    } else {
+      fprintf(output, "%" PRId64 " ", distance_from_source);
     }
-    fprintf(output, "%" PRId64 " ", distance_from_source);
   }
   fprintf(output, "\n");
 
@@ -358,7 +359,7 @@ int main(void) {
     // print_graph(graph, N);
 
     PathInfo pathInfo = dijkstra_naive_adj_list(graph, S, F);
-    print_path_info(&pathInfo, stdout);
+    print_path_info(&pathInfo, N, stdout);
 
     destroy_graph(graph);
     deallocate_path_info(&pathInfo);
