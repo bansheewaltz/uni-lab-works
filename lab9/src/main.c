@@ -253,10 +253,10 @@ int get_min_dist_v(bool visited[], int64_t known_dist[], int n_vertices,
   return min_dist_v;
 }
 
-void relaxate_set_previous(AdjListNode *neighbour_node, int64_t known_dist[],
+void relaxate_set_previous(AdjListNode *neighbour, int64_t known_dist[],
                            int previous_v[], int min_dist_v) {
-  int neighbour_v = neighbour_node->dst;
-  int neighbour_dist = neighbour_node->length;
+  int neighbour_v = neighbour->dst;
+  int neighbour_dist = neighbour->length;
   int64_t calculated_distance = known_dist[min_dist_v] + neighbour_dist;
 
   if (calculated_distance < known_dist[neighbour_v]) {
@@ -268,10 +268,10 @@ void relaxate_set_previous(AdjListNode *neighbour_node, int64_t known_dist[],
 PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   int n_vertices = graph->n_vertices;
   int arr_size = n_vertices + 1;
-
   bool *visited = (bool *)calloc(arr_size, sizeof(bool));
-  int *previous_v = (int *)malloc(sizeof(int) * arr_size);
   int64_t *known_dist = (int64_t *)malloc(sizeof(int64_t) * arr_size);
+  int *previous_v = (int *)malloc(sizeof(int) * arr_size);
+
   for (int i = 0; i <= n_vertices; ++i) {
     known_dist[i] = INFINITY;
     previous_v[i] = -1;
@@ -282,16 +282,15 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   int min_dist_v = S;
   while (visited_num < n_vertices) {
     min_dist_v = get_min_dist_v(visited, known_dist, n_vertices, min_dist_v);
-    AdjListNode *neighbour_node = graph->adjacency_lists[min_dist_v];
+    AdjListNode *neighbour = graph->adjacency_lists[min_dist_v];
     visited[min_dist_v] = true;
     ++visited_num;
 
-    while (neighbour_node != NULL) {
-      if (!visited[neighbour_node->dst]) {
-        relaxate_set_previous(neighbour_node, known_dist, previous_v,
-                              min_dist_v);
+    while (neighbour != NULL) {
+      if (!visited[neighbour->dst]) {
+        relaxate_set_previous(neighbour, known_dist, previous_v, min_dist_v);
       }
-      neighbour_node = neighbour_node->next;
+      neighbour = neighbour->next;
     }
     find_next_unvisited(n_vertices, visited, &min_dist_v);
   }
