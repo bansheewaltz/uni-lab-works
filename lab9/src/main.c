@@ -273,7 +273,8 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
     AdjListNode *neighbour_node = graph->adjacency_lists[min_dist_v];
     /// iterate over neighbour_node
     while (neighbour_node != NULL) {
-      if (visited[neighbour_node->dst] == true) {
+      if (visited[neighbour_node->dst] == true ||
+          min_dist_v == neighbour_node->dst) {
         neighbour_node = neighbour_node->next;
         continue;
       }

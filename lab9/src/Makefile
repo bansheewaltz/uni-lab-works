@@ -3,6 +3,7 @@ UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
 	OS := macOS
 endif
+LAB := $(shell pwd | grep -o 'lab[0-9]')
 # compile options
 CC := gcc
 WFLAGS := -Wall -Werror -Wextra
@@ -27,6 +28,8 @@ run:
 d: debug
 debug:
 	$(CC) -g -DDEBUG $(CFLAGS) $(FILES)
+t: test
+	./test$(LAB) $(EXE)
 static: clear
 	cppcheck --enable=all --suppress=missingIncludeSystem *.[ch]
 valgrind: clear d
