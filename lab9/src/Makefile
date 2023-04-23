@@ -19,6 +19,9 @@ FILES := main.c
 EXE := a.out
 all: static
 	gcc -g $(CFLAGS) $(FILES)
+r: run
+run:
+	./$(EXE)
 d: debug
 debug:
 	$(CC) -g -DDEBUG $(CFLAGS) $(FILES)
