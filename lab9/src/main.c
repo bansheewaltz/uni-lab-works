@@ -34,12 +34,6 @@ struct AdjListNode {
   AdjListNode *next;
 };
 
-struct Edge {
-  int src;
-  int dst;
-  int64_t length;
-};
-
 struct PathInfo {
   int src;
   int dst;
@@ -77,32 +71,6 @@ void initialise_lists(AdjListNode *adjacency_lists[], int N) {
   for (int i = 0; i < N; i++) {
     adjacency_lists[i] = NULL;
   }
-}
-
-Graph *create_graph(struct Edge *edges[], int N, int M) {
-  if (edges == NULL) {
-    print_error_terminate("edges pointer is NULL");
-  }
-
-  Graph *graph = (Graph *)malloc(sizeof(Graph));
-
-  graph->n_vertices = N;
-  graph->n_edges = M;
-  graph->adjacency_lists =  // N + 1 because idx 0 node will be ingored
-      (AdjListNode **)malloc((N + 1) * sizeof(AdjListNode *));
-
-  initialise_lists(graph->adjacency_lists, N + 1);
-
-  for (int i = 0; i < M; ++i) {
-    int src = edges[i]->src;
-    int dst = edges[i]->dst;
-    int length = edges[i]->length;
-
-    add_node(graph, src, dst, length);
-    add_node(graph, dst, src, length);
-  }
-
-  return graph;
 }
 
 void print_graph(Graph *graph, int M) {
@@ -173,29 +141,31 @@ bool scan_validate_parameters(int *N, int *S, int *F, int *M) {
          scan_validate_n_edges(M, *N);    //
 }
 
-bool scan_validate_input(int *N, int *S, int *F, int *M, struct Edge ***edges) {
-  if (scan_validate_parameters(N, S, F, M) == FAILURE) {
-    return FAILURE;
-  }
+Graph *create_graph(int N, int M) {
+  Graph *graph = (Graph *)malloc(sizeof(Graph));
 
-  *edges = (struct Edge **)malloc(sizeof(struct Edge *) * (*M));
-  if (*edges == NULL) {
-    print_error_terminate("heap buffer overflow");
-  }
+  graph->n_vertices = N;
+  graph->n_edges = M;
+  graph->adjacency_lists =  // N + 1 because idx 0 node will be ingored
+      (AdjListNode **)malloc((N + 1) * sizeof(AdjListNode *));
 
-  for (int i = 0; i < *M; ++i) {
-    (*edges)[i] = (struct Edge *)malloc(sizeof(struct Edge));
-    int *src = &(*edges)[i]->src;
-    int *dst = &(*edges)[i]->dst;
-    int64_t *len = &(*edges)[i]->length;
+  initialise_lists(graph->adjacency_lists, N + 1);
 
-    bool ret = scan_validate_edge(src, dst, *N, len);
+  for (int i = 0; i < M; ++i) {
+    int src;
+    int dst;
+    int64_t length;
+
+    bool ret = scan_validate_edge(&src, &dst, N, &length);
     if (ret != SUCCESS) {
       print_error_terminate("bad number of lines");
     }
+
+    add_node(graph, src, dst, length);
+    add_node(graph, dst, src, length);
   }
 
-  return SUCCESS;
+  return graph;
 }
 
 void destroy_graph(Graph *graph) {
@@ -222,33 +192,18 @@ void destroy_graph(Graph *graph) {
   free(graph);
 }
 
-void deallocate_temporary_storage(struct Edge **edges, int M) {
-  if (edges == NULL) {
-    return;
-  }
+int get_min_dist_v(bool const visited[], int64_t const dist[], int n_vertices) {
+  int min_dist_v = 1;
 
-  for (int i = 0; i < M; ++i) {
-    free(edges[i]);
-  }
-  free(edges);
-}
-
-void find_next_unvisited(int n_vertices, bool const *visited, int *min_dist_v) {
-  for (int i = 1; i < n_vertices; ++i) {
+  for (int i = 1; i <= n_vertices; ++i) {
     if (!visited[i]) {
-      *min_dist_v = i;
+      min_dist_v = i;
       break;
     }
   }
-}
-
-int get_min_dist_v(bool visited[], int64_t dist[], int n_vertices,
-                   int min_dist_v) {
-  min_dist_v = UNDEFINED;
 
   for (int i = min_dist_v; i <= n_vertices; ++i) {
-    if (!visited[i] &&
-        (min_dist_v == UNDEFINED || dist[i] < dist[min_dist_v])) {
+    if (!visited[i] && dist[i] < dist[min_dist_v]) {
       min_dist_v = i;
     }
   }
@@ -259,8 +214,8 @@ int get_min_dist_v(bool visited[], int64_t dist[], int n_vertices,
 void relaxate_set_previous(AdjListNode *neighbour, int64_t dist[],
                            int previous_v[], int min_dist_v) {
   int neighbour_v = neighbour->dst;
-  int neighbour_dist = neighbour->length;
-  int64_t calculated_distance = dist[min_dist_v] + neighbour_dist;
+  int rel_dist_to_neighbour = neighbour->length;
+  int64_t calculated_distance = dist[min_dist_v] + rel_dist_to_neighbour;
 
   if (calculated_distance < dist[neighbour_v]) {
     dist[neighbour_v] = calculated_distance;
@@ -281,9 +236,8 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   }
   dist[S] = 0;
 
-  int min_dist_v = S;
   for (int n_visited = 0; n_visited < n_vertices; ++n_visited) {
-    min_dist_v = get_min_dist_v(visited, dist, n_vertices, min_dist_v);
+    int min_dist_v = get_min_dist_v(visited, dist, n_vertices);
     if (dist[min_dist_v] == INFINITY) {
       break;
     }
@@ -342,7 +296,6 @@ void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
   }
 }
 
-// the graph is not being built until all the input data is checked
 int main(void) {
 #ifdef DEBUG
   setbuf(stdout, NULL);
@@ -351,12 +304,12 @@ int main(void) {
   int S;  // path source
   int F;  // path destination
   int M;  // number of edges in the graph
-  struct Edge **edges_temp_storage = NULL;
 
-  if (scan_validate_input(&N, &S, &F, &M, &edges_temp_storage) == SUCCESS) {
-    Graph *graph = create_graph(edges_temp_storage, N, M);
-    deallocate_temporary_storage(edges_temp_storage, M);
-    // print_graph(graph, N);
+  if (scan_validate_parameters(&N, &S, &F, &M) == SUCCESS) {
+    Graph *graph = create_graph(N, M);
+#ifdef DEBUG
+    print_graph(graph, N);
+#endif
 
     PathInfo pathInfo = dijkstra_naive_adj_list(graph, S, F);
     print_path_info(&pathInfo, N, stdout);
