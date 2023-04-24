@@ -1,0 +1,12 @@
+{
+    "configurations": [
+        {
+            "name": "Universal",
+            "includePath": [
+                "${workspaceFolder}/include"
+            ],
+            "cStandard": "c99"
+        }
+    ],
+    "version": 4
+}
