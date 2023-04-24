@@ -7,43 +7,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-/* changable variables */
-#define MAX_VERTICES_NUM 5000
-#define MAX_EDGES_NUM (N * (N - 1) / 2)
-#define MAX_EDGE_LEN INT_MAX
-/* utility stuff */
-#define SUCCESS 1
-#define FAILURE 0
-#define INFINITY UINT64_MAX
-#define UNDEFINED -1
-#define ADJACENCY_LIST 1
-#define ADJACENCY_MATRIX 0
-#define IS_IN_BOUNDS(l, value, r) (l <= value && value <= r)
+#include "defines.h"
 
-typedef struct Graph Graph;
-typedef struct AdjListNode AdjListNode;
-typedef struct PathInfo PathInfo;
-
-struct Graph {
-  int n_vertices;
-  int n_edges;
-  AdjListNode **adjacency_lists;
-  int *adjacency_matrix;
-  bool representation;
-};
-
-struct AdjListNode {
-  int dst;
-  int length;
-  AdjListNode *next;
-};
-
-struct PathInfo {
-  int src;
-  int dst;
-  uint64_t *distances;
-  int *previous_arr;
-};
+#ifdef DEBUG
+#include "debug.h"
+#endif
 
 void print_error_terminate(char message[]) {
   puts(message);
@@ -74,58 +42,6 @@ void initialise_lists(AdjListNode *adjacency_lists[], int N) {
 
   for (int i = 0; i < N; i++) {
     adjacency_lists[i] = NULL;
-  }
-}
-
-void print_adj_matrix_graph(Graph *graph) {
-  if (graph == NULL) {
-    return;
-  }
-
-  int n_vertices = graph->n_vertices;
-  printf("x| ");
-  for (int i = 1; i <= n_vertices; ++i) {
-    printf("%d ", i);
-  }
-  printf("\n");
-
-  for (int r = 1; r <= n_vertices; ++r) {
-    printf("%d| ", r);
-
-    for (int c = 1; c <= n_vertices; ++c) {
-      printf("%d ", graph->adjacency_matrix[r * (n_vertices + 1) + c]);
-    }
-    printf("\n");
-  }
-}
-
-void print_adj_list_graph(Graph *graph) {
-  if (graph == NULL) {
-    return;
-  }
-
-  for (int i = 1; i <= graph->n_vertices; ++i) {
-    AdjListNode *ptr = graph->adjacency_lists[i];
-
-    while (ptr != NULL) {
-      printf("%d —> %d (%d)\t", i, ptr->dst, ptr->length);
-      ptr = ptr->next;
-    }
-
-    printf("\n");
-  }
-}
-
-void print_graph(Graph *graph) {
-  if (graph == NULL) {
-    return;
-  }
-
-  if (graph->representation == ADJACENCY_LIST) {
-    print_adj_list_graph(graph);
-  }
-  if (graph->representation == ADJACENCY_MATRIX) {
-    print_adj_matrix_graph(graph);
   }
 }
 
