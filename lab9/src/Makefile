@@ -33,6 +33,7 @@ test: n
 	./test$(LAB) $(EXE)
 static: clear
 	cppcheck --enable=all --suppress=missingIncludeSystem *.[ch]
+v: valgrind
 valgrind: clear d
 	valgrind $(MEMFLAGS) ./$(EXE)
 asan: clear

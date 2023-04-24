@@ -9,4 +9,6 @@ RUN apt-get update && apt-get install -y \
     check \
     clang-format \
     pkg-config \
-    sudo
+    sudo \
+    cppcheck \
+    gdb

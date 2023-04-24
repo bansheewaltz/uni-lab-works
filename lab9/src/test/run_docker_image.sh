@@ -24,7 +24,7 @@ else
 fi
 
 container_name="dondarri.${image_os}-temp"
-docker rm ${container_name} 2> /dev/null
+docker rm -f ${container_name} #2> /dev/null
 dockerfile="Dockerfile.$image_os"
 image="dondarri/$image_os"
 prompt="$CLR$image_os@container$RST:\W$ "

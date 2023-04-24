@@ -14,8 +14,10 @@
 /* utility stuff */
 #define SUCCESS 1
 #define FAILURE 0
-#define INFINITY INT64_MAX
+#define INFINITY UINT64_MAX
 #define UNDEFINED -1
+#define ADJACENCY_LIST 1
+#define ADJACENCY_MATRIX 0
 #define IS_IN_BOUNDS(l, value, r) (l <= value && value <= r)
 
 typedef struct Graph Graph;
@@ -26,18 +28,20 @@ struct Graph {
   int n_vertices;
   int n_edges;
   AdjListNode **adjacency_lists;
+  int *adjacency_matrix;
+  bool representation;
 };
 
 struct AdjListNode {
   int dst;
-  int64_t length;
+  int length;
   AdjListNode *next;
 };
 
 struct PathInfo {
   int src;
   int dst;
-  int64_t *distances;
+  uint64_t *distances;
   int *previous_arr;
 };
 
@@ -46,7 +50,7 @@ void print_error_terminate(char message[]) {
   exit(EXIT_SUCCESS);  // but actually FAILURE
 }
 
-void add_node(Graph *graph, int src, int dst, int length) {
+void add_adj_list_node(Graph *graph, int src, int dst, int length) {
   if (graph == NULL) {
     return;
   }
@@ -73,20 +77,55 @@ void initialise_lists(AdjListNode *adjacency_lists[], int N) {
   }
 }
 
-void print_graph(Graph *graph, int M) {
+void print_adj_matrix_graph(Graph *graph) {
   if (graph == NULL) {
     return;
   }
 
-  for (int i = 1; i < M + 1; i++) {
+  int n_vertices = graph->n_vertices;
+  printf("x| ");
+  for (int i = 1; i <= n_vertices; ++i) {
+    printf("%d ", i);
+  }
+  printf("\n");
+
+  for (int r = 1; r <= n_vertices; ++r) {
+    printf("%d| ", r);
+
+    for (int c = 1; c <= n_vertices; ++c) {
+      printf("%d ", graph->adjacency_matrix[r * (n_vertices + 1) + c]);
+    }
+    printf("\n");
+  }
+}
+
+void print_adj_list_graph(Graph *graph) {
+  if (graph == NULL) {
+    return;
+  }
+
+  for (int i = 1; i <= graph->n_vertices; ++i) {
     AdjListNode *ptr = graph->adjacency_lists[i];
 
     while (ptr != NULL) {
-      printf("%d —> %d (%" PRId64 ")\t", i, ptr->dst, ptr->length);
+      printf("%d —> %d (%d)\t", i, ptr->dst, ptr->length);
       ptr = ptr->next;
     }
 
     printf("\n");
+  }
+}
+
+void print_graph(Graph *graph) {
+  if (graph == NULL) {
+    return;
+  }
+
+  if (graph->representation == ADJACENCY_LIST) {
+    print_adj_list_graph(graph);
+  }
+  if (graph->representation == ADJACENCY_MATRIX) {
+    print_adj_matrix_graph(graph);
   }
 }
 
@@ -118,8 +157,8 @@ bool scan_validate_n_edges(int *M, int N) {
   return false;
 }
 
-bool scan_validate_edge_len(int64_t *length) {
-  if (scanf("%" SCNd64, length) && IS_IN_BOUNDS(0, *length, MAX_EDGE_LEN)) {
+bool scan_validate_edge_len(int *length) {
+  if (scanf("%d", length) && IS_IN_BOUNDS(0, *length, MAX_EDGE_LEN)) {
     return true;
   }
 
@@ -127,7 +166,7 @@ bool scan_validate_edge_len(int64_t *length) {
   return false;
 }
 
-int scan_validate_edge(int *src, int *dst, int N, int64_t *length) {
+int scan_validate_edge(int *src, int *dst, int N, int *length) {
   if (scan_validate_path(src, dst, N) && scan_validate_edge_len(length)) {
     return SUCCESS;
   }
@@ -141,9 +180,10 @@ bool scan_validate_parameters(int *N, int *S, int *F, int *M) {
          scan_validate_n_edges(M, *N);    //
 }
 
-Graph *create_graph(int N, int M) {
+Graph *create_graph_adj_list(int N, int M) {
   Graph *graph = (Graph *)malloc(sizeof(Graph));
 
+  graph->representation = ADJACENCY_LIST;
   graph->n_vertices = N;
   graph->n_edges = M;
   graph->adjacency_lists =  // N + 1 because idx 0 node will be ingored
@@ -154,21 +194,63 @@ Graph *create_graph(int N, int M) {
   for (int i = 0; i < M; ++i) {
     int src;
     int dst;
-    int64_t length;
+    int length;
 
     bool ret = scan_validate_edge(&src, &dst, N, &length);
     if (ret != SUCCESS) {
       print_error_terminate("bad number of lines");
     }
 
-    add_node(graph, src, dst, length);
-    add_node(graph, dst, src, length);
+    add_adj_list_node(graph, src, dst, length);
+    add_adj_list_node(graph, dst, src, length);
   }
 
   return graph;
 }
 
-void destroy_graph(Graph *graph) {
+void add_matrix_entry(Graph *graph, int src, int dst, int length) {
+  graph->adjacency_matrix[(graph->n_vertices + 1) * src + dst] = length;
+}
+
+Graph *create_graph_adj_matrix(int N, int M) {
+  Graph *graph = (Graph *)calloc(1, sizeof(Graph));
+
+  graph->representation = ADJACENCY_MATRIX;
+  graph->n_vertices = N;
+  graph->n_edges = M;
+  graph->adjacency_matrix =  // N + 1 because idx 0 node will be ingored
+      (int *)calloc(((N + 1) * (N + 1)), sizeof(int));
+
+  for (int i = 0; i < M; ++i) {
+    int src;
+    int dst;
+    int length;
+
+    bool ret = scan_validate_edge(&src, &dst, N, &length);
+    if (ret != SUCCESS) {
+      print_error_terminate("bad number of lines");
+    }
+
+    add_matrix_entry(graph, src, dst, length);
+    add_matrix_entry(graph, dst, src, length);
+  }
+
+  return graph;
+}
+
+Graph *create_graph(int N, int M) {
+  Graph *graph;
+
+  if (N * (N - 1) * 0.25 > M) {
+    graph = create_graph_adj_list(N, M);
+  } else {
+    graph = create_graph_adj_matrix(N, M);
+  }
+
+  return graph;
+}
+
+void deallocate_adj_list(Graph *graph) {
   if (graph == NULL) {
     return;
   }
@@ -189,10 +271,24 @@ void destroy_graph(Graph *graph) {
   }
 
   free(graph->adjacency_lists);
+}
+
+void destroy_graph(Graph *graph) {
+  if (graph == NULL) {
+    return;
+  }
+
+  if (graph->representation == ADJACENCY_LIST) {
+    deallocate_adj_list(graph);
+  }
+  if (graph->representation == ADJACENCY_MATRIX) {
+    free(graph->adjacency_matrix);
+  }
   free(graph);
 }
 
-int get_min_dist_v(bool const visited[], int64_t const dist[], int n_vertices) {
+int get_min_dist_v(bool const visited[], uint64_t const dist[],
+                   int n_vertices) {
   int min_dist_v = 1;
 
   for (int i = 1; i <= n_vertices; ++i) {
@@ -211,11 +307,11 @@ int get_min_dist_v(bool const visited[], int64_t const dist[], int n_vertices) {
   return min_dist_v;
 }
 
-void relaxate_set_previous(AdjListNode *neighbour, int64_t dist[],
+void relaxate_set_previous(AdjListNode *neighbour, uint64_t dist[],
                            int previous_v[], int min_dist_v) {
   int neighbour_v = neighbour->dst;
   int rel_dist_to_neighbour = neighbour->length;
-  int64_t calculated_distance = dist[min_dist_v] + rel_dist_to_neighbour;
+  uint64_t calculated_distance = dist[min_dist_v] + rel_dist_to_neighbour;
 
   if (calculated_distance < dist[neighbour_v]) {
     dist[neighbour_v] = calculated_distance;
@@ -228,7 +324,7 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
   int arr_size = n_vertices + 1;
   bool *visited = (bool *)calloc(arr_size, sizeof(bool));
 
-  int64_t *dist = (int64_t *)malloc(sizeof(int64_t) * arr_size);
+  uint64_t *dist = (uint64_t *)malloc(sizeof(uint64_t) * arr_size);
   int *previous_v = (int *)malloc(sizeof(int) * arr_size);
   for (int i = 0; i <= n_vertices; ++i) {
     dist[i] = INFINITY;
@@ -265,7 +361,7 @@ void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
   int overflow_counter = 0;
 
   for (int i = 1; i <= n_vertices; ++i) {
-    int64_t distance_from_source = pathInfo->distances[i];
+    uint64_t distance_from_source = pathInfo->distances[i];
     if (distance_from_source == INFINITY) {
       fprintf(output, "oo ");
       continue;
@@ -282,7 +378,7 @@ void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
   }
   fprintf(output, "\n");
 
-  int64_t src_to_dst_len = pathInfo->distances[pathInfo->dst];
+  uint64_t src_to_dst_len = pathInfo->distances[pathInfo->dst];
   if (src_to_dst_len == INFINITY) {
     fprintf(output, "no path");
   } else if (src_to_dst_len > INT_MAX && overflow_counter > 2) {
@@ -308,7 +404,7 @@ int main(void) {
   if (scan_validate_parameters(&N, &S, &F, &M) == SUCCESS) {
     Graph *graph = create_graph(N, M);
 #ifdef DEBUG
-    print_graph(graph, N);
+    print_graph(graph);
 #endif
 
     PathInfo pathInfo = dijkstra_naive_adj_list(graph, S, F);
