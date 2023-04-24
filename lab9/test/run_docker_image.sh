@@ -30,7 +30,7 @@ image="dondarri/$image_os"
 prompt="$CLR$image_os@container$RST:\W$ "
 command="echo \"export PS1='$prompt'\" >> ~/.bashrc && bash"
 
-docker build -t $image -f test/$dockerfile .
+docker build -t $image -f ${TEST_DIR}/$dockerfile .
 docker run -it \
   --name "$container_name" \
   -e PS1="$prompt" \
