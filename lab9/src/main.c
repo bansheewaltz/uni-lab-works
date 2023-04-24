@@ -241,11 +241,11 @@ Graph *create_graph_adj_matrix(int N, int M) {
 Graph *create_graph(int N, int M) {
   Graph *graph;
 
-  // if (N * (N - 1) * 0.25 > M) {
-  //   graph = create_graph_adj_list(N, M);
-  // } else {
-  graph = create_graph_adj_matrix(N, M);
-  // }
+  if (N * (N - 1) * 0.25 > M) {
+    graph = create_graph_adj_list(N, M);
+  } else {
+    graph = create_graph_adj_matrix(N, M);
+  }
 
   return graph;
 }
