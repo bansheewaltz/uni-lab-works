@@ -241,11 +241,11 @@ Graph *create_graph_adj_matrix(int N, int M) {
 Graph *create_graph(int N, int M) {
   Graph *graph;
 
-  if (N * (N - 1) * 0.25 > M) {
-    graph = create_graph_adj_list(N, M);
-  } else {
-    graph = create_graph_adj_matrix(N, M);
-  }
+  // if (N * (N - 1) * 0.25 > M) {
+  //   graph = create_graph_adj_list(N, M);
+  // } else {
+  graph = create_graph_adj_matrix(N, M);
+  // }
 
   return graph;
 }
@@ -307,19 +307,54 @@ int get_min_dist_v(bool const visited[], uint64_t const dist[],
   return min_dist_v;
 }
 
-void relaxate_set_previous(AdjListNode *neighbour, uint64_t dist[],
-                           int previous_v[], int min_dist_v) {
-  int neighbour_v = neighbour->dst;
-  int rel_dist_to_neighbour = neighbour->length;
-  uint64_t calculated_distance = dist[min_dist_v] + rel_dist_to_neighbour;
+int get_matrix_entry_idx(Graph *graph, int row, int column) {
+  return row * (graph->n_vertices + 1) + column;
+}
 
-  if (calculated_distance < dist[neighbour_v]) {
-    dist[neighbour_v] = calculated_distance;
-    previous_v[neighbour_v] = min_dist_v;
+int get_matrix_entry(Graph *graph, int row, int column) {
+  return graph->adjacency_matrix[get_matrix_entry_idx(graph, row, column)];
+}
+
+bool is_matrix_neighbour(Graph *graph, int row, int column) {
+  return get_matrix_entry(graph, row, column) != 0;
+}
+
+void relaxate_neighbours(Graph *graph, uint64_t dist[], bool visited[],
+                         int previous_v[], int min_dist_v) {
+  if (graph->representation == ADJACENCY_LIST) {
+    AdjListNode *neighbour = graph->adjacency_lists[min_dist_v];
+
+    while (neighbour != NULL) {
+      if (!visited[neighbour->dst]) {
+        int neighbour_v = neighbour->dst;
+        int rel_dist_to_neighbour = neighbour->length;
+        uint64_t calculated_distance = dist[min_dist_v] + rel_dist_to_neighbour;
+
+        if (calculated_distance < dist[neighbour_v]) {
+          dist[neighbour_v] = calculated_distance;
+          previous_v[neighbour_v] = min_dist_v;
+        }
+      }
+      neighbour = neighbour->next;
+    }
+  }
+
+  if (graph->representation == ADJACENCY_MATRIX) {
+    for (int c = 1; c <= graph->n_vertices; ++c) {
+      if (!visited[c] && is_matrix_neighbour(graph, min_dist_v, c)) {
+        int rel_dist_to_neighbour = get_matrix_entry(graph, min_dist_v, c);
+        uint64_t calculated_distance = dist[min_dist_v] + rel_dist_to_neighbour;
+
+        if (calculated_distance < dist[c]) {
+          dist[c] = calculated_distance;
+          previous_v[c] = min_dist_v;
+        }
+      }
+    }
   }
 }
 
-PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
+PathInfo dijkstra_naive(Graph *graph, int S, int F) {
   int n_vertices = graph->n_vertices;
   int arr_size = n_vertices + 1;
   bool *visited = (bool *)calloc(arr_size, sizeof(bool));
@@ -339,13 +374,7 @@ PathInfo dijkstra_naive_adj_list(Graph *graph, int S, int F) {
     }
 
     visited[min_dist_v] = true;
-    AdjListNode *neighbour = graph->adjacency_lists[min_dist_v];
-    while (neighbour != NULL) {
-      if (!visited[neighbour->dst]) {
-        relaxate_set_previous(neighbour, dist, previous_v, min_dist_v);
-      }
-      neighbour = neighbour->next;
-    }
+    relaxate_neighbours(graph, dist, visited, previous_v, min_dist_v);
   }
 
   free(visited);
@@ -407,7 +436,7 @@ int main(void) {
     print_graph(graph);
 #endif
 
-    PathInfo pathInfo = dijkstra_naive_adj_list(graph, S, F);
+    PathInfo pathInfo = dijkstra_naive(graph, S, F);
     print_path_info(&pathInfo, N, stdout);
 
     destroy_graph(graph);

@@ -18,6 +18,7 @@ export
 
 FILES := main.c
 EXE := a.out
+INPUT_REDIRECTION := < in.txt
 all: static
 	gcc -g $(CFLAGS) $(FILES)
 n:
@@ -36,6 +37,8 @@ static: clear
 v: valgrind
 valgrind: clear d
 	valgrind $(MEMFLAGS) ./$(EXE)
+valred: clear d
+	valgrind $(MEMFLAGS) ./$(EXE) $(INPUT_REDIRECTION)
 asan: clear
 	$(CC) -g $(CFLAGS) $(ASANFLAGS) $(FILES) && ./$(EXE)
 clean:
