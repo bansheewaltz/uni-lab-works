@@ -32,7 +32,7 @@ EXE := a.out
 INPUT_REDIRECTION := < in.txt
 all: static
 	gcc -g $(CFLAGS) $(FILES)
-n:
+n: main.c
 	gcc -g $(CFLAGS) $(FILES)
 r: run
 run:
@@ -41,8 +41,9 @@ d: debug
 debug:
 	$(CC) -g -DDEBUG $(CFLAGS) $(FILES)
 t: test
-test: n
+test: clear
 	$(TEST_DIR)/test$(LAB)_$(OS_SUFFIX) $(EXE)
+s: static
 static: clear
 	cppcheck $(CPPCHECKFLAGS) *.[ch]
 v: valgrind
@@ -57,6 +58,8 @@ clean:
 	$(RM) *.out
 	$(RM) *.dSYM
 clear:
-	clear
+	printf "\033c"
+# clear:
+# 	clear
 container: clean
 	bash $(TEST_DIR)/run_docker_image.sh

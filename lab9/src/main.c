@@ -319,7 +319,7 @@ bool is_matrix_neighbour(Graph *graph, int row, int column) {
   return get_matrix_entry(graph, row, column) != 0;
 }
 
-void relaxate_neighbours(Graph *graph, uint64_t dist[], bool visited[],
+void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
                          int previous_v[], int min_dist_v) {
   if (graph->representation == ADJACENCY_LIST) {
     AdjListNode *neighbour = graph->adjacency_lists[min_dist_v];
