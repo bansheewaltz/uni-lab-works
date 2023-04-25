@@ -4,11 +4,12 @@ WORKDIR /usr/project
 
 RUN apt-get update && apt-get install -y \
     gcc \ 
-    valgrind \
     make \
-    check \
+    cmake \
+    valgrind \
+    cppcheck \
     clang-format \
     pkg-config \
-    sudo \
-    cppcheck \
-    gdb
+    check \
+    gdb \
+    sudo

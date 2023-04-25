@@ -7,9 +7,9 @@ RST="\033[0m"
 # start docker if is not running yet
 if ! docker ps >/dev/null; then
   if [ "$OS" = 'macOS' ]; then
-    echo "Starting Docker app... Delay is 15 sec"
+    echo "Starting Docker app... Delay is 17 sec"
     open -a Docker
-    sleep 10
+    sleep 17
   else
     echo "you should run Docker first"
     exit 0
@@ -34,8 +34,8 @@ docker build -t $image -f ${TEST_DIR}/$dockerfile .
 docker run -it \
   --name "$container_name" \
   -e PS1="$prompt" \
-  -v $PWD:/usr/project \
-  -w /usr/project \
+  -v $PWD/../:/usr/project \
+  -w /usr/project/${LAB} \
   $image \
   bash -c "$command"
 

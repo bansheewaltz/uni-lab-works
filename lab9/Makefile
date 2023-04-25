@@ -1,4 +1,4 @@
-# utility stuff
+# the operability has been tested only on ARM-based macOS, Linux Ubuntu systems
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S), Darwin)
 	OS := macOS
@@ -16,7 +16,8 @@ LAB := $(shell pwd | grep -o 'lab[0-9]')
 # project paths
 SRC_DIR := src
 HDR_DIR := $(SRC_DIR)/headers# private
-EXE_DIR := build
+BLD_DIR := build
+EXE_DIR := $(BLD_DIR)
 TEST_DIR := test
 # project SRC_FILES
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
@@ -48,35 +49,53 @@ export
 
 EXE_FILE := $(EXE_DIR)/$(LAB)
 INPUT_REDIRECTION := < in.txt
-all: static
-	gcc -g $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
+all: static n
 n:
 	gcc -g $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
+
 r: run
 run:
 	$(EXE_FILE)
+
 d: debug
+debug: CFLAGS := -DDEBUG $(CFLAGS)
 debug:
-	$(CC) -g -DDEBUG $(CFLAGS) $(SRC_FILES)
-t: test
-test: clear
-	$(TEST_DIR)/test$(LAB)_$(OS_SUFFIX) $(EXE_FILE)
-v: valgrind
-valgrind: clear d
-	valgrind $(VALGRINDFLAGS) $(EXE_FILE)
+	$(CC) -g $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
+
 s: static
 static: clear
 	cppcheck $(CPPCHECKFLAGS) -I $(HDR_DIR) $(SRC_FILES)
+
+t: test
+test: clear
+	$(TEST_DIR)/test$(LAB)_$(OS_SUFFIX) $(EXE_FILE)
+
+container: cleanall
+	bash $(TEST_DIR)/run_docker_image.sh
+
+v: valgrind
+valgrind: clear d
+	valgrind $(VALGRINDFLAGS) $(EXE_FILE)
 valred: clear d
 	valgrind $(VALGRINDFLAGS) $(EXE_FILE) $(INPUT_REDIRECTION)
+
 asan: clear
 	$(CC) -g $(CFLAGS) $(ASANFLAGS) $(SRC_FILES) && $(EXE_FILE)
+
+cmake: cleanall
+	cmake -B $(BLD_DIR)
+	cmake --build $(BLD_DIR)
+
 clean:
 	$(RM) $(EXE_FILE)
 	$(RM) $(EXE_FILE)*.dSYM
+	$(RM) in.txt
+	$(RM) out.txt
+cleanall: clean
+	$(RM) $(BLD_DIR)
+
 clear:
 	$(CLEAR_SCREEN)
-# clear:
-# 	clear
-container: clean
-	bash $(TEST_DIR)/run_docker_image.sh
+
+info:
+	@echo $(LAB)

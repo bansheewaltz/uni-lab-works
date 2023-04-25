@@ -1,9 +1,22 @@
 {
+    "env": {
+        "DefaultHeaders": "${workspaceFolder}/src/headers"
+    },
     "configurations": [
         {
-            "name": "Universal",
+            "name": "Release",
             "includePath": [
-                "${workspaceFolder}/include"
+                "${workspaceFolder}/**"
+            ],
+            "cStandard": "c99"
+        },
+        {
+            "name": "Debug",
+            "includePath": [
+                "${DefaultHeaders}"
+            ],
+            "defines": [
+                "DEBUG"
             ],
             "cStandard": "c99"
         }
