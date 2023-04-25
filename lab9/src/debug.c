@@ -2,7 +2,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "defines.h"
+#include "typedefs.h"
+#include "utils.h"
 
 void print_adj_matrix_graph(Graph *graph) {
   if (graph == NULL) {

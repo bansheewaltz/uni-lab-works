@@ -7,8 +7,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include "defines.h"
 #include "input.h"
+#include "typedefs.h"
 #include "utils.h"
 
 #ifdef DEBUG
@@ -43,7 +43,7 @@ void initialise_lists(AdjListNode *adjacency_lists[], int N) {
   }
 }
 
-Graph *create_graph_adj_list(int N, int M) {
+Graph *create_graph_adj_list(int N, int M, bool directivity) {
   Graph *graph = (Graph *)malloc(sizeof(Graph));
 
   graph->representation = ADJACENCY_LIST;
@@ -65,17 +65,19 @@ Graph *create_graph_adj_list(int N, int M) {
     }
 
     add_adj_list_node(graph, src, dst, length);
-    add_adj_list_node(graph, dst, src, length);
+    if (directivity == UNDIRECTED) {
+      add_adj_list_node(graph, dst, src, length);
+    }
   }
 
   return graph;
 }
 
-void add_matrix_entry(Graph *graph, int src, int dst, int length) {
+void add_adj_matrix_entry(Graph *graph, int src, int dst, int length) {
   graph->adjacency_matrix[(graph->n_vertices + 1) * src + dst] = length;
 }
 
-Graph *create_graph_adj_matrix(int N, int M) {
+Graph *create_graph_adj_matrix(int N, int M, bool directivity) {
   Graph *graph = (Graph *)calloc(1, sizeof(Graph));
 
   graph->representation = ADJACENCY_MATRIX;
@@ -94,20 +96,22 @@ Graph *create_graph_adj_matrix(int N, int M) {
       print_error_terminate("bad number of lines");
     }
 
-    add_matrix_entry(graph, src, dst, length);
-    add_matrix_entry(graph, dst, src, length);
+    add_adj_matrix_entry(graph, src, dst, length);
+    if (directivity == UNDIRECTED) {
+      add_adj_matrix_entry(graph, dst, src, length);
+    }
   }
 
   return graph;
 }
 
-Graph *create_graph(int N, int M) {
+Graph *create_graph(int N, int M, bool directivity) {
   Graph *graph;
 
   if (N * (N - 1) * 0.25 > M) {
-    graph = create_graph_adj_list(N, M);
+    graph = create_graph_adj_list(N, M, directivity);
   } else {
-    graph = create_graph_adj_matrix(N, M);
+    graph = create_graph_adj_matrix(N, M, directivity);
   }
 
   return graph;
@@ -294,7 +298,7 @@ int main(void) {
   int M;  // number of edges in the graph
 
   if (scan_validate_parameters(&N, &S, &F, &M) == SUCCESS) {
-    Graph *graph = create_graph(N, M);
+    Graph *graph = create_graph(N, M, UNDIRECTED);
 #ifdef DEBUG
     print_graph(graph);
 #endif

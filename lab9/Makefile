@@ -67,8 +67,9 @@ s: static
 static: clear
 	cppcheck $(CPPCHECKFLAGS) -I $(HDR_DIR) $(SRC_FILES)
 
+.PHONY: t test
 t: test
-test: clear
+test:
 	$(TEST_DIR)/test$(LAB)_$(OS_SUFFIX) $(EXE_FILE)
 
 container: cleanall
@@ -95,6 +96,7 @@ clean:
 cleanall: clean
 	$(RM) $(BLD_DIR)
 
+cs: clear
 clear:
 	$(CLEAR_SCREEN)
 
