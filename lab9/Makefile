@@ -34,11 +34,12 @@ VALGRINDFLAGS := --leak-check=full \
 				 --trace-children=yes
 CPPCHECKFLAGS := --verbose \
 				 --language=c \
-				 --std=c99 \
-				 --enable=warning,style,performance,portability,unusedFunction \
+				 -$(STDFLAG) \
+				 --enable=all \
 				 --inline-suppr \
+				 --suppress=missingIncludeSystem \
 				 --error-exitcode=1 \
-				 -DMAIN=main \
+				 -DMAIN
 # macros
 RM := rm -rf
 CLEAR_SCREEN := printf "\033c"
