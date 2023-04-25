@@ -2,6 +2,7 @@
 #define DEFINES_H
 
 #include <inttypes.h>
+#include <limits.h>
 
 /* changable variables */
 #define MAX_VERTICES_NUM 5000
@@ -14,7 +15,6 @@
 #define UNDEFINED -1
 #define ADJACENCY_LIST 1
 #define ADJACENCY_MATRIX 0
-#define IS_IN_BOUNDS(l, value, r) (l <= value && value <= r)
 
 typedef struct Graph Graph;
 typedef struct AdjListNode AdjListNode;

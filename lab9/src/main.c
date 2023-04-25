@@ -8,22 +8,20 @@
 #include <stdlib.h>
 
 #include "defines.h"
+#include "input.h"
+#include "utils.h"
 
 #ifdef DEBUG
 #include "debug.h"
 #endif
-
-void print_error_terminate(char message[]) {
-  puts(message);
-  exit(EXIT_SUCCESS);  // but actually FAILURE
-}
 
 void add_adj_list_node(Graph *graph, int src, int dst, int length) {
   if (graph == NULL) {
     return;
   }
 
-  AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
+  AdjListNode *new_node = NULL;
+  new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
   if (new_node == NULL) {
     print_error_terminate("heap buffer overflow");
   }
@@ -43,57 +41,6 @@ void initialise_lists(AdjListNode *adjacency_lists[], int N) {
   for (int i = 0; i < N; i++) {
     adjacency_lists[i] = NULL;
   }
-}
-
-bool scan_validate_n_vertices(int *N) {
-  if (scanf("%i", N) && IS_IN_BOUNDS(0, *N, MAX_VERTICES_NUM)) {
-    return true;
-  }
-
-  print_error_terminate("bad number of vertices");
-  return false;
-}
-
-bool scan_validate_path(int *S, int *F, int N) {
-  if ((scanf("%d", S) && IS_IN_BOUNDS(1, *S, N)) &&
-      (scanf("%d", F) && IS_IN_BOUNDS(1, *F, N))) {
-    return true;
-  }
-
-  print_error_terminate("bad vertex");
-  return false;
-}
-
-bool scan_validate_n_edges(int *M, int N) {
-  if (scanf("%d", M) && IS_IN_BOUNDS(0, *M, MAX_EDGES_NUM)) {
-    return true;
-  }
-
-  print_error_terminate("bad number of edges");
-  return false;
-}
-
-bool scan_validate_edge_len(int *length) {
-  if (scanf("%d", length) && IS_IN_BOUNDS(0, *length, MAX_EDGE_LEN)) {
-    return true;
-  }
-
-  print_error_terminate("bad length");
-  return false;
-}
-
-int scan_validate_edge(int *src, int *dst, int N, int *length) {
-  if (scan_validate_path(src, dst, N) && scan_validate_edge_len(length)) {
-    return SUCCESS;
-  }
-
-  return FAILURE;
-}
-
-bool scan_validate_parameters(int *N, int *S, int *F, int *M) {
-  return scan_validate_n_vertices(N) &&   //
-         scan_validate_path(S, F, *N) &&  //
-         scan_validate_n_edges(M, *N);    //
 }
 
 Graph *create_graph_adj_list(int N, int M) {

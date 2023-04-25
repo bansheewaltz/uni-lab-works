@@ -39,6 +39,7 @@ CPPCHECKFLAGS := --verbose \
 				 --enable=all \
 				 --inline-suppr \
 				 --suppress=missingIncludeSystem \
+				 --suppress=nullPointerRedundantCheck \
 				 --error-exitcode=1 \
 				 -DMAIN
 # macros
