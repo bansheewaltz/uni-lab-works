@@ -43,7 +43,6 @@ void print_adj_list_graph(Graph *graph) {
   }
 }
 
-// cppcheck-suppress unusedFunction
 void print_graph(Graph *graph) {
   if (graph == NULL) {
     return;

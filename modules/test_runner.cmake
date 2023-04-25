@@ -1,9 +1,9 @@
 if(WIN32)
-	set(EXE ".exe")
+	set(EXE "_win.exe")
 endif(WIN32)
-if(APPLE)
-	set(EXE "-mac")
-endif(APPLE)
+if(UNIX)
+	set(EXE "_linux")
+endif(UNIX)
 
 set(TEST_RUNNER_NAME "test${PROJECT_NAME}${EXE}")
 set(TEST_RUNNER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/test/${TEST_RUNNER_NAME})
