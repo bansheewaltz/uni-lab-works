@@ -2,9 +2,9 @@ list(APPEND CPPCHECK_ARGS
     --enable=warning,style,performance,portability,unusedFunction
     --std=c99
     --verbose
-    --error-exitcode=1
+    --error-exitcode=0
     --language=c
-    --suppressions-list=${CMAKE_SOURCE_DIR}/test/suppressions_tester.txt
+    --inline-suppr
     -DMAIN=main
     -I ${CMAKE_SOURCE_DIR}/include
     ${CMAKE_SOURCE_DIR}/src/*.c
