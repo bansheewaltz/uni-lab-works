@@ -1,9 +1,20 @@
+#include "utils.h"
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "matrix.h"
 #include "typedefs.h"
-#include "utils.h"
+
+void print_error_terminate(char message[]) {
+  puts(message);
+  exit(EXIT_SUCCESS);  // but actually FAILURE
+}
+
+int get_nth_triangular_number(int number) {
+  return (1 + number) * number / 2;
+}
 
 void print_adj_matrix_graph(Graph *graph) {
   if (graph == NULL) {
@@ -21,7 +32,11 @@ void print_adj_matrix_graph(Graph *graph) {
     printf("%d| ", r);
 
     for (int c = 1; c <= n_vertices; ++c) {
-      printf("%d ", graph->adjacency_matrix[r * (n_vertices + 1) + c]);
+      if (graph->directivity == DIRECTED || r > c) {
+        printf("%d ", get_adj_matrix_entry(graph, r, c));
+      } else {
+        printf("%d ", 0);
+      }
     }
     printf("\n");
   }
@@ -33,7 +48,7 @@ void print_adj_list_graph(Graph *graph) {
   }
 
   for (int i = 1; i <= graph->n_vertices; ++i) {
-    AdjListNode *ptr = graph->adjacency_lists[i];
+    AdjListNode *ptr = graph->adj_lists[i];
 
     while (ptr != NULL) {
       printf("%d —> %d (%d)\t", i, ptr->dst, ptr->length);
