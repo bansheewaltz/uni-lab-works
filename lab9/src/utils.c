@@ -1,8 +1,10 @@
 #include "utils.h"
 
+#include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "matrix.h"
 #include "typedefs.h"
@@ -10,6 +12,11 @@
 void print_error_terminate(char message[]) {
   puts(message);
   exit(EXIT_SUCCESS);  // but actually FAILURE
+}
+
+void print_allocation_failed_terminate(char *file, int line) {
+  fprintf(stdout, "Internal Error: %s:%d: %s\n", file, line, strerror(errno));
+  exit(17);
 }
 
 int get_nth_triangular_number(int number) {

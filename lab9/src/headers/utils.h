@@ -14,6 +14,7 @@
 #define DENSE_COEFFICIENT 0.5
 
 void print_error_terminate(char message[]);
+void print_allocation_failed_terminate(char *file, int line);
 int get_nth_triangular_number(int number);
 
 void print_adj_matrix_graph(Graph *graph);

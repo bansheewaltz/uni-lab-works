@@ -22,8 +22,7 @@ void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
 
   AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
   if (new_node == NULL) {
-    print_error_terminate("heap buffer overflow");
-    // print_error_terminate(__FILE__, __LINE__, "allocation failed");
+    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
   }
 
   new_node->dst = edge->dst;
@@ -54,7 +53,7 @@ AdjListNode **create_graph_adj_lists(int n_vertices, int n_edges,
   AdjListNode **adj_lists;  // N + 1 b/c idx 0 node will be ingored
   adj_lists = (AdjListNode **)malloc((n_vertices + 1) * sizeof(AdjListNode *));
   if (adj_lists == NULL) {
-    print_error_terminate("heap buffer overflow");
+    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
   }
 
   initialise_lists(adj_lists, n_vertices + 1);
@@ -85,7 +84,7 @@ bool is_graph_dense(int n_vertices, int n_edges) {
 Graph *create_graph(int N, int M, bool directivity) {
   Graph *graph = (Graph *)calloc(1, sizeof(Graph));
   if (graph == NULL) {
-    print_error_terminate("heap buffer overflow");
+    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
   }
 
   graph->n_vertices = N;

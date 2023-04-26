@@ -76,10 +76,20 @@ void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
 PathInfo dijkstra_naive(Graph *graph, int S, int F) {
   int n_vertices = graph->n_vertices;
   int arr_size = n_vertices + 1;
-  bool *visited = (bool *)calloc(arr_size, sizeof(bool));
 
+  bool *visited = (bool *)calloc(arr_size, sizeof(bool));
+  if (visited == NULL) {
+    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
+  }
   uint64_t *dist = (uint64_t *)malloc(sizeof(uint64_t) * arr_size);
+  if (dist == NULL) {
+    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
+  }
   int *previous_v = (int *)malloc(sizeof(int) * arr_size);
+  if (previous_v == NULL) {
+    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
+  }
+
   for (int i = 0; i <= n_vertices; ++i) {
     dist[i] = INFINITY;
     previous_v[i] = UNDEFINED;
