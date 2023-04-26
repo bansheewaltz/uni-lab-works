@@ -15,12 +15,6 @@
 #include "typedefs.h"
 #include "utils.h"
 
-// int get_adj_list_node_idx(Graph *graph, int src, int dst) {
-//   if (graph->directivity == DIRECTED) {
-//     return;
-//   }
-// }
-
 void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
   if (adj_lists == NULL) {
     return;
