@@ -15,13 +15,18 @@
 #include "typedefs.h"
 #include "utils.h"
 
+// int get_adj_list_node_idx(Graph *graph, int src, int dst) {
+//   if (graph->directivity == DIRECTED) {
+//     return;
+//   }
+// }
+
 void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
   if (adj_lists == NULL) {
     return;
   }
 
-  AdjListNode *new_node = NULL;
-  new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
+  AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
   if (new_node == NULL) {
     print_error_terminate("heap buffer overflow");
     // print_error_terminate(__FILE__, __LINE__, "allocation failed");
@@ -44,9 +49,15 @@ void initialise_lists(AdjListNode *adj_lists[], int N) {
   }
 }
 
+void reverse_edge(Edge *edge) {
+  int temp_dst = edge->dst;
+  edge->dst = edge->src;
+  edge->src = temp_dst;
+}
+
 AdjListNode **create_graph_adj_lists(int n_vertices, int n_edges,
                                      bool directivity) {
-  AdjListNode **adj_lists = NULL;  // N + 1 b/c idx 0 node will be ingored
+  AdjListNode **adj_lists;  // N + 1 b/c idx 0 node will be ingored
   adj_lists = (AdjListNode **)malloc((n_vertices + 1) * sizeof(AdjListNode *));
   if (adj_lists == NULL) {
     print_error_terminate("heap buffer overflow");
@@ -63,22 +74,22 @@ AdjListNode **create_graph_adj_lists(int n_vertices, int n_edges,
     }
 
     add_adj_list_node(adj_lists, &edge);
-    (void)directivity;
-    // if (directivity == UNDIRECTED) {
-    //   add_adj_list_node(adj_lists, &edge);
-    // }
+    if (directivity == UNDIRECTED) {
+      reverse_edge(&edge);
+      add_adj_list_node(adj_lists, &edge);
+    }
   }
 
   return adj_lists;
 }
 
 bool is_graph_dense(int n_vertices, int n_edges) {
-  return n_edges / (n_vertices * (n_vertices - 1) / 2) > DENSE_COEFFICIENT;
+  int max_edges = n_vertices * (n_vertices - 1) / 2;
+  return (float)n_edges / max_edges > DENSE_COEFFICIENT;
 }
 
 Graph *create_graph(int N, int M, bool directivity) {
-  Graph *graph = NULL;
-  graph = (Graph *)calloc(1, sizeof(Graph));
+  Graph *graph = (Graph *)calloc(1, sizeof(Graph));
   if (graph == NULL) {
     print_error_terminate("heap buffer overflow");
   }

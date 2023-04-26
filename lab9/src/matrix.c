@@ -11,24 +11,34 @@ int get_adj_matrix_entry_idx(Graph *graph, int row, int column) {
   if (graph->directivity == DIRECTED) {
     return (graph->n_vertices + 1) * row + column;
   } else {
-    int bigger = row > column ? row : column;
+    int greater = row > column ? row : column;
     int smaller = row < column ? row : column;
-    return get_nth_triangular_number(bigger - 2) + smaller - 1;
+    return get_nth_triangular_number(greater - 2) + smaller - 1;
   }
 }
 
 int get_adj_matrix_entry(Graph *graph, int row, int column) {
+  assert(graph != NULL);
+  assert(graph->adj_matrix != NULL);
+
+  if (row == column) {
+    return 0;
+  }
+
   return graph->adj_matrix[get_adj_matrix_entry_idx(graph, row, column)];
 }
 
 void add_adj_matrix_entry(Graph *graph, Edge *edge) {
+  assert(graph != NULL);
   assert(edge != NULL);
   assert(graph->adj_matrix != NULL);
+  if (edge->dst == edge->src) {
+    return;
+  }
 
-  int *adj_matrix = graph->adj_matrix;
   int entry_id = get_adj_matrix_entry_idx(graph, edge->src, edge->dst);
 
-  adj_matrix[entry_id] = edge->weight;
+  graph->adj_matrix[entry_id] = edge->weight;
 }
 
 bool is_matrix_neighbour(Graph *graph, int row, int column) {
