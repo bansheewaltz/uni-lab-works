@@ -25,7 +25,7 @@ SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 CC := gcc
 WFLAGS := -Wall -Werror -Wextra
 STDFLAG := -std=c99
-CFLAGS := $(WFLAGS) $(STDFLAG) -I$(HDR_DIR)
+CFLAGS :=  $(STDFLAG) $(WFLAGS) -I$(HDR_DIR)
 ASANFLAGS := -fsanitize=address \
 			 -fsanitize=leak \
 			 -fsanitize=undefined
@@ -51,17 +51,22 @@ export
 EXE_FILE := $(EXE_DIR)/$(LAB)
 INPUT_REDIRECTION := < in.txt
 all: static n
-n:
-	gcc -g $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
+n: CFLAGS := -DNDEBUG $(CFLAGS)
+n: 
+	gcc $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
 
-r: run
-run:
-	$(EXE_FILE)
+o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
+o: 
+	gcc $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
 
 d: debug
 debug: CFLAGS := -DDEBUG $(CFLAGS)
 debug:
 	$(CC) -g $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
+
+r: run
+run:
+	$(EXE_FILE)
 
 s: static
 static: clear

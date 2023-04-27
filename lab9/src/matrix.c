@@ -8,6 +8,8 @@
 #include "utils.h"
 
 int get_adj_matrix_entry_idx(Graph *graph, int row, int column) {
+  assert(graph != NULL);
+
   if (graph->directivity == DIRECTED) {
     return (graph->n_vertices + 1) * row + column;
   } else {
@@ -32,6 +34,7 @@ void add_adj_matrix_entry(Graph *graph, Edge *edge) {
   assert(graph != NULL);
   assert(edge != NULL);
   assert(graph->adj_matrix != NULL);
+
   if (edge->dst == edge->src) {
     return;
   }
@@ -42,12 +45,16 @@ void add_adj_matrix_entry(Graph *graph, Edge *edge) {
 }
 
 bool is_matrix_neighbour(Graph *graph, int row, int column) {
+  assert(graph != NULL);
+
   return get_adj_matrix_entry(graph, row, column) != 0;
 }
 
 int *create_graph_adj_matrix(Graph *graph) {
-  int *adj_matrix = NULL;  // N + 1 b/c idx 0 node will be ingored
+  assert(graph != NULL);
+
   int n_vertices = graph->n_vertices;
+  int *adj_matrix;
   int array_size;
 
   if (graph->directivity == DIRECTED) {

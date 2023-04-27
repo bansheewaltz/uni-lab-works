@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -6,6 +7,11 @@
 #include "utils.h"
 
 void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
+  assert(pathInfo != NULL);
+  assert(pathInfo->distances != NULL);
+  assert(pathInfo->previous_arr != NULL);
+  assert(output != NULL);
+
   int overflow_counter = 0;
 
   for (int i = 1; i <= n_vertices; ++i) {

@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdlib.h>
@@ -8,6 +9,9 @@
 
 int get_min_dist_v(bool const visited[], uint64_t const dist[],
                    int n_vertices) {
+  assert(visited != NULL);
+  assert(dist != NULL);
+
   int min_dist_v = 1;
 
   for (int i = 1; i <= n_vertices; ++i) {
@@ -26,10 +30,14 @@ int get_min_dist_v(bool const visited[], uint64_t const dist[],
   return min_dist_v;
 }
 
-// bool is_list_neighbour()
-
 void relaxate_lists(Graph *graph, uint64_t dist[], bool const visited[],
                     int previous_v[], int min_dist_v) {
+  assert(graph != NULL);
+  assert(graph->adj_lists != NULL);
+  assert(dist != NULL);
+  assert(visited != NULL);
+  assert(previous_v != NULL);
+
   AdjListNode *neighbour = graph->adj_lists[min_dist_v];
 
   while (neighbour != NULL) {
@@ -49,6 +57,12 @@ void relaxate_lists(Graph *graph, uint64_t dist[], bool const visited[],
 
 void relaxate_matrix(Graph *graph, uint64_t dist[], bool const visited[],
                      int previous_v[], int min_dist_v) {
+  assert(graph != NULL);
+  assert(graph->adj_matrix != NULL);
+  assert(dist != NULL);
+  assert(visited != NULL);
+  assert(previous_v != NULL);
+
   for (int c = 1; c <= graph->n_vertices; ++c) {
     if (!visited[c] && is_matrix_neighbour(graph, min_dist_v, c)) {
       int rel_dist_to_neighbour = get_adj_matrix_entry(graph, min_dist_v, c);
@@ -64,6 +78,11 @@ void relaxate_matrix(Graph *graph, uint64_t dist[], bool const visited[],
 
 void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
                          int previous_v[], int min_dist_v) {
+  assert(graph != NULL);
+  assert(dist != NULL);
+  assert(visited != NULL);
+  assert(previous_v != NULL);
+
   if (graph->representation == ADJACENCY_LIST) {
     relaxate_lists(graph, dist, visited, previous_v, min_dist_v);
   }
@@ -74,6 +93,8 @@ void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
 }
 
 PathInfo dijkstra_naive(Graph *graph, int S, int F) {
+  assert(graph != NULL);
+
   int n_vertices = graph->n_vertices;
   int arr_size = n_vertices + 1;
 

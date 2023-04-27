@@ -1,5 +1,6 @@
 #include "utils.h"
 
+#include <assert.h>
 #include <errno.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -9,12 +10,16 @@
 #include "matrix.h"
 #include "typedefs.h"
 
-void print_error_terminate(char message[]) {
+void print_error_terminate(char *message) {
+  assert(message != NULL);
+
   puts(message);
   exit(EXIT_SUCCESS);  // but actually FAILURE
 }
 
 void print_allocation_failed_terminate(char *file, int line) {
+  assert(file != NULL);
+
   fprintf(stdout, "Internal Error: %s:%d: %s\n", file, line, strerror(errno));
   exit(17);
 }
@@ -24,9 +29,8 @@ int get_nth_triangular_number(int number) {
 }
 
 void print_adj_matrix_graph(Graph *graph) {
-  if (graph == NULL) {
-    return;
-  }
+  assert(graph != NULL);
+  assert(graph->adj_matrix != NULL);
 
   int n_vertices = graph->n_vertices;
   printf("x| ");
@@ -50,9 +54,8 @@ void print_adj_matrix_graph(Graph *graph) {
 }
 
 void print_adj_list_graph(Graph *graph) {
-  if (graph == NULL) {
-    return;
-  }
+  assert(graph != NULL);
+  assert(graph->adj_lists != NULL);
 
   for (int i = 1; i <= graph->n_vertices; ++i) {
     AdjListNode *ptr = graph->adj_lists[i];

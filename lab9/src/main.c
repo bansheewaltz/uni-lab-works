@@ -16,9 +16,7 @@
 #include "utils.h"
 
 void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
-  if (adj_lists == NULL) {
-    return;
-  }
+  assert(adj_lists != NULL);
 
   AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
   if (new_node == NULL) {
@@ -33,9 +31,7 @@ void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
 }
 
 void initialise_lists(AdjListNode *adj_lists[], int N) {
-  if (adj_lists == NULL) {
-    return;
-  }
+  assert(adj_lists != NULL);
 
   for (int i = 0; i < N; i++) {
     adj_lists[i] = NULL;
@@ -103,9 +99,7 @@ Graph *create_graph(int N, int M, bool directivity) {
 }
 
 void deallocate_adj_list(Graph *graph) {
-  if (graph == NULL) {
-    return;
-  }
+  assert(graph != NULL);
 
   for (int i = 0; i < graph->n_vertices + 1; ++i) {
     AdjListNode *list_head = graph->adj_lists[i];
@@ -140,6 +134,10 @@ void destroy_graph(Graph *graph) {
 }
 
 void deallocate_path_info(PathInfo *pathInfo) {
+  if (pathInfo == NULL) {
+    return;
+  }
+
   free(pathInfo->distances);
   free(pathInfo->previous_arr);
 }
