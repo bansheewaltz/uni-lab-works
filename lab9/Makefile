@@ -51,18 +51,14 @@ export
 EXE_FILE := $(EXE_DIR)/$(LAB)
 INPUT_REDIRECTION := < in.txt
 all: static n
+
+debug: d
+
 n: CFLAGS := -DNDEBUG $(CFLAGS)
-n: 
-	gcc $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
-
 o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
-o: 
+d: CFLAGS := -DDEBUG -g $(CFLAGS)
+n o d:
 	gcc $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
-
-d: debug
-debug: CFLAGS := -DDEBUG $(CFLAGS)
-debug:
-	$(CC) -g $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
 
 r: run
 run:
