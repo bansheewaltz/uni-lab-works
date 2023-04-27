@@ -1,11 +1,17 @@
 #include <assert.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdio.h>
 #include <stdlib.h>
 
+#include "graph.h"
 #include "input.h"
 #include "typedefs.h"
 #include "utils.h"
+
+int get_nth_triangular_number(int number) {
+  return (1 + number) * number / 2;
+}
 
 int get_adj_matrix_entry_idx(Graph *graph, int row, int column) {
   assert(graph != NULL);
@@ -80,4 +86,29 @@ int *create_graph_adj_matrix(Graph *graph) {
   }
 
   return adj_matrix;
+}
+
+void print_adj_matrix_graph(Graph *graph) {
+  assert(graph != NULL);
+  assert(graph->adj_matrix != NULL);
+
+  int n_vertices = graph->n_vertices;
+  printf("x| ");
+  for (int i = 1; i <= n_vertices; ++i) {
+    printf("%d ", i);
+  }
+  printf("\n");
+
+  for (int r = 1; r <= n_vertices; ++r) {
+    printf("%d| ", r);
+
+    for (int c = 1; c <= n_vertices; ++c) {
+      if (graph->directivity == DIRECTED || r > c) {
+        printf("%d ", get_adj_matrix_entry(graph, r, c));
+      } else {
+        printf("%d ", 0);
+      }
+    }
+    printf("\n");
+  }
 }

@@ -2,9 +2,20 @@
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 
+#include "graph.h"
 #include "typedefs.h"
 #include "utils.h"
+
+void deallocate_path_info(PathInfo *pathInfo) {
+  if (pathInfo == NULL) {
+    return;
+  }
+
+  free(pathInfo->distances);
+  free(pathInfo->previous_arr);
+}
 
 void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
   assert(pathInfo != NULL);
@@ -16,7 +27,7 @@ void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
 
   for (int i = 1; i <= n_vertices; ++i) {
     uint64_t distance_from_source = pathInfo->distances[i];
-    if (distance_from_source == INFINITY) {
+    if (distance_from_source == INFINITY_LENGTH) {
       fprintf(output, "oo ");
       continue;
     }
@@ -33,7 +44,7 @@ void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output) {
   fprintf(output, "\n");
 
   uint64_t src_to_dst_len = pathInfo->distances[pathInfo->dst];
-  if (src_to_dst_len == INFINITY) {
+  if (src_to_dst_len == INFINITY_LENGTH) {
     fprintf(output, "no path\n");
   } else if (src_to_dst_len > INT_MAX && overflow_counter > 2) {
     fprintf(output, "overflow\n");

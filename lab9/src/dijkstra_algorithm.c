@@ -3,7 +3,8 @@
 #include <stdbool.h>
 #include <stdlib.h>
 
-#include "matrix.h"
+#include "adjacency_matrix.h"
+#include "graph.h"
 #include "typedefs.h"
 #include "utils.h"
 
@@ -112,14 +113,14 @@ PathInfo dijkstra_naive(Graph *graph, int S, int F) {
   }
 
   for (int i = 0; i <= n_vertices; ++i) {
-    dist[i] = INFINITY;
+    dist[i] = INFINITY_LENGTH;
     previous_v[i] = UNDEFINED;
   }
   dist[S] = 0;
 
   for (int n_visited = 0; n_visited < n_vertices; ++n_visited) {
     int min_dist_v = get_min_dist_v(visited, dist, n_vertices);
-    if (dist[min_dist_v] == INFINITY) {
+    if (dist[min_dist_v] == INFINITY_LENGTH) {
       break;
     }
 
