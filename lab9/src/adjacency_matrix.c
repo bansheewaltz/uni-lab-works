@@ -6,7 +6,6 @@
 
 #include "graph.h"
 #include "input.h"
-#include "typedefs.h"
 #include "utils.h"
 
 int get_nth_triangular_number(int number) {

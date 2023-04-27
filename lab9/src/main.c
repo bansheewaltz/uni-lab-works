@@ -12,7 +12,6 @@
 #include "graph.h"
 #include "input.h"
 #include "output.h"
-#include "typedefs.h"
 #include "utils.h"
 
 int main(void) {

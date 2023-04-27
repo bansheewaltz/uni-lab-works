@@ -2,7 +2,8 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "typedefs.h"
+#include "graph.h"
+#include "main.h"
 #include "utils.h"
 
 #define IS_IN_BOUNDS(l, value, r) (l <= value && value <= r)

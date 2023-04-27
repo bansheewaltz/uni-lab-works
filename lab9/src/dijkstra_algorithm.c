@@ -1,11 +1,13 @@
+#include "dijkstra_algorithm.h"
+
 #include <assert.h>
 #include <inttypes.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
+#include "adjacency_list.h"
 #include "adjacency_matrix.h"
 #include "graph.h"
-#include "typedefs.h"
 #include "utils.h"
 
 int get_min_dist_v(bool const visited[], uint64_t const dist[],
@@ -100,17 +102,11 @@ PathInfo dijkstra_naive(Graph *graph, int S, int F) {
   int arr_size = n_vertices + 1;
 
   bool *visited = (bool *)calloc(arr_size, sizeof(bool));
-  if (visited == NULL) {
-    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
-  }
+  if_fail(visited == NULL, __FILE__, __LINE__ - 1);
   uint64_t *dist = (uint64_t *)malloc(sizeof(uint64_t) * arr_size);
-  if (dist == NULL) {
-    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
-  }
+  if_fail(dist == NULL, __FILE__, __LINE__ - 1);
   int *previous_v = (int *)malloc(sizeof(int) * arr_size);
-  if (previous_v == NULL) {
-    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
-  }
+  if_fail(previous_v == NULL, __FILE__, __LINE__ - 1);
 
   for (int i = 0; i <= n_vertices; ++i) {
     dist[i] = INFINITY_LENGTH;

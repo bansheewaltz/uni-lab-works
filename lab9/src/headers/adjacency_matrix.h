@@ -1,7 +1,7 @@
 #ifndef ADJACENCY_MATRIX_H
 #define ADJACENCY_MATRIX_H
 
-#include "typedefs.h"
+#include "graph.h"
 
 int *create_graph_adj_matrix(Graph *graph);
 int get_adj_matrix_entry_idx(Graph *graph, int row, int column);

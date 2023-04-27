@@ -1,7 +1,13 @@
 #ifndef ADJACENCY_LIST_H
 #define ADJACENCY_LIST_H
 
-#include "typedefs.h"
+#include "graph.h"
+
+struct AdjListNode {
+  int dst;
+  int length;
+  AdjListNode *next;
+};
 
 void add_adj_list_node(AdjListNode **adj_lists, Edge *edge);
 void initialise_lists(AdjListNode *adj_lists[], int N);

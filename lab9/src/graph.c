@@ -7,7 +7,7 @@
 
 #include "adjacency_list.h"
 #include "adjacency_matrix.h"
-#include "typedefs.h"
+#include "graph.h"
 #include "utils.h"
 
 void reverse_edge(Edge *edge) {
@@ -25,9 +25,7 @@ bool is_graph_dense(int n_vertices, int n_edges) {
 
 Graph *create_graph(int N, int M, bool directivity) {
   Graph *graph = (Graph *)calloc(1, sizeof(Graph));
-  if (graph == NULL) {
-    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
-  }
+  if_fail(graph == NULL, __FILE__, __LINE__ - 2);
 
   graph->n_vertices = N;
   graph->n_edges = M;

@@ -1,11 +1,12 @@
 #include <assert.h>
 #include <inttypes.h>
+#include <limits.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
+#include "dijkstra_algorithm.h"
 #include "graph.h"
-#include "typedefs.h"
 #include "utils.h"
 
 void deallocate_path_info(PathInfo *pathInfo) {

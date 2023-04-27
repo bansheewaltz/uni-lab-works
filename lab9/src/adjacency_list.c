@@ -1,19 +1,18 @@
+#include "adjacency_list.h"
+
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #include "graph.h"
 #include "input.h"
-#include "typedefs.h"
 #include "utils.h"
 
 void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
   assert(adj_lists != NULL);
 
   AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
-  if (new_node == NULL) {
-    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
-  }
+  if_fail(new_node == NULL, __FILE__, __LINE__ - 1);
 
   new_node->dst = edge->dst;
   new_node->length = edge->weight;
@@ -55,9 +54,7 @@ AdjListNode **create_graph_adj_lists(int n_vertices, int n_edges,
                                      bool directivity) {
   AdjListNode **adj_lists;  // N + 1 b/c idx 0 node will be ingored
   adj_lists = (AdjListNode **)malloc((n_vertices + 1) * sizeof(AdjListNode *));
-  if (adj_lists == NULL) {
-    print_allocation_failed_terminate(__FILE__, __LINE__ - 2);
-  }
+  if_fail(adj_lists == NULL, __FILE__, __LINE__ - 1);
 
   initialise_lists(adj_lists, n_vertices + 1);
 

@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 
-#include "typedefs.h"
-
 void print_path_info(PathInfo *pathInfo, int n_vertices, FILE *output);
 void deallocate_path_info(PathInfo *pathInfo);
 

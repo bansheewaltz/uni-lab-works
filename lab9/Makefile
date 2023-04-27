@@ -39,7 +39,6 @@ CPPCHECKFLAGS := --verbose \
 				 --enable=all \
 				 --inline-suppr \
 				 --suppress=missingIncludeSystem \
-				 --suppress=nullPointerRedundantCheck \
 				 --error-exitcode=1 \
 				 -DMAIN
 # macros
@@ -57,8 +56,10 @@ debug: d
 n: CFLAGS := -DNDEBUG $(CFLAGS)
 o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
 d: CFLAGS := -DDEBUG -g $(CFLAGS)
-n o d:
+n o d: build_dir
 	gcc $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
+build_dir:
+	mkdir -p build
 
 r: run
 run:

@@ -30,8 +30,8 @@ image="dondarri/$image_os"
 prompt="$CLR$image_os@container$RST:\W$ "
 command="echo \"export PS1='$prompt'\" >> ~/.bashrc && bash"
 
-# docker build -t $image -f ${TEST_DIR}/$dockerfile .
-docker build -t $image -f ${TEST_DIR}/$dockerfile . --platform linux/x86_64
+docker build -t $image -f ${TEST_DIR}/$dockerfile .
+# docker build -t $image -f ${TEST_DIR}/$dockerfile . --platform linux/x86_64
 # docker run --platform linux/x86_64
 docker run -it \
   --name "$container_name" \
