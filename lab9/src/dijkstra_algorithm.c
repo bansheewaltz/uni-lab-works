@@ -12,9 +12,6 @@
 
 static int get_min_dist_v(bool const visited[], uint64_t const dist[],
                           int n_vertices) {
-  assert(visited != NULL);
-  assert(dist != NULL);
-
   int min_dist_v = 1;
 
   for (int i = 1; i <= n_vertices; ++i) {
@@ -35,11 +32,7 @@ static int get_min_dist_v(bool const visited[], uint64_t const dist[],
 
 static void relaxate_lists(Graph *graph, uint64_t dist[], bool const visited[],
                            int previous_v[], int min_dist_v) {
-  assert(graph != NULL);
   assert(graph->adj_lists != NULL);
-  assert(dist != NULL);
-  assert(visited != NULL);
-  assert(previous_v != NULL);
 
   AdjListNode *neighbour = graph->adj_lists[min_dist_v];
 
@@ -60,11 +53,7 @@ static void relaxate_lists(Graph *graph, uint64_t dist[], bool const visited[],
 
 static void relaxate_matrix(Graph *graph, uint64_t dist[], bool const visited[],
                             int previous_v[], int min_dist_v) {
-  assert(graph != NULL);
   assert(graph->adj_matrix != NULL);
-  assert(dist != NULL);
-  assert(visited != NULL);
-  assert(previous_v != NULL);
 
   for (int c = 1; c <= graph->n_vertices; ++c) {
     if (!visited[c] && is_matrix_neighbour(graph, min_dist_v, c)) {
@@ -83,9 +72,6 @@ static void relaxate_neighbours(Graph *graph, uint64_t dist[],
                                 bool const visited[], int previous_v[],
                                 int min_dist_v) {
   assert(graph != NULL);
-  assert(dist != NULL);
-  assert(visited != NULL);
-  assert(previous_v != NULL);
 
   if (graph->representation == ADJACENCY_LIST) {
     relaxate_lists(graph, dist, visited, previous_v, min_dist_v);
