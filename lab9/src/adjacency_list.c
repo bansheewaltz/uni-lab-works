@@ -52,7 +52,7 @@ void deallocate_adj_list(Graph *graph) {
 
 AdjListNode **create_graph_adj_lists(int n_vertices, int n_edges,
                                      bool directivity) {
-  AdjListNode **adj_lists;  // V + 1 b/c idx 0 node will be ingored
+  AdjListNode **adj_lists;  // + 1 b/c idx 0 node will be ingored
   adj_lists = (AdjListNode **)malloc((n_vertices + 1) * sizeof(AdjListNode *));
   if_fail(adj_lists == NULL, __FILE__, __LINE__ - 1);
 

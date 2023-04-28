@@ -12,6 +12,7 @@ struct PathInfo {
   int dst;
   uint64_t *distances;
   int *previous_arr;
+  int n_vertices;
 };
 
 int get_min_dist_v(bool const visited[], uint64_t const dist[], int n_vertices);

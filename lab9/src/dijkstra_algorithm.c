@@ -125,5 +125,5 @@ PathInfo dijkstra_naive(Graph *graph, int src, int dst) {
   }
 
   free(visited);
-  return (PathInfo){src, dst, dist, previous_v};
+  return (PathInfo){src, dst, dist, previous_v, n_vertices};
 }
