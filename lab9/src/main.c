@@ -31,7 +31,7 @@ int main(void) {
     print_graph(graph);
 #endif
 
-    PathInfo pathInfo = dijkstra_naive(graph, src, dst);
+    PathInfo pathInfo = find_shortest_path_dijkstra_naive(graph, src, dst);
 
     output_path_len_to_each_v(&pathInfo, stdout);
     output_shortest_path(&pathInfo, stdout);

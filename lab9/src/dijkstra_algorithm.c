@@ -95,18 +95,18 @@ void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
   }
 }
 
-PathInfo dijkstra_naive(Graph *graph, int src, int dst) {
+PathInfo find_shortest_path_dijkstra_naive(Graph *graph, int src, int dst) {
   assert(graph != NULL);
 
   int n_vertices = graph->n_vertices;
   int arr_size = n_vertices + 1;
-
   bool *visited = (bool *)calloc(arr_size, sizeof(bool));
-  if_fail(visited == NULL, __FILE__, __LINE__ - 1);
   uint64_t *dist = (uint64_t *)malloc(sizeof(uint64_t) * arr_size);
-  if_fail(dist == NULL, __FILE__, __LINE__ - 1);
   int *previous_v = (int *)malloc(sizeof(int) * arr_size);
-  if_fail(previous_v == NULL, __FILE__, __LINE__ - 1);
+
+  if_fail(visited == NULL, __FILE__, __LINE__ - 4);
+  if_fail(dist == NULL, __FILE__, __LINE__ - 5);
+  if_fail(previous_v == NULL, __FILE__, __LINE__ - 6);
 
   for (int i = 0; i <= n_vertices; ++i) {
     dist[i] = INFINITY_LENGTH;
