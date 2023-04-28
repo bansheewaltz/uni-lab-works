@@ -9,8 +9,6 @@
 #define DIRECTED 1
 #define UNDIRECTED 0
 #define DENSITY_CONSTANT 0.3
-#define INFINITY_LENGTH UINT64_MAX
-#define UNDEFINED -1
 
 typedef struct AdjListNode AdjListNode;
 

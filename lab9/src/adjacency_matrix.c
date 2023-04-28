@@ -8,11 +8,11 @@
 #include "input.h"
 #include "utils.h"
 
-int get_nth_triangular_number(int number) {
+static int get_nth_triangular_number(int number) {
   return (1 + number) * number / 2;
 }
 
-int get_adj_matrix_entry_idx(Graph *graph, int row, int column) {
+static int get_adj_matrix_entry_idx(Graph *graph, int row, int column) {
   assert(graph != NULL);
 
   if (graph->directivity == DIRECTED) {

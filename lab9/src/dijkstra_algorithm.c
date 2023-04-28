@@ -10,8 +10,8 @@
 #include "graph.h"
 #include "utils.h"
 
-int get_min_dist_v(bool const visited[], uint64_t const dist[],
-                   int n_vertices) {
+static int get_min_dist_v(bool const visited[], uint64_t const dist[],
+                          int n_vertices) {
   assert(visited != NULL);
   assert(dist != NULL);
 
@@ -33,8 +33,8 @@ int get_min_dist_v(bool const visited[], uint64_t const dist[],
   return min_dist_v;
 }
 
-void relaxate_lists(Graph *graph, uint64_t dist[], bool const visited[],
-                    int previous_v[], int min_dist_v) {
+static void relaxate_lists(Graph *graph, uint64_t dist[], bool const visited[],
+                           int previous_v[], int min_dist_v) {
   assert(graph != NULL);
   assert(graph->adj_lists != NULL);
   assert(dist != NULL);
@@ -58,8 +58,8 @@ void relaxate_lists(Graph *graph, uint64_t dist[], bool const visited[],
   }
 }
 
-void relaxate_matrix(Graph *graph, uint64_t dist[], bool const visited[],
-                     int previous_v[], int min_dist_v) {
+static void relaxate_matrix(Graph *graph, uint64_t dist[], bool const visited[],
+                            int previous_v[], int min_dist_v) {
   assert(graph != NULL);
   assert(graph->adj_matrix != NULL);
   assert(dist != NULL);
@@ -79,8 +79,9 @@ void relaxate_matrix(Graph *graph, uint64_t dist[], bool const visited[],
   }
 }
 
-void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
-                         int previous_v[], int min_dist_v) {
+static void relaxate_neighbours(Graph *graph, uint64_t dist[],
+                                bool const visited[], int previous_v[],
+                                int min_dist_v) {
   assert(graph != NULL);
   assert(dist != NULL);
   assert(visited != NULL);
@@ -105,12 +106,12 @@ PathInfo find_shortest_path_dijkstra_naive(Graph *graph, int src, int dst) {
   int *previous_v = (int *)malloc(sizeof(int) * arr_size);
 
   if_fail(visited == NULL, __FILE__, __LINE__ - 4);
-  if_fail(dist == NULL, __FILE__, __LINE__ - 5);
-  if_fail(previous_v == NULL, __FILE__, __LINE__ - 6);
+  if_fail(dist == NULL, __FILE__, __LINE__ - 4);
+  if_fail(previous_v == NULL, __FILE__, __LINE__ - 4);
 
   for (int i = 0; i <= n_vertices; ++i) {
     dist[i] = INFINITY_LENGTH;
-    previous_v[i] = UNDEFINED;
+    previous_v[i] = UNDEFINED_NEIGHBOUR;
   }
   dist[src] = 0;
 

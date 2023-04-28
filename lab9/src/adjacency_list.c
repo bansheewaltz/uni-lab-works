@@ -8,7 +8,7 @@
 #include "input.h"
 #include "utils.h"
 
-void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
+static void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
   assert(adj_lists != NULL);
 
   AdjListNode *new_node = (AdjListNode *)malloc(sizeof(AdjListNode));
@@ -21,7 +21,7 @@ void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
   adj_lists[edge->src] = new_node;
 }
 
-void initialise_lists(AdjListNode *adj_lists[], int V) {
+static void initialise_lists(AdjListNode *adj_lists[], int V) {
   assert(adj_lists != NULL);
 
   for (int i = 0; i < V; i++) {

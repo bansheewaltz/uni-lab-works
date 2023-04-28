@@ -6,6 +6,9 @@
 
 #include "graph.h"
 
+#define INFINITY_LENGTH UINT64_MAX
+#define UNDEFINED_NEIGHBOUR -1
+
 typedef struct {
   int src;
   int dst;
@@ -14,9 +17,6 @@ typedef struct {
   int n_vertices;
 } PathInfo;
 
-int get_min_dist_v(bool const visited[], uint64_t const dist[], int n_vertices);
-void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
-                         int previous_v[], int min_dist_v);
 PathInfo find_shortest_path_dijkstra_naive(Graph *graph, int src, int dst);
 
 #endif  // DIJKSTRA_ALGORITHM_H
