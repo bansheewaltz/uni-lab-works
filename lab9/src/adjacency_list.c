@@ -21,10 +21,10 @@ void add_adj_list_node(AdjListNode **adj_lists, Edge *edge) {
   adj_lists[edge->src] = new_node;
 }
 
-void initialise_lists(AdjListNode *adj_lists[], int N) {
+void initialise_lists(AdjListNode *adj_lists[], int V) {
   assert(adj_lists != NULL);
 
-  for (int i = 0; i < N; i++) {
+  for (int i = 0; i < V; i++) {
     adj_lists[i] = NULL;
   }
 }
@@ -52,7 +52,7 @@ void deallocate_adj_list(Graph *graph) {
 
 AdjListNode **create_graph_adj_lists(int n_vertices, int n_edges,
                                      bool directivity) {
-  AdjListNode **adj_lists;  // N + 1 b/c idx 0 node will be ingored
+  AdjListNode **adj_lists;  // V + 1 b/c idx 0 node will be ingored
   adj_lists = (AdjListNode **)malloc((n_vertices + 1) * sizeof(AdjListNode *));
   if_fail(adj_lists == NULL, __FILE__, __LINE__ - 1);
 

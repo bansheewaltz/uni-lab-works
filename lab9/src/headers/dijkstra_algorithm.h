@@ -17,6 +17,6 @@ struct PathInfo {
 int get_min_dist_v(bool const visited[], uint64_t const dist[], int n_vertices);
 void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
                          int previous_v[], int min_dist_v);
-PathInfo dijkstra_naive(Graph *graph, int S, int F);
+PathInfo dijkstra_naive(Graph *graph, int src, int dst);
 
 #endif  // DIJKSTRA_ALGORITHM_H

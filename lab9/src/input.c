@@ -8,10 +8,10 @@
 
 #define IS_IN_BOUNDS(l, value, r) (l <= value && value <= r)
 
-static bool scan_validate_n_of_vertices(int *N) {
-  assert(N != NULL);
+static bool scan_validate_n_of_vertices(int *V) {
+  assert(V != NULL);
 
-  if (scanf("%i", N) && IS_IN_BOUNDS(0, *N, MAX_VERTICES_NUM)) {
+  if (scanf("%i", V) && IS_IN_BOUNDS(0, *V, MAX_VERTICES_NUM)) {
     return true;
   }
 
@@ -19,12 +19,12 @@ static bool scan_validate_n_of_vertices(int *N) {
   return false;
 }
 
-static bool scan_validate_path(int *S, int *F, int N) {
-  assert(S != NULL);
-  assert(F != NULL);
+static bool scan_validate_path(int *src, int *dst, int V) {
+  assert(src != NULL);
+  assert(dst != NULL);
 
-  if ((scanf("%d", S) && IS_IN_BOUNDS(1, *S, N)) &&
-      (scanf("%d", F) && IS_IN_BOUNDS(1, *F, N))) {
+  if ((scanf("%d", src) && IS_IN_BOUNDS(1, *src, V)) &&
+      (scanf("%d", dst) && IS_IN_BOUNDS(1, *dst, V))) {
     return true;
   }
 
@@ -32,10 +32,10 @@ static bool scan_validate_path(int *S, int *F, int N) {
   return false;
 }
 
-static bool scan_validate_n_of_edges(int *M, int N) {
-  assert(M != NULL);
+static bool scan_validate_n_of_edges(int *E, int V) {
+  assert(E != NULL);
 
-  if (scanf("%d", M) && IS_IN_BOUNDS(0, *M, MAX_EDGES_NUM)) {
+  if (scanf("%d", E) && IS_IN_BOUNDS(0, *E, MAX_EDGES_NUM)) {
     return true;
   }
 
@@ -65,13 +65,13 @@ int scan_validate_edge(Edge *edge, int n_vertices) {
   return FAILURE;
 }
 
-bool scan_validate_parameters(int *N, int *S, int *F, int *M) {
-  assert(N != NULL);
-  assert(S != NULL);
-  assert(F != NULL);
-  assert(M != NULL);
+bool scan_validate_parameters(int *V, int *src, int *dst, int *E) {
+  assert(V != NULL);
+  assert(src != NULL);
+  assert(dst != NULL);
+  assert(E != NULL);
 
-  return scan_validate_n_of_vertices(N) &&  //
-         scan_validate_path(S, F, *N) &&    //
-         scan_validate_n_of_edges(M, *N);   //
+  return scan_validate_n_of_vertices(V) &&    //
+         scan_validate_path(src, dst, *V) &&  //
+         scan_validate_n_of_edges(E, *V);     //
 }

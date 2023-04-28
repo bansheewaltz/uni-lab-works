@@ -95,7 +95,7 @@ void relaxate_neighbours(Graph *graph, uint64_t dist[], bool const visited[],
   }
 }
 
-PathInfo dijkstra_naive(Graph *graph, int S, int F) {
+PathInfo dijkstra_naive(Graph *graph, int src, int dst) {
   assert(graph != NULL);
 
   int n_vertices = graph->n_vertices;
@@ -112,7 +112,7 @@ PathInfo dijkstra_naive(Graph *graph, int S, int F) {
     dist[i] = INFINITY_LENGTH;
     previous_v[i] = UNDEFINED;
   }
-  dist[S] = 0;
+  dist[src] = 0;
 
   for (int n_visited = 0; n_visited < n_vertices; ++n_visited) {
     int min_dist_v = get_min_dist_v(visited, dist, n_vertices);
@@ -125,5 +125,5 @@ PathInfo dijkstra_naive(Graph *graph, int S, int F) {
   }
 
   free(visited);
-  return (PathInfo){S, F, dist, previous_v};
+  return (PathInfo){src, dst, dist, previous_v};
 }

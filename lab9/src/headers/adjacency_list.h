@@ -10,7 +10,7 @@ struct AdjListNode {
 };
 
 void add_adj_list_node(AdjListNode **adj_lists, Edge *edge);
-void initialise_lists(AdjListNode *adj_lists[], int N);
+void initialise_lists(AdjListNode *adj_lists[], int V);
 void deallocate_adj_list(Graph *graph);
 AdjListNode **create_graph_adj_lists(int n_vertices, int n_edges,
                                      bool directivity);

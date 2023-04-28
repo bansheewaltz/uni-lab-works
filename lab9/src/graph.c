@@ -38,17 +38,17 @@ bool is_graph_dense(int V, int E, bool directivity) {
   return adj_matrix_size < adj_list_size && graph_density > DENSITY_CONSTANT;
 }
 
-Graph *create_graph(int N, int M, bool directivity) {
+Graph *create_graph(int V, int E, bool directivity) {
   Graph *graph = (Graph *)calloc(1, sizeof(Graph));
   if_fail(graph == NULL, __FILE__, __LINE__ - 1);
 
-  graph->n_vertices = N;
-  graph->n_edges = M;
+  graph->n_vertices = V;
+  graph->n_edges = E;
   graph->directivity = directivity;
 
-  if (!is_graph_dense(N, M, directivity)) {
+  if (!is_graph_dense(V, E, directivity)) {
     graph->representation = ADJACENCY_LIST;
-    graph->adj_lists = create_graph_adj_lists(N, M, directivity);
+    graph->adj_lists = create_graph_adj_lists(V, E, directivity);
   } else {
     graph->representation = ADJACENCY_MATRIX;
     graph->adj_matrix = create_graph_adj_matrix(graph);
