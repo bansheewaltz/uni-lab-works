@@ -5,10 +5,18 @@
 
 #define SUCCESS 1
 #define FAILURE 0
+#define DECIMAL_BASE 10
 
 void print_error_terminate(char *message);
 void if_fail(bool check, char *file, int line);
-void print_int_array(int *arr, int arr_length);
-void copy_int_array(int *arr, int arr_length);
+void array_int_print(int *arr, int arr_length, int alignment);
+int *array_int_copy(const int *arr, int arr_length);
+int *create_mapping_array(int arr_length);
+int array_int_max(const int *arr, int arr_size);
+int count_int_digits(int n);
+int array_int_print_alignment(int *arr, int arr_size);
+void array_int_reorder(int *arr, int *indexes, int arr_length);
+void print_table(int width, int table[][width], int objects_count, int values[],
+                 int weights[]);
 
 #endif  // UTILS_H

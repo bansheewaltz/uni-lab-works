@@ -51,12 +51,16 @@ EXE_FILE := $(EXE_DIR)/$(LAB)
 INPUT_REDIRECTION := < in.txt
 all: static n
 
+normal: n
+warnings: w
+optimised: o
 debug: d
 
-n: CFLAGS := -DNDEBUG $(CFLAGS)
+n: CFLAGS := -DNDEBUG -I$(HDR_DIR)
+w: CFLAGS := -DNDEBUG $(CFLAGS)
 o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
 d: CFLAGS := -DDEBUG -g $(CFLAGS)
-n o d: build_dir
+n w o d: build_dir
 	gcc $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
 build_dir:
 	mkdir -p build
@@ -67,7 +71,7 @@ run:
 
 s: static
 static: clear
-	cppcheck $(CPPCHECKFLAGS) -I $(HDR_DIR) $(SRC_FILES)
+	cppcheck $(CPPCHECKFLAGS) -I$(HDR_DIR) $(SRC_FILES)
 
 .PHONY: t test
 t: test
