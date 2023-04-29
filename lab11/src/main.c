@@ -93,16 +93,16 @@ int main(void) {
     scanf("%d %d", &weights[i], &values[i]);
   }
 
-  int* mapping = create_mapping_array(objects_count);
-  if_fail(mapping == NULL, __FILE__, __LINE__);
 #ifdef DEBUG
+  int* indices = create_indices_array(objects_count);
+  if_fail(indices == NULL, __FILE__, __LINE__);
   int alignment = array_int_print_alignment(weights, objects_count);
   puts("original order");
-  array_int_print(mapping, objects_count, alignment);
+  array_int_print(indices, objects_count, alignment);
   array_int_print(weights, objects_count, alignment);
   array_int_print(values, objects_count, alignment);
 #endif
-  radix_sort_int_int(mapping, weights, objects_count, ASCENDING);
+  int* mapping = array_int_radix_sort(weights, objects_count, ASCENDING);
 #ifdef DEBUG
   puts("sorted order");
   array_int_print(mapping, objects_count, alignment);
@@ -111,7 +111,7 @@ int main(void) {
   array_int_print(values, objects_count, alignment);
 #endif
 
-  bool* includes = knapsack(knapsack_capacity, weights, values, objects_count);
+  knapsack(knapsack_capacity, weights, values, objects_count);
   // for (int i = 0; i < objects_count; ++i) {
   //   if ()
   // }
