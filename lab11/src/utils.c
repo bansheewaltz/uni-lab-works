@@ -55,7 +55,7 @@ int *array_int_copy(const int *arr, int arr_length) {
 }
 
 // cppcheck-suppress unusedFunction
-int *create_mapping_array(int arr_length) {
+int *create_indices_array(int arr_length) {
   int *arr = (int *)malloc(sizeof(int) * arr_length);
 
   if (arr != NULL) {
