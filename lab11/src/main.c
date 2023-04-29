@@ -19,21 +19,23 @@ int max(int a, int b) {
 }
 
 void find_subset(int width, int table[][width], int i, int j, int weights[],
-                 int values[]) {
+                 int values[], bool includes[]) {
   if (table[i][j] == 0) {
     return;
   }
   if (table[i - 1][j] == table[i][j]) {
-    find_subset(width, table, i - 1, j, weights, values);
+    find_subset(width, table, i - 1, j, weights, values, includes);
   } else {
-    find_subset(width, table, i - 1, j - weights[i - 1], weights, values);
+    find_subset(width, table, i - 1, j - weights[i - 1], weights, values,
+                includes);
     // ans.push(i);
-    printf("%d %d\n", weights[i - 1], values[i - 1]);
+    // printf("%d %d\n", weights[i - 1], values[i - 1]);
+    includes[i - 1] = true;
   }
 }
 
-void knapsack(int knapsack_capacity, int weights[], int values[],
-              int objects_count) {
+bool* knapsack(int knapsack_capacity, int weights[], int values[],
+               int objects_count) {
   assert(objects_count >= 0);
   assert(knapsack_capacity >= 0);
 
@@ -58,13 +60,19 @@ void knapsack(int knapsack_capacity, int weights[], int values[],
   // print_table(knapsack_capacity + 1, table, objects_count, values, weights);
 #endif
 
-  bool* include = (bool*)calloc(objects_count, sizeof(bool));
-  if_fail(include == NULL, __FILE__, __LINE__);
+  bool* includes = (bool*)calloc(objects_count, sizeof(bool));
+  if_fail(includes == NULL, __FILE__, __LINE__);
   int total_value = table[objects_count][knapsack_capacity];
 
-  printf("%d\n", total_value);
   find_subset(knapsack_capacity + 1, table, objects_count, knapsack_capacity,
-              weights, values);
+              weights, values, includes);
+#ifdef DEBUG
+  puts("knapsack includes");
+  array_bool_print(includes, objects_count, 3);
+#endif
+  printf("%d\n", total_value);
+
+  return includes;
 }
 
 int main(void) {
@@ -89,21 +97,24 @@ int main(void) {
   if_fail(mapping == NULL, __FILE__, __LINE__);
 #ifdef DEBUG
   int alignment = array_int_print_alignment(weights, objects_count);
-  puts("original weights array");
+  puts("original order");
   array_int_print(mapping, objects_count, alignment);
   array_int_print(weights, objects_count, alignment);
   array_int_print(values, objects_count, alignment);
 #endif
   radix_sort_int_int(mapping, weights, objects_count, ASCENDING);
 #ifdef DEBUG
-  puts("mapped sorted array");
+  puts("sorted order");
   array_int_print(mapping, objects_count, alignment);
   array_int_print(weights, objects_count, alignment);
   array_int_reorder(values, mapping, objects_count);
   array_int_print(values, objects_count, alignment);
 #endif
 
-  knapsack(knapsack_capacity, weights, values, objects_count);
+  bool* includes = knapsack(knapsack_capacity, weights, values, objects_count);
+  // for (int i = 0; i < objects_count; ++i) {
+  //   if ()
+  // }
 
   free(mapping);
   free(weights);

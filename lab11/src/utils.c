@@ -34,6 +34,14 @@ void array_int_print(int *arr, int arr_length, int alignment) {
 }
 
 // cppcheck-suppress unusedFunction
+void array_bool_print(bool *arr, int arr_length, int alignment) {
+  for (int i = 0; i < arr_length; ++i) {
+    printf("%*d ", alignment, arr[i]);
+  }
+  printf("\n");
+}
+
+// cppcheck-suppress unusedFunction
 int *array_int_copy(const int *arr, int arr_length) {
   int *copy = (int *)malloc(sizeof(int) * arr_length);
 

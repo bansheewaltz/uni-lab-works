@@ -10,6 +10,7 @@
 void print_error_terminate(char *message);
 void if_fail(bool check, char *file, int line);
 void array_int_print(int *arr, int arr_length, int alignment);
+void array_bool_print(bool *arr, int arr_length, int alignment);
 int *array_int_copy(const int *arr, int arr_length);
 int *create_mapping_array(int arr_length);
 int array_int_max(const int *arr, int arr_size);
