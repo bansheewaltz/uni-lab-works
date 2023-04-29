@@ -7,6 +7,7 @@
 #define DESCENDING true
 #define ASCENDING false
 
-int *array_int_radix_sort(int arr[], int arr_length, bool order);
+void radix_sort_int_int(int arr[], int arr_by_which[], int arr_length,
+                        bool order);
 
 #endif  // SORT_H
