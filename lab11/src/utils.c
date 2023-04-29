@@ -20,3 +20,10 @@ void if_fail(bool check, char *file, int line) {
     exit(EXIT_FAILURE);
   }
 }
+
+void print_int_array(int *arr, int arr_length) {
+  for (int i = 0; i < arr_length; ++i) {
+    printf("%d ", arr[i]);
+  }
+  printf("\n");
+}
