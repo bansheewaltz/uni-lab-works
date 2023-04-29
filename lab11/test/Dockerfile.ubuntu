@@ -1,0 +1,15 @@
+FROM ubuntu
+
+WORKDIR /usr/project
+
+RUN apt-get update && apt-get install -y \
+    gcc \ 
+    make \
+    cmake \
+    valgrind \
+    cppcheck \
+    clang-format \
+    pkg-config \
+    check \
+    gdb \
+    sudo

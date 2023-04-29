@@ -27,15 +27,15 @@ void find_subset(int width, int table[][width], int i, int j, int weights[],
   if (table[i - 1][j] == table[i][j]) {
     find_subset(width, table, i - 1, j, weights, values);
   } else {
-    find_subset(width, table, i - 1, j - weights[i], weights, values);
+    find_subset(width, table, i - 1, j - weights[i - 1], weights, values);
     // ans.push(i);
-    printf("%d, %d\n", weights[i], values[i]);
+    printf("%d %d\n", weights[i - 1], values[i - 1]);
   }
 }
 
 void print_table(int width, int table[][width], int objects_count, int values[],
                  int weights[]) {
-  for (int i = -3; i <= width; ++i) {
+  for (int i = -3; i < width; ++i) {
     if (i < 0) {
       printf("%4s ", "");
     } else {
@@ -45,7 +45,7 @@ void print_table(int width, int table[][width], int objects_count, int values[],
   printf("\n");
 
   for (int i = 0; i <= objects_count; ++i) {
-    for (int j = -3; j <= width; ++j) {
+    for (int j = -3; j < width; ++j) {
       if (i == 0 && j < 0) {
         if (j == -3) {
           printf("%4s ", "val");
@@ -89,19 +89,22 @@ void knapsack(int knapsack_capacity, int weights[], int values[],
       } else if (weights[i - 1] <= j) {
         table[i][j] = max(values[i - 1] + table[i - 1][j - weights[i - 1]],
                           table[i - 1][j]);
+        // table[i][j] = values[i - 1];
       } else {
         table[i][j] = table[i - 1][j];
       }
+      // print_table(knapsack_capacity + 1, table, objects_count, values,
+      // weights);
     }
   }
 
 #ifdef DEBUG
-  print_table(knapsack_capacity, table, objects_count, values, weights);
+  print_table(knapsack_capacity + 1, table, objects_count, values, weights);
 #endif
 
   bool *include = (bool *)calloc(objects_count, sizeof(bool));
   if_fail(include == NULL, __FILE__, __LINE__);
-  // int total_value = table[objects_count][knapsack_capacity];
+  int total_value = table[objects_count][knapsack_capacity];
 
   // for (int i = objects_count - 1; i >= 0; --i) {
   //   for (int j = knapsack_capacity; j >= 0; --j) {
@@ -113,9 +116,9 @@ void knapsack(int knapsack_capacity, int weights[], int values[],
   //   include[objects_count] = 1;
   // }
 
-  // printf("%d\n", total_value);
-  // find_subset(knapsack_capacity + 1, table, objects_count, knapsack_capacity,
-  //             weights, values);
+  printf("%d\n", total_value);
+  find_subset(knapsack_capacity + 1, table, objects_count, knapsack_capacity,
+              weights, values);
 }
 
 int main(void) {
@@ -135,9 +138,8 @@ int main(void) {
   for (int i = 0; i < objects_count; ++i) {
     scanf("%d %d", &weights[i], &values[i]);
   }
+  // int *weights_orig = copy_int_array(weights);
   radix_sort_int_int(values, weights, objects_count, ASCENDING);
-  print_int_array(weights, objects_count);
-  print_int_array(values, objects_count);
 
   // printf("The solution is : %d",
   //        knapsack(knapsack_capacity, weights, values, objects_count));
