@@ -27,3 +27,15 @@ void print_int_array(int *arr, int arr_length) {
   }
   printf("\n");
 }
+
+int *copy_int_array(int *arr, int arr_length) {
+  int *copy = (int *)malloc(sizeof(int) * arr_length);
+
+  if (copy != NULL) {
+    for (int i = 0; i < arr_length; ++i) {
+      copy[i] = arr[i];
+    }
+  }
+
+  return copy;
+}
