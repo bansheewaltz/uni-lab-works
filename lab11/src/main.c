@@ -31,8 +31,8 @@ bool* knapsack(int knapsack_capacity, int weights[], int values[],
       if (i == 0 || j == 0) {
         table[i][j] = 0;
       } else if (weights[i - 1] <= j) {
-        table[i][j] = max(values[i - 1] + table[i - 1][j - weights[i - 1]],
-                          table[i - 1][j]);
+        table[i][j] = int_max(values[i - 1] + table[i - 1][j - weights[i - 1]],
+                              table[i - 1][j]);
       } else {
         table[i][j] = table[i - 1][j];
       }

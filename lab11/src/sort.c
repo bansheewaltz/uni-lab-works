@@ -11,8 +11,12 @@ static int *array_int_counting_sort(int indices[], int arr[], int arr_length,
                                     int place, bool order) {
   int max_digit = COUNTING_SORT_BASE - 1;
   int count[COUNTING_SORT_BASE] = {0};
-  int indices_output[arr_length];
-  int arr_output[arr_length];
+  int *indices_output = (int *)malloc(sizeof(int) * arr_length);
+  int *arr_output = (int *)malloc(sizeof(int) * arr_length);
+
+  if (indices_output == NULL || arr_output == NULL) {
+    return NULL;
+  }
 
   // Calculate count of elements
   for (int i = 0; i < arr_length; ++i) {
@@ -38,6 +42,9 @@ static int *array_int_counting_sort(int indices[], int arr[], int arr_length,
     indices[i] = indices_output[i];
     arr[i] = arr_output[i];
   }
+
+  free(indices_output);
+  free(arr_output);
 
   return indices;
 }
