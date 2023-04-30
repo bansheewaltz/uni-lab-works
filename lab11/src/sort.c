@@ -73,5 +73,7 @@ int *array_int_radix_sort(int arr[], int arr_length, bool order) {
     }
   }
 
+  free(indices);
+
   return mapping;
 }

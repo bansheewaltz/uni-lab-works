@@ -89,8 +89,10 @@ int main(void) {
   }
 
   free(mapping);
+  free(reverse_mapping);
   free(weights);
   free(values);
   free(includes);
+
   return EXIT_SUCCESS;
 }
