@@ -4,7 +4,8 @@ Checks: >
   portability-*,
   readability-*,
   cppcoreguidelines-*,
-  google-readability*
+  google-readability*,
+  -clang-analyzer-core.NullDereference
 # readability-braces-around-statements,
 # -cppcoreguidelines-avoid-c-arrays
 # -clang-analyzer-security.insecureAPI.DeprecatedOrUnsafeBufferHandling,

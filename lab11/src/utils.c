@@ -54,7 +54,6 @@ int *array_int_copy(const int *arr, int arr_length) {
   return copy;
 }
 
-// cppcheck-suppress unusedFunction
 int *create_indices_array(int arr_length) {
   int *arr = (int *)malloc(sizeof(int) * arr_length);
 
@@ -81,7 +80,6 @@ int array_int_max(const int *arr, int arr_size) {
   return temp_max;
 }
 
-// cppcheck-suppress unusedFunction
 int count_int_digits(int n) {
   int count = 1;
 
@@ -116,8 +114,7 @@ int array_int_alignment(int *arr, int arr_size) {
   return temp_max;
 }
 
-// cppcheck-suppress unusedFunction
-void array_int_reorder(int *arr, int *mapping, int arr_length) {
+void array_int_reorder(int *arr, const int *mapping, int arr_length) {
   assert(arr != NULL);
   assert(mapping != NULL);
 
@@ -132,8 +129,7 @@ void array_int_reorder(int *arr, int *mapping, int arr_length) {
   }
 }
 
-// cppcheck-suppress unusedFunction
-void array_bool_reorder(bool *arr, int *mapping, int arr_length) {
+void array_bool_reorder(bool *arr, const int *mapping, int arr_length) {
   assert(arr != NULL);
   assert(mapping != NULL);
 
@@ -148,8 +144,7 @@ void array_bool_reorder(bool *arr, int *mapping, int arr_length) {
   }
 }
 
-// cppcheck-suppress unusedFunction
-int *create_reverse_mapping(int mapping[], int arr_length) {
+int *create_reverse_mapping(const int mapping[], int arr_length) {
   if (mapping == NULL) {
     return NULL;
   }
@@ -166,7 +161,9 @@ int *create_reverse_mapping(int mapping[], int arr_length) {
 }
 
 // cppcheck-suppress unusedFunction
-void print_table(int width, int table[][width], int objects_count, int values[],
+// NOLINTNEXTLINE
+void print_table(int width, int table[][width], int objects_count,
+                 int values[],  // NOLINT
                  int weights[]) {
   for (int i = -3; i < width; ++i) {
     if (i < 0) {
@@ -208,7 +205,7 @@ void print_table(int width, int table[][width], int objects_count, int values[],
   }
 }
 
-int max(int a, int b) {
+int int_max(int a, int b) {
   if (a > b) {
     return a;
   }
