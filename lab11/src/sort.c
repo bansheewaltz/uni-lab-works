@@ -12,9 +12,12 @@ static int *array_int_counting_sort(int indices[], int arr[], int arr_length,
   int max_digit = COUNTING_SORT_BASE - 1;
   int count[COUNTING_SORT_BASE] = {0};
   int *indices_output = (int *)malloc(sizeof(int) * arr_length);
+  if (indices_output == NULL) {
+    return NULL;
+  }
   int *arr_output = (int *)malloc(sizeof(int) * arr_length);
-
-  if (indices_output == NULL || arr_output == NULL) {
+  if (arr_output == NULL) {
+    free(indices_output);
     return NULL;
   }
 
