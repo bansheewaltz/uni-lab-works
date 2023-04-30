@@ -54,13 +54,15 @@ all: static n
 normal: n
 warnings: w
 optimised: o
+fast: f
 debug: d
 
 n: CFLAGS := -DNDEBUG -I$(HDR_DIR)
 w: CFLAGS := -DNDEBUG $(CFLAGS)
 o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
+f: CFLAGS := -DNDEBUG -O3 $(CFLAGS)
 d: CFLAGS := -DDEBUG -g $(CFLAGS)
-n w o d: build_dir
+n w o f d: build_dir
 	gcc $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
 build_dir:
 	mkdir -p build
