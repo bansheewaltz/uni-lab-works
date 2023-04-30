@@ -5,19 +5,6 @@
 #include "sort.h"
 #include "utils.h"
 
-typedef struct {
-  int total_value;
-  int* picked_weight;
-  int* picked_value;
-} KnapSackInfo;
-
-int max(int a, int b) {
-  if (a > b) {
-    return a;
-  }
-  return b;
-}
-
 void find_subset(int width, int table[][width], int i, int j, int weights[],
                  int values[], bool includes[]) {
   if (table[i][j] == 0) {

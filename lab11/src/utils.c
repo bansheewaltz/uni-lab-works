@@ -207,3 +207,10 @@ void print_table(int width, int table[][width], int objects_count, int values[],
     printf("\n");
   }
 }
+
+int max(int a, int b) {
+  if (a > b) {
+    return a;
+  }
+  return b;
+}
