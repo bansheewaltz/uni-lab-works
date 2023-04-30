@@ -54,7 +54,9 @@ int main(void) {
   int objects_count = 0;
   int knapsack_capacity = 0;
 
-  scanf("%d %d", &objects_count, &knapsack_capacity);
+  if (scanf("%d %d", &objects_count, &knapsack_capacity) != 2) {
+    return (EXIT_FAILURE);
+  }
 
   int* weights = (int*)malloc(objects_count * sizeof(int));
   int* values = (int*)malloc(objects_count * sizeof(int));
@@ -62,7 +64,9 @@ int main(void) {
   if_fail(values == NULL, __FILE__, __LINE__);
 
   for (int i = 0; i < objects_count; ++i) {
-    scanf("%d %d", &weights[i], &values[i]);
+    if (scanf("%d %d", &weights[i], &values[i]) != 2) {
+      return (EXIT_FAILURE);
+    }
   }
 
   int* mapping = array_int_radix_sort(weights, objects_count, ASCENDING_ORDER);

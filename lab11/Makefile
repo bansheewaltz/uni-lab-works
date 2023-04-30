@@ -23,7 +23,7 @@ TEST_DIR := test
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 # compile options
 CC := gcc
-WFLAGS := -Wall -Werror -Wextra
+WFLAGS := -Wall -Werror -Wextra -pedantic -pedantic-errors
 STDFLAG := -std=c99
 CFLAGS :=  $(STDFLAG) $(WFLAGS) -I$(HDR_DIR)
 ASANFLAGS := -fsanitize=address \
