@@ -15,8 +15,6 @@ void find_subset(int width, int table[][width], int i, int j, int weights[],
   } else {
     find_subset(width, table, i - 1, j - weights[i - 1], weights, values,
                 includes);
-    // ans.push(i);
-    // printf("%d %d\n", weights[i - 1], values[i - 1]);
     includes[i - 1] = true;
   }
 }
@@ -38,13 +36,11 @@ bool* knapsack(int knapsack_capacity, int weights[], int values[],
       } else {
         table[i][j] = table[i - 1][j];
       }
-      // print_table(knapsack_capacity + 1, table, objects_count, values,
-      // weights);
     }
   }
 
 #ifdef DEBUG
-  // print_table(knapsack_capacity + 1, table, objects_count, values, weights);
+  print_table(knapsack_capacity + 1, table, objects_count, values, weights);
 #endif
 
   bool* includes = (bool*)calloc(objects_count, sizeof(bool));
