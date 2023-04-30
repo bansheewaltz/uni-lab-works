@@ -21,5 +21,6 @@ void array_bool_reorder(bool *arr, int *indexes, int arr_length);
 int *create_reverse_mapping(int mapping[], int arr_length);
 void print_table(int width, int table[][width], int objects_count, int values[],
                  int weights[]);
+int max(int a, int b);
 
 #endif  // UTILS_H
