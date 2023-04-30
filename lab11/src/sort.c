@@ -39,7 +39,6 @@ static int *array_int_counting_sort(int indices[], int arr[], int arr_length,
     arr[i] = arr_output[i];
   }
 
-  // array_int_print(indices_output, arr_length, 3);
   return indices;
 }
 
@@ -56,7 +55,6 @@ int *array_int_radix_sort(int arr[], int arr_length, bool order) {
     }
   }
 
-  // array_int_print(indices, arr_length, 3);
   for (int place = 1; max / place > 0; place *= COUNTING_SORT_BASE) {
     indices = array_int_counting_sort(indices, arr, arr_length, place, order);
   }
