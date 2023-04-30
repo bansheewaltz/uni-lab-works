@@ -4,11 +4,12 @@ list(APPEND CPPCHECK_ARGS
     --verbose
     --error-exitcode=1
     --language=c
+    --inline-suppr
     -DMAIN=main
     -I ${CMAKE_SOURCE_DIR}/include
-    ${CMAKE_SOURCE_DIR}/include/*.h
     ${CMAKE_SOURCE_DIR}/src/*.c
     ${CMAKE_SOURCE_DIR}/test/*.c
+
 )
 
 add_custom_target(
