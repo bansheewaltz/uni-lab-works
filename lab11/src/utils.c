@@ -55,7 +55,7 @@ int *array_int_copy(const int *arr, int arr_length) {
 }
 
 // cppcheck-suppress unusedFunction
-int *create_mapping_array(int arr_length) {
+int *create_indices_array(int arr_length) {
   int *arr = (int *)malloc(sizeof(int) * arr_length);
 
   if (arr != NULL) {
@@ -102,7 +102,7 @@ int count_int_digits(int n) {
 }
 
 // cppcheck-suppress unusedFunction
-int array_int_print_alignment(int *arr, int arr_size) {
+int array_int_alignment(int *arr, int arr_size) {
   assert(arr != NULL);
   int temp_max = count_int_digits(arr[0]);
 
@@ -117,20 +117,52 @@ int array_int_print_alignment(int *arr, int arr_size) {
 }
 
 // cppcheck-suppress unusedFunction
-void array_int_reorder(int *arr, int *indexes, int arr_length) {
+void array_int_reorder(int *arr, int *mapping, int arr_length) {
   assert(arr != NULL);
-  assert(indexes != NULL);
+  assert(mapping != NULL);
 
   int temp[arr_length];
 
   for (int i = 0; i < arr_length; ++i) {
-    temp[i] = arr[indexes[i]];
+    temp[mapping[i]] = arr[i];
   }
 
   for (int i = 0; i < arr_length; ++i) {
     arr[i] = temp[i];
-    indexes[i] = i;
   }
+}
+
+// cppcheck-suppress unusedFunction
+void array_bool_reorder(bool *arr, int *mapping, int arr_length) {
+  assert(arr != NULL);
+  assert(mapping != NULL);
+
+  bool temp[arr_length];
+
+  for (int i = 0; i < arr_length; ++i) {
+    temp[mapping[i]] = arr[i];
+  }
+
+  for (int i = 0; i < arr_length; ++i) {
+    arr[i] = temp[i];
+  }
+}
+
+// cppcheck-suppress unusedFunction
+int *create_reverse_mapping(int mapping[], int arr_length) {
+  if (mapping == NULL) {
+    return NULL;
+  }
+
+  int *reverse_mapping = (int *)malloc(sizeof(int) * arr_length);
+
+  if (reverse_mapping != NULL) {
+    for (int i = 0; i < arr_length; ++i) {
+      reverse_mapping[mapping[i]] = i;
+    }
+  }
+
+  return reverse_mapping;
 }
 
 // cppcheck-suppress unusedFunction

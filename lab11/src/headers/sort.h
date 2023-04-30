@@ -3,11 +3,9 @@
 
 #include <stdbool.h>
 
-#define COUNTING_SORT_BASE 10
-#define DESCENDING true
-#define ASCENDING false
+#define DESCENDING_ORDER true
+#define ASCENDING_ORDER false
 
-void radix_sort_int_int(int arr[], int arr_by_which[], int arr_length,
-                        bool order);
+int *array_int_radix_sort(int arr[], int arr_length, bool order);
 
 #endif  // SORT_H
