@@ -39,29 +39,18 @@ bool* knapsack(int knapsack_capacity, int weights[], int values[],
     }
   }
 
-#ifdef DEBUG
-  print_table(knapsack_capacity + 1, table, objects_count, values, weights);
-#endif
-
   bool* includes = (bool*)calloc(objects_count, sizeof(bool));
   if_fail(includes == NULL, __FILE__, __LINE__);
   int total_value = table[objects_count][knapsack_capacity];
 
   find_subset(knapsack_capacity + 1, table, objects_count, knapsack_capacity,
               weights, values, includes);
-#ifdef DEBUG
-  puts("knapsack includes");
-  array_bool_print(includes, objects_count, 3);
-#endif
   printf("%d\n", total_value);
 
   return includes;
 }
 
 int main(void) {
-#ifdef DEBUG
-  setbuf(stdout, NULL);
-#endif
   int objects_count = 0;
   int knapsack_capacity = 0;
 
@@ -76,33 +65,15 @@ int main(void) {
     scanf("%d %d", &weights[i], &values[i]);
   }
 
-#ifdef DEBUG
-  int alignment = array_int_alignment(weights, objects_count);
-  int* indices = create_indices_array(objects_count);
-  if_fail(indices == NULL, __FILE__, __LINE__);
-  puts("original order");
-  array_int_print(indices, objects_count, alignment);
-  array_int_print(weights, objects_count, alignment);
-  array_int_print(values, objects_count, alignment);
-#endif
   int* mapping = array_int_radix_sort(weights, objects_count, ASCENDING_ORDER);
   if_fail(mapping == NULL, __FILE__, __LINE__);
-#ifdef DEBUG
-  puts("sorted order");
-  array_int_print(mapping, objects_count, alignment);
-  array_int_print(weights, objects_count, alignment);
-#endif
   array_int_reorder(values, mapping, objects_count);
-#ifdef DEBUG
-  array_int_print(values, objects_count, alignment);
-#endif
 
   bool* includes = knapsack(knapsack_capacity, weights, values, objects_count);
+
   int* reverse_mapping = create_reverse_mapping(mapping, objects_count);
   if_fail(reverse_mapping == NULL, __FILE__, __LINE__);
-#ifdef DEBUG
-  array_int_print(reverse_mapping, objects_count, alignment);
-#endif
+
   array_int_reorder(weights, reverse_mapping, objects_count);
   array_int_reorder(values, reverse_mapping, objects_count);
   array_bool_reorder(includes, reverse_mapping, objects_count);
