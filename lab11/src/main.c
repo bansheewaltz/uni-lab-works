@@ -93,31 +93,46 @@ int main(void) {
     scanf("%d %d", &weights[i], &values[i]);
   }
 
-  int* mapping = create_mapping_array(objects_count);
-  if_fail(mapping == NULL, __FILE__, __LINE__);
 #ifdef DEBUG
-  int alignment = array_int_print_alignment(weights, objects_count);
+  int alignment = array_int_alignment(weights, objects_count);
+  int* indices = create_indices_array(objects_count);
+  if_fail(indices == NULL, __FILE__, __LINE__);
   puts("original order");
-  array_int_print(mapping, objects_count, alignment);
+  array_int_print(indices, objects_count, alignment);
   array_int_print(weights, objects_count, alignment);
   array_int_print(values, objects_count, alignment);
 #endif
-  radix_sort_int_int(mapping, weights, objects_count, ASCENDING);
+  int* mapping = array_int_radix_sort(weights, objects_count, ASCENDING_ORDER);
+  if_fail(mapping == NULL, __FILE__, __LINE__);
 #ifdef DEBUG
   puts("sorted order");
   array_int_print(mapping, objects_count, alignment);
   array_int_print(weights, objects_count, alignment);
+#endif
   array_int_reorder(values, mapping, objects_count);
+#ifdef DEBUG
   array_int_print(values, objects_count, alignment);
 #endif
 
   bool* includes = knapsack(knapsack_capacity, weights, values, objects_count);
-  // for (int i = 0; i < objects_count; ++i) {
-  //   if ()
-  // }
+  int* reverse_mapping = create_reverse_mapping(mapping, objects_count);
+  if_fail(reverse_mapping == NULL, __FILE__, __LINE__);
+#ifdef DEBUG
+  array_int_print(reverse_mapping, objects_count, alignment);
+#endif
+  array_int_reorder(weights, reverse_mapping, objects_count);
+  array_int_reorder(values, reverse_mapping, objects_count);
+  array_bool_reorder(includes, reverse_mapping, objects_count);
+
+  for (int i = 0; i < objects_count; ++i) {
+    if (includes[i] == true) {
+      printf("%d %d\n", weights[i], values[i]);
+    }
+  }
 
   free(mapping);
   free(weights);
   free(values);
+  free(includes);
   return EXIT_SUCCESS;
 }

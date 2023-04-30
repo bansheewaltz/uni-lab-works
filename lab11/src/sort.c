@@ -1,20 +1,25 @@
 #include "sort.h"
 
 #include <stdbool.h>
+#include <stdlib.h>
 
-static void counting_sort_int_int(int arr[], int arr_by_which[], int size,
-                                  int place, bool order) {
+#include "utils.h"
+
+#define COUNTING_SORT_BASE 10
+
+static int *array_int_counting_sort(int indices[], int arr[], int arr_length,
+                                    int place, bool order) {
   int max_digit = COUNTING_SORT_BASE - 1;
   int count[COUNTING_SORT_BASE] = {0};
-  int arr_output[size];
-  int arr_by_output[size];
+  int indices_output[arr_length];
+  int arr_output[arr_length];
 
   // Calculate count of elements
-  for (int i = 0; i < size; ++i) {
-    count[(arr_by_which[i] / place) % COUNTING_SORT_BASE]++;
+  for (int i = 0; i < arr_length; ++i) {
+    count[(arr[i] / place) % COUNTING_SORT_BASE]++;
   }
   // Calculate cumulative count
-  if (order) {
+  if (order == DESCENDING_ORDER) {
     for (int i = max_digit; i > 0; --i) {
       count[i - 1] += count[i];
     }
@@ -24,30 +29,44 @@ static void counting_sort_int_int(int arr[], int arr_by_which[], int size,
     }
   }
   // Place the elements in sorted order
-  for (int i = size - 1; i >= 0; --i) {
-    arr_output[--count[(arr_by_which[i] / place) % COUNTING_SORT_BASE]] =
-        arr[i];
-    arr_by_output[count[(arr_by_which[i] / place) % COUNTING_SORT_BASE]] =
-        arr_by_which[i];
+  for (int i = arr_length - 1; i >= 0; --i) {
+    indices_output[--count[(arr[i] / place) % COUNTING_SORT_BASE]] = indices[i];
+    arr_output[count[(arr[i] / place) % COUNTING_SORT_BASE]] = arr[i];
   }
-  // Copy the sorted elements into original arr_by_which
-  for (int i = 0; i < size; ++i) {
+  // Copy the sorted elements into original arr
+  for (int i = 0; i < arr_length; ++i) {
+    indices[i] = indices_output[i];
     arr[i] = arr_output[i];
-    arr_by_which[i] = arr_by_output[i];
   }
+
+  // array_int_print(indices_output, arr_length, 3);
+  return indices;
 }
 
-void radix_sort_int_int(int arr[], int arr_by_which[], int arr_length,
-                        bool order) {
-  int max = arr_by_which[0];
+int *array_int_radix_sort(int arr[], int arr_length, bool order) {
+  int *indices = create_indices_array(arr_length);
+  if (indices == NULL) {
+    return NULL;
+  }
 
+  int max = arr[0];
   for (int i = 1; i < arr_length; ++i) {
-    if (arr_by_which[i] > max) {
-      max = arr_by_which[i];
+    if (arr[i] > max) {
+      max = arr[i];
     }
   }
 
+  // array_int_print(indices, arr_length, 3);
   for (int place = 1; max / place > 0; place *= COUNTING_SORT_BASE) {
-    counting_sort_int_int(arr, arr_by_which, arr_length, place, order);
+    indices = array_int_counting_sort(indices, arr, arr_length, place, order);
   }
+
+  int *mapping = (int *)malloc(sizeof(int) * arr_length);
+  if (mapping != NULL) {
+    for (int i = 0; i < arr_length; ++i) {
+      mapping[indices[i]] = i;
+    }
+  }
+
+  return mapping;
 }
