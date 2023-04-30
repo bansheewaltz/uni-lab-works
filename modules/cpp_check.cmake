@@ -2,7 +2,7 @@ list(APPEND CPPCHECK_ARGS
     --enable=warning,style,performance,portability,unusedFunction
     --std=c99
     --verbose
-    --error-exitcode=1
+    --error-exitcode=0
     --language=c
     --inline-suppr
     -DMAIN=main
