@@ -1,0 +1,25 @@
+{
+    "env": {
+        "DefaultHeaders": "${workspaceFolder}/src/headers"
+    },
+    "configurations": [
+        {
+            "name": "Release",
+            "includePath": [
+                "${workspaceFolder}/**"
+            ],
+            "cStandard": "c99"
+        },
+        {
+            "name": "Debug",
+            "includePath": [
+                "${DefaultHeaders}"
+            ],
+            "defines": [
+                "DEBUG"
+            ],
+            "cStandard": "c99"
+        }
+    ],
+    "version": 4
+}
