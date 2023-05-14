@@ -1,0 +1,24 @@
+# retard guard / reality check
+ifeq "$(OS)" "Windows_NT"
+$(error You are not welcome here. Get out with that Windows-thong)
+endif
+
+UNAME_S := $(shell uname -s)
+ifeq "$(UNAME_S)" "Darwin"
+	OS := macOS
+	BASE := darwin
+endif
+ifeq "$(UNAME_S)" "Linux"
+	OS := Linux
+	BASE := linux
+endif
+
+ARCHITECTURE := $(shell uname -m)
+PLATFORM := $(BASE)_$(ARCHITECTURE)
+
+# globals
+LAB := $(shell pwd | grep -o 'lab[0-9-]\+')
+
+# macros
+RM := rm -rf
+CLEAR_SCREEN := printf "\033c"

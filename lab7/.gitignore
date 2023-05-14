@@ -1,0 +1,5 @@
+*.txt
+!test/*.txt
+**/*dSYM
+**/*.out
+**/.DS*
