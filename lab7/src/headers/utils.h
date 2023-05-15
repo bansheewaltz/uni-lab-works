@@ -18,6 +18,5 @@
 void print_error(char *file, int line, char *error_msg);
 void *safe_malloc(size_t size, char *file, int line);
 void *safe_calloc(size_t n, size_t size, char *file, int line);
-void stack_array_print(int *stack_array, int length);
 
 #endif  // UTILS_H
