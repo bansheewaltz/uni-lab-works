@@ -1,0 +1,9 @@
+BasedOnStyle: Google
+UseTab: Never
+IndentWidth: 2
+ColumnLimit: 79
+AlignConsecutiveMacros: true
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortCaseLabelsOnASingleLine: true
+#AlignConsecutiveAssignments: Consecutive
