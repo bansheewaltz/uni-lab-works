@@ -4,6 +4,7 @@ project(lab7 C)
 file(GLOB SRC "src/*")
 
 add_executable(${PROJECT_NAME} ${SRC})
+target_include_directories(${PROJECT_NAME} PRIVATE ${PROJECT_SOURCE_DIR}/src/headers)
 
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}/../modules")
 include(common_lab)
