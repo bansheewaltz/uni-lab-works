@@ -3,7 +3,7 @@ include Makefile.autoconfig
 include Makefile.misc
 # project paths
 SRC_DIR := src
-HDR_DIR := $(SRC_DIR)/headers# private
+HDR_DIR := $(SRC_DIR)/headers# private headers
 BLD_DIR := build
 EXE_DIR := $(BLD_DIR)
 TEST_DIR := test
@@ -20,9 +20,9 @@ WFLAGS := -Wall \
 					-pedantic-errors
 STDFLAG := -std=c99
 CFLAGS :=  $(STDFLAG) -I$(HDR_DIR) $(WFLAGS)
-ASANFLAGS := -fsanitize=address \
-			       -fsanitize=leak \
-			       -fsanitize=undefined
+SANFLAGS := -fsanitize=address \
+			      -fsanitize=leak \
+			      -fsanitize=undefined
 VALGRINDFLAGS := --leak-check=full \
 				 --show-leak-kinds=all \
 				 --track-origins=yes \
@@ -61,7 +61,7 @@ n w o f d: build_dir
 .PHONY: f fast
 .PHONY: d debug
 build_dir:
-	mkdir -p build
+	$(MK) $(BLD_DIR)
 .PHONY: build_dir
 
 r: run
@@ -90,9 +90,9 @@ valred: clear d
 	valgrind $(VALGRINDFLAGS) $(EXE_FILE) $(INPUT_REDIRECTION)
 .PHONY: v valgring valred
 
-asan: clear
-	$(CC) -g $(CFLAGS) $(ASANFLAGS) $(SRC_FILES) && $(EXE_FILE)
-.PHONY: asan
+san: clear
+	$(CC) -g $(CFLAGS) $(SANFLAGS) $(SRC_FILES) && $(EXE_FILE)
+.PHONY: san
 
 cmake: cleanall
 	cmake -B $(BLD_DIR)
@@ -102,6 +102,9 @@ ctest: cmake
 ccheck: cmake
 	cd $(BLD_DIR) && make check
 .PHONY: cmake ctest ccheck
+
+tidy:
+	clang-tidy $(shell find . -type f -name '*.c') -- -I$(HDR_DIR)
 
 clean:
 	$(RM) $(EXE_FILE)
