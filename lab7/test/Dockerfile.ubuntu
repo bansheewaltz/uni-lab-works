@@ -7,9 +7,4 @@ RUN apt-get update && apt-get install -y \
     make \
     cmake \
     valgrind \
-    cppcheck \
-    clang-format \
-    pkg-config \
-    check \
-    gdb \
-    sudo
+    cppcheck

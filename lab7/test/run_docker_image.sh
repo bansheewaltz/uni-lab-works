@@ -33,7 +33,8 @@ command="echo \"export PS1='$prompt'\" >> ~/.bashrc && bash"
 docker build -t $image -f ${TEST_DIR}/$dockerfile .
 # docker build -t $image -f ${TEST_DIR}/$dockerfile . --platform linux/x86_64
 # docker run --platform linux/x86_64
-docker run -it --rm\
+docker run -it \
+  --rm \
   --name "$container_name" \
   -e PS1="$prompt" \
   -v $PWD/../:/usr/project \
