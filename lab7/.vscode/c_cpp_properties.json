@@ -6,9 +6,8 @@
         {
             "name": "Release",
             "includePath": [
-                "${workspaceFolder}/**"
-            ],
-            "cStandard": "c99"
+                "${DefaultHeaders}"
+            ]
         },
         {
             "name": "Debug",
@@ -17,8 +16,7 @@
             ],
             "defines": [
                 "DEBUG"
-            ],
-            "cStandard": "c99"
+            ]
         }
     ],
     "version": 4
