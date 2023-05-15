@@ -1,4 +1,4 @@
-# the operability has been tested only on ARM-based macOS and Linux Ubuntu systems
+# has been tested on ARM-based macOS and Linux Ubuntu
 include Makefile.autoconfig
 include Makefile.misc
 # project paths
@@ -44,15 +44,15 @@ all: static n t
 
 normal: n
 warnings: w
+debug: d
 optimised: o
 fast: f
-debug: d
 
 n: CFLAGS := -DNDEBUG -O0 -I$(HDR_DIR)
 w: CFLAGS := -DNDEBUG -O0 $(CFLAGS)
-o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
-f: CFLAGS := -DNDEBUG -O3 $(CFLAGS)
 d: CFLAGS := -D DEBUG -g  $(CFLAGS)
+o: CFLAGS := -DNDEBUG -O2 -I$(HDR_DIR)
+f: CFLAGS := -DNDEBUG -O3 -I$(HDR_DIR)
 n w o f d: build_dir
 	$(CC) $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
 .PHONY: n normal
@@ -107,10 +107,10 @@ tidy:
 	clang-tidy $(shell find . -type f -name '*.c') -- -I$(HDR_DIR)
 
 clean:
-	$(RM) $(EXE_FILE)
-	$(RM) $(EXE_FILE)*.dSYM
+	$(RM) $(BLD_DIR)
+cleanmisc:
 	$(RM) in.txt
 	$(RM) out.txt
-cleanall: clean
-	$(RM) $(BLD_DIR)
-.PHONY: clean cleanall
+	$(RM) a.out
+cleanall: clean cleanmisc
+.PHONY: clean cleanmisc cleanall
