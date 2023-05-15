@@ -1,6 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+#include "main.h"
 #include "utils.h"
 
 bool scan_validate_vertices_count(int *vertices_count) {
@@ -24,7 +25,7 @@ bool scan_validate_edges_count(int *edges_count, int vertices_count) {
   return FAILURE;
 }
 
-bool scan_validate_parameters(int *vertices_count, int *edges_count) {
+bool graph_scan_validate_parameters(int *vertices_count, int *edges_count) {
   if (scan_validate_vertices_count(vertices_count) &&
       scan_validate_edges_count(edges_count, *vertices_count)) {
     return SUCCESS;
@@ -40,7 +41,9 @@ bool validate_edge(int src, int dst, int vertices_count) {
   return false;
 }
 
-bool scan_edges(bool *graph_array, int vertices_count, int edges_count) {
+bool graph_scan_validate_edges(Graph *graph) {
+  int vertices_count = graph->vertices_count;
+  int edges_count = graph->edges_count;
   int edge_src = 0;
   int edge_dst = 0;
   int scanned_edges_count = 0;
@@ -49,7 +52,7 @@ bool scan_edges(bool *graph_array, int vertices_count, int edges_count) {
 
   while (scanf("%d %d", &edge_src, &edge_dst) != EOF) {
     if (validate_edge(edge_src, edge_dst, vertices_count)) {
-      graph_array[--edge_src * vertices_count + --edge_dst] = 1;
+      graph->graph_array[--edge_src * vertices_count + --edge_dst] = 1;
     } else {
       puts("bad vertex");
       result = FAILURE;
