@@ -21,4 +21,5 @@ LAB := $(shell pwd | grep -o 'lab[0-9-]\+')
 
 # macros
 RM := rm -rf
+MK := mkdir -p
 CLEAR_SCREEN := printf "\033c"
