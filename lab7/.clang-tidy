@@ -13,4 +13,4 @@ HeaderFilterRegex: >
   "(src/headers).*\\.h$"
 CheckOptions:
   - key: readability-identifier-length.IgnoredParameterNames
-    value: ^[ijxyabn]$
+    value: ^[ijkabnv]$
