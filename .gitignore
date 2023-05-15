@@ -2,5 +2,6 @@
 **/cmake-build*/
 build/
 /*
+!modules
 !.gitignore
 !lab7
