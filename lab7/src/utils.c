@@ -3,6 +3,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#define MEMORY_INTERNAL
+
 #include "main.h"
 
 void print_error(char *file, int line, char *error_msg) {
