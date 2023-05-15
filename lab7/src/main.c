@@ -5,13 +5,15 @@
 #include <stdlib.h>
 
 #include "input.h"
+#include "typehandlers.h"
 #include "utils.h"
 
 enum VertexState { NOT_VISITED, TEMPORARY_MARK, PERMANENT_MARK };
 
-bool topological_sort_recursive(bool *graph_array, int *vertex_state, int v,
-                                int vertices_count, int *stack_array,
-                                int *stack_top) {
+bool topsort_recursive(Graph *graph, Stack *stack, int v, int *vertex_state) {
+  int vertices_count = graph->vertices_count;
+  bool *graph_array = graph->graph_array;
+
   if (vertex_state[v] == PERMANENT_MARK) {
     return true;
   }
@@ -23,9 +25,7 @@ bool topological_sort_recursive(bool *graph_array, int *vertex_state, int v,
   bool result = true;
   for (int i = vertices_count - 1; i >= 0; --i) {
     if (graph_array[vertices_count * v + i]) {
-      result =
-          topological_sort_recursive(graph_array, vertex_state, i,
-                                     vertices_count, stack_array, stack_top);
+      result = topsort_recursive(graph, stack, i, vertex_state);
       if (result == false) {
         break;
       }
@@ -34,68 +34,58 @@ bool topological_sort_recursive(bool *graph_array, int *vertex_state, int v,
 
   if (result == true) {
     vertex_state[v] = PERMANENT_MARK;
-    stack_array[(*stack_top)++] = v + 1;
+    result = stack_push(stack, v + 1);
   }
   return result;
 }
 
-int *topological_sort(bool *graph_array, int vertices_count) {
+Stack *graph_topological_sort(Graph *graph) {
+  int vertices_count = graph->vertices_count;
+
+  Stack *stack = stack_init(vertices_count);
   int *vertex_state = calloc((size_t)vertices_count, sizeof(int));
-  int *stack_array = malloc(sizeof(int) * (size_t)vertices_count);
-  int stack_top = 0;
 
   bool result = false;
   for (int i = 0; i < vertices_count; ++i) {
     if (vertex_state[i] == NOT_VISITED) {
-      result =
-          topological_sort_recursive(graph_array, vertex_state, i,
-                                     vertices_count, stack_array, &stack_top);
+      result = topsort_recursive(graph, stack, i, vertex_state);
     }
     if (result == false) {
-      free(stack_array);
-      stack_array = NULL;
+      stack_free(stack);
       break;
     }
   }
 
   free(vertex_state);
-  return stack_array;
+  return stack;
 }
 
 int main(void) {
 #ifdef DEBUG
   setbuf(stdout, NULL);
 #endif
-
   int vertices_count = 0;
   int edges_count = 0;
-  bool *graph_array = NULL;
+  Graph *graph = NULL;
 
-  if (!scan_validate_parameters(&vertices_count, &edges_count)) {
+  if (!graph_scan_validate_parameters(&vertices_count, &edges_count)) {
     goto cleanup_and_exit;
   }
 
-  size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
-  graph_array = calloc(graph_matrix_size, sizeof(bool));
-  if (graph_array == NULL) {
+  graph = graph_init(vertices_count, edges_count);
+  if (graph == NULL || graph_scan_validate_edges(graph) == FAILURE) {
     goto cleanup_and_exit;
   }
 
-  if (!scan_edges(graph_array, vertices_count, edges_count)) {
-    goto cleanup_and_exit;
-  }
-
-  int *sorted_nodes = topological_sort(graph_array, vertices_count);
-  if (sorted_nodes != NULL) {
-    stack_array_print(sorted_nodes, vertices_count);
-    free(sorted_nodes);
+  Stack *ordered_vertices = graph_topological_sort(graph);
+  if (ordered_vertices != NULL) {
+    stack_print(ordered_vertices);
+    stack_free(ordered_vertices);
   } else {
     puts("impossible to sort");
   }
 
 cleanup_and_exit:
-  if (graph_array != NULL) {
-    free(graph_array);
-  }
+  graph_free(graph);
   return EXIT_SUCCESS;
 }
