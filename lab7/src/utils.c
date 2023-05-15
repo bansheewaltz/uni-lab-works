@@ -28,7 +28,7 @@ void *safe_calloc(size_t n, size_t size, char *file, int line) {
 }
 
 void stack_array_print(int *stack_array, int length) {
-  for (int i = length; i >= 0; --i) {
+  for (int i = length - 1; i >= 0; --i) {
     if (stack_array[i] != 0) {
       printf("%d%s", stack_array[i], i == 0 ? "\n" : " ");
     }
