@@ -8,7 +8,8 @@
 #include "main.h"
 
 void print_error(char *file, int line, char *error_msg) {
-  fprintf(stderr, "Internal Error: %s:%d: %s\n", file, line, error_msg);
+  char *executable_name = getenv("LAB");
+  fprintf(stderr, "%s: %s:%d: %s\n", executable_name, file, line, error_msg);
 }
 
 void *safe_malloc(size_t size, char *file, int line) {
