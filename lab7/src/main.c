@@ -10,7 +10,7 @@
 #define malloc(n) safe_malloc(n, __FILE__, __LINE__)
 #define calloc(n, size) safe_calloc(n, size, __FILE__, __LINE__)
 
-enum { NOT_VISITED, TEMPORARY_MARK, PERMANENT_MARK };
+enum VertexState { NOT_VISITED, TEMPORARY_MARK, PERMANENT_MARK };
 
 bool topological_sort_recursive(bool *graph_array, int *vertex_state, int v,
                                 int vertices_count, int *stack_array,
@@ -88,8 +88,8 @@ int main(void) {
     goto cleanup_and_exit;
   }
 
-  int *sorted_nodes = NULL;
-  if ((sorted_nodes = topological_sort(graph_array, vertices_count)) != NULL) {
+  int *sorted_nodes = topological_sort(graph_array, vertices_count);
+  if (sorted_nodes != NULL) {
     stack_array_print(sorted_nodes, vertices_count);
     free(sorted_nodes);
   } else {
