@@ -44,7 +44,7 @@ bool topological_sort_recursive(bool *graph_array, int *vertex_state, int v,
 
 int *topological_sort(bool *graph_array, int vertices_count) {
   int *vertex_state = calloc((size_t)vertices_count, sizeof(int));
-  int *stack_array = calloc((size_t)vertices_count, sizeof(int));
+  int *stack_array = malloc(sizeof(int) * (size_t)vertices_count);
   int stack_top = 0;
 
   bool result = false;
