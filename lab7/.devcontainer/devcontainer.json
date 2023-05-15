@@ -1,0 +1,35 @@
+// For format details, see https://aka.ms/devcontainer.json
+{
+	"name": "${workspaceFolderBasename}",
+	"image": "docker.io/dondarri/school21-c-dev-ubuntu:excessive",
+	// /// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	// "build": {
+	// 	"dockerfile": "Dockerfile"
+	// },
+	// /// Features to add to the dev container. More info: https://containers.dev/features.
+	"runArgs": [
+		"--platform=linux/arm64"
+	],
+	// /// Uncomment to connect as a non-root user. See https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "vscode"
+	"features": {},
+	// /// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			// "settings": {
+			// 	// "extensions.ignoreRecommendations": true,
+			// 	"extensions.verifySignature": false
+			// },
+			"extensions": [
+				"ms-vscode.cpptools",
+				"vadimcn.vscode-lldb",
+				"eamodio.gitlens",
+				"ms-vscode.live-server"
+			]
+		}
+	},
+	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
+	"workspaceFolder": "/workspace",
+	"postStartCommand": "cd src && make fclean",
+	"shutdownAction": "stopContainer"
+}
