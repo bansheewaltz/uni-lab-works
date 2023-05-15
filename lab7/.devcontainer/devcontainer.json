@@ -1,6 +1,6 @@
 // For format details, see https://aka.ms/devcontainer.json
 {
-	"name": "${workspaceFolderBasename}",
+	"name": "${localWorkspaceFolderBasename}",
 	"image": "docker.io/dondarri/school21-c-dev-ubuntu:excessive",
 	// /// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	// "build": {
@@ -16,10 +16,9 @@
 	// /// Configure tool-specific properties.
 	"customizations": {
 		"vscode": {
-			// "settings": {
-			// 	// "extensions.ignoreRecommendations": true,
-			// 	"extensions.verifySignature": false
-			// },
+			"settings": {
+				"extensions.ignoreRecommendations": true
+			},
 			"extensions": [
 				"ms-vscode.cpptools",
 				"vadimcn.vscode-lldb",
@@ -28,8 +27,8 @@
 			]
 		}
 	},
-	"workspaceMount": "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached",
-	"workspaceFolder": "/workspace",
-	"postStartCommand": "cd src && make fclean",
+	"workspaceMount": "source=${localWorkspaceFolder}/..,target=/workspace/template,type=bind,consistency=cached",
+	"workspaceFolder": "/workspace/template/${localWorkspaceFolderBasename}",
+	"postStartCommand": "make cleanall",
 	"shutdownAction": "stopContainer"
 }
