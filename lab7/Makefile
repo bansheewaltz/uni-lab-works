@@ -99,7 +99,9 @@ cmake: cleanall
 	cmake --build $(BLD_DIR)
 ctest: cmake
 	cd $(BLD_DIR) && make test
-.PHONY: cmake ctest
+ccheck: cmake
+	cd $(BLD_DIR) && make check
+.PHONY: cmake ctest ccheck
 
 clean:
 	$(RM) $(EXE_FILE)
