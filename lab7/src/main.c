@@ -72,18 +72,20 @@ int main(void) {
 
   int vertices_count = 0;
   int edges_count = 0;
+  bool *graph_array = NULL;
 
   if (!scan_validate_parameters(&vertices_count, &edges_count)) {
-    return EXIT_SUCCESS;
+    goto cleanup_and_exit;
   }
 
   size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
-  bool *graph_array = calloc(graph_matrix_size, sizeof(bool));
+  graph_array = calloc(graph_matrix_size, sizeof(bool));
+  if (graph_array == NULL) {
+    goto cleanup_and_exit;
+  }
 
   if (!scan_edges(graph_array, vertices_count, edges_count)) {
-    // free(graph_array);
-    // return EXIT_SUCCESS;
-    goto cleanup;
+    goto cleanup_and_exit;
   }
 
   int *sorted_nodes = NULL;
@@ -94,7 +96,9 @@ int main(void) {
     puts("impossible to sort");
   }
 
-cleanup:
-  free(graph_array);
+cleanup_and_exit:
+  if (graph_array != NULL) {
+    free(graph_array);
+  }
   return EXIT_SUCCESS;
 }
