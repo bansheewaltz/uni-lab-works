@@ -7,9 +7,6 @@
 #include "input.h"
 #include "utils.h"
 
-#define malloc(n) safe_malloc(n, __FILE__, __LINE__)
-#define calloc(n, size) safe_calloc(n, size, __FILE__, __LINE__)
-
 enum VertexState { NOT_VISITED, TEMPORARY_MARK, PERMANENT_MARK };
 
 bool topological_sort_recursive(bool *graph_array, int *vertex_state, int v,
