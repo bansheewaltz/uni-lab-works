@@ -5,4 +5,4 @@ ColumnLimit: 79
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
 AllowShortCaseLabelsOnASingleLine: true
-RemoveSemicolon: true
+#RemoveSemicolon: true
