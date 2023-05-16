@@ -23,6 +23,13 @@ else
   image_os="$image"
 fi
 
+# set default platform if another is not specified
+if test -z "$platform"; then
+  platform_flag=
+else
+  platform_flag="--platform $platform"
+fi
+
 container_name="dondarri.${image_os}-temp"
 docker rm -f ${container_name} 2> /dev/null
 dockerfile="Dockerfile.$image_os"
@@ -30,11 +37,11 @@ image="dondarri/$image_os"
 prompt="$CLR$image_os@container$RST:\W$ "
 command="echo \"export PS1='$prompt'\" >> ~/.bashrc && bash"
 
-docker build -t $image -f ${TEST_DIR}/$dockerfile .
-# docker build -t $image -f ${TEST_DIR}/$dockerfile . --platform linux/x86_64
-# docker run --platform linux/x86_64
+
+docker build -t $image $platform_flag -f ${TEST_DIR}/$dockerfile .
 docker run -it \
   --rm \
+  $platform_flag \
   --name "$container_name" \
   -e PS1="$prompt" \
   -v $PWD/../:/usr/project \
