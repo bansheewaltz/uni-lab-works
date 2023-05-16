@@ -2,11 +2,10 @@ list(APPEND CPPCHECK_ARGS
     --enable=warning,style,performance,portability,unusedFunction
     --std=c99
     --verbose
-    --inline-suppr
     --error-exitcode=1
     --language=c
     -DMAIN=main
-    -I ${CMAKE_SOURCE_DIR}/include
+    -I ${CMAKE_SOURCE_DIR}/src/headers
     ${CMAKE_SOURCE_DIR}/include/*.h
     ${CMAKE_SOURCE_DIR}/src/*.c
     ${CMAKE_SOURCE_DIR}/test/*.c
