@@ -40,7 +40,7 @@ CPPCHECKFLAGS := --verbose \
                  -DMAIN
 export
 
-EXE_FILE := $(EXE_DIR)/$(LAB)
+EXE_FILE := $(EXE_DIR)/$(EXE_NAME)
 INPUT_REDIRECTION := < in.txt
 
 
@@ -82,7 +82,7 @@ test:
 #==============================================================================
 ### Cmake invokers:
 
-cmake: cleanall
+cmake: clean
 	cmake -B $(BLD_DIR)
 	cmake --build $(BLD_DIR)
 ctest: cmake
@@ -95,7 +95,7 @@ ccheck: cmake
 #==============================================================================
 ### Custom checks:
 
-s: cppcheck
+c: cppcheck
 cppcheck: clear
 	cppcheck $(CPPCHECKFLAGS) -I$(HDR_DIR) $(SRC_FILES)
 .PHONY: s cppcheck
@@ -137,12 +137,14 @@ container: cleanall
 
 clean:
 	$(RM) $(BLD_DIR)
+cleanbuild:
+	cd $(BLD_DIR) && ls | grep -xv "$(EXE_NAME)" | xargs $(RM)
 cleanmisc:
 	$(RM) in.txt
 	$(RM) out.txt
 	$(RM) a.out
 cleanall: clean cleanmisc
-.PHONY: clean cleanmisc cleanall
+.PHONY: clean cleanbuild cleanmisc cleanall
 
 cs: clear
 clear:
