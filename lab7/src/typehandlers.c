@@ -1,7 +1,7 @@
 #include <stddef.h>
+#include <stdio.h>
 
 #include "main.h"
-#include "stdio.h"
 #include "utils.h"
 
 Stack *stack_init(int capacity) {
@@ -23,7 +23,6 @@ void stack_free(Stack *stack) {
     free(stack->stack_array);
   }
   free(stack);
-  stack = NULL;
 }
 
 bool stack_push(Stack *stack, int element) {
@@ -38,7 +37,7 @@ bool stack_push(Stack *stack, int element) {
 }
 
 void stack_print(Stack *stack) {
-  if (stack == NULL) {
+  if (stack == NULL || stack->stack_array == NULL) {
     return;
   }
   int *stack_array = stack->stack_array;
@@ -69,5 +68,4 @@ void graph_free(Graph *graph) {
     free(graph->graph_array);
   }
   free(graph);
-  graph = NULL;
 }
