@@ -10,22 +10,26 @@ TEST_DIR := test
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 # compile options
 CC := gcc
-WFLAGS := -Wall \
-          -Werror \
-					-Wextra \
-					-Wconversion \
-					-Wshadow \
-					-pedantic \
-					-pedantic-errors
 STDFLAG := -std=c99
-CFLAGS :=  $(STDFLAG) -I$(HDR_DIR) $(WFLAGS)
-SANFLAGS := -fsanitize=address \
-			      -fsanitize=leak \
-			      -fsanitize=undefined
+CFLAGS = -I$(HDR_DIR) $(STDFLAG)
+
+WFLAGS := 			 -Wall \
+          			 -Werror \
+								 -Wextra \
+								 -Wconversion \
+								 -Wshadow \
+								 -pedantic \
+								 -pedantic-errors
+
+SANFLAGS := 		 -fsanitize=address \
+			      		 -fsanitize=leak \
+			      		 -fsanitize=undefined
+
 VALGRINDFLAGS := --leak-check=full \
 								 --show-leak-kinds=all \
 								 --track-origins=yes \
 								 --trace-children=yes
+
 CPPCHECKFLAGS := --verbose \
 								 --language=c \
 								 -$(STDFLAG) \
@@ -51,18 +55,15 @@ debug: d
 optimised: o
 fast: f
 
-n: CFLAGS := -DNDEBUG -O0 -I$(HDR_DIR)
-w: CFLAGS := -DNDEBUG -O0 $(CFLAGS)
-d: CFLAGS := -D DEBUG -g  $(CFLAGS)
-o: CFLAGS := -DNDEBUG -O2 -I$(HDR_DIR)
-f: CFLAGS := -DNDEBUG -O3 -I$(HDR_DIR)
+w: CFLAGS := -DNDEBUG -O0 $(CFLAGS) $(WFLAGS)
+n: CFLAGS := -DNDEBUG -O0 $(CFLAGS)
+d: CFLAGS := -D DEBUG -g2 $(CFLAGS)
+o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
+f: CFLAGS := -DNDEBUG -O3 $(CFLAGS)
 n w o f d: build_dir
 	$(CC) $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
-.PHONY: n normal
-.PHONY: w warnings
-.PHONY: o optimised
-.PHONY: f fast
-.PHONY: d debug
+.PHONY: n normal w warnings o optimised f fast d debug
+
 build_dir:
 	$(MK) $(BLD_DIR)
 .PHONY: build_dir
@@ -106,8 +107,8 @@ valred: clear d
 	valgrind $(VALGRINDFLAGS) $(EXE_FILE) $(INPUT_REDIRECTION)
 .PHONY: v valgring valred
 
-san: clear
-	$(CC) -g $(CFLAGS) $(SANFLAGS) $(SRC_FILES) && $(EXE_FILE)
+san: clear build_dir
+	$(CC) -g $(CFLAGS) $(SANFLAGS) $(SRC_FILES) -o $(EXE_FILE) && $(EXE_FILE)
 .PHONY: san
 
 tidy:
