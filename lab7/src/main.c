@@ -52,6 +52,7 @@ Stack *graph_topological_sort(Graph *graph) {
     }
     if (result == false) {
       stack_free(stack);
+      stack = NULL;
       break;
     }
   }
