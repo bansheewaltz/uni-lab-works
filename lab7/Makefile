@@ -13,31 +13,31 @@ CC := gcc
 STDFLAG := -std=c99
 CFLAGS = -I$(HDR_DIR) $(STDFLAG)
 
-WFLAGS := 			 -Wall \
-          			 -Werror \
-								 -Wextra \
-								 -Wconversion \
-								 -Wshadow \
-								 -pedantic \
-								 -pedantic-errors
+WFLAGS :=        -Wall \
+                 -Werror \
+                 -Wextra \
+                 -Wconversion \
+                 -Wshadow \
+                 -pedantic \
+                 -pedantic-errors
 
-SANFLAGS := 		 -fsanitize=address \
-			      		 -fsanitize=leak \
-			      		 -fsanitize=undefined
+SANFLAGS :=      -fsanitize=address \
+                 -fsanitize=leak \
+                 -fsanitize=undefined
 
 VALGRINDFLAGS := --leak-check=full \
-								 --show-leak-kinds=all \
-								 --track-origins=yes \
-								 --trace-children=yes
+                 --show-leak-kinds=all \
+                 --track-origins=yes \
+                 --trace-children=yes
 
 CPPCHECKFLAGS := --verbose \
-								 --language=c \
-								 -$(STDFLAG) \
-								 --enable=all \
-								 --inline-suppr \
-								 --suppress=missingIncludeSystem \
-								 --error-exitcode=1 \
-								 -DMAIN
+                 --language=c \
+                 -$(STDFLAG) \
+                 --enable=all \
+                 --inline-suppr \
+                 --suppress=missingIncludeSystem \
+                 --error-exitcode=1 \
+                 -DMAIN
 export
 
 EXE_FILE := $(EXE_DIR)/$(LAB)
