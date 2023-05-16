@@ -9,23 +9,29 @@
 
 void print_error(char *file, int line, char *error_msg) {
   char *executable_name = getenv("LAB");
-  fprintf(stderr, "%s: %s:%d: %s\n", executable_name, file, line, error_msg);
+  if (executable_name != NULL) {
+    fprintf(stderr, "%s: ", executable_name);
+  }
+  char *msg = "\033[0;31merror:\033[0m";
+  fprintf(stderr, "%s:%d: %s %s\n", file, line, msg, error_msg);
 }
 
+// cppcheck-suppress unusedFunction
 void *safe_malloc(size_t size, char *file, int line) {
   void *pointer = malloc(size);
   if (pointer == NULL) {
     print_error(file, line, strerror(errno));
-    exit(EXIT_FAILURE);
+    // exit(EXIT_FAILURE);
   }
   return pointer;
 }
 
+// cppcheck-suppress unusedFunction
 void *safe_calloc(size_t n, size_t size, char *file, int line) {
   void *pointer = calloc(n, size);
   if (pointer == NULL) {
     print_error(file, line, strerror(errno));
-    exit(EXIT_FAILURE);
+    // exit(EXIT_FAILURE);
   }
   return pointer;
 }
