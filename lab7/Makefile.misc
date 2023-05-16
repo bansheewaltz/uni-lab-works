@@ -1,8 +1,0 @@
-cs: clear
-clear:
-	$(CLEAR_SCREEN)
-.PHONY: cs clear
-
-info:
-	@echo $(PLATFORM)
-.PHONY: info
