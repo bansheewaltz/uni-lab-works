@@ -8,7 +8,7 @@
 #include "main.h"
 
 void print_error(char *file, int line, char *error_msg) {
-  char *executable_name = getenv("LAB");
+  char *executable_name = getenv("EXE_NAME");
   if (executable_name != NULL) {
     fprintf(stderr, "%s: ", executable_name);
   }
@@ -16,7 +16,6 @@ void print_error(char *file, int line, char *error_msg) {
   fprintf(stderr, "%s:%d: %s %s\n", file, line, msg, error_msg);
 }
 
-// cppcheck-suppress unusedFunction
 void *safe_malloc(size_t size, char *file, int line) {
   void *pointer = malloc(size);
   if (pointer == NULL) {
@@ -26,7 +25,6 @@ void *safe_malloc(size_t size, char *file, int line) {
   return pointer;
 }
 
-// cppcheck-suppress unusedFunction
 void *safe_calloc(size_t n, size_t size, char *file, int line) {
   void *pointer = calloc(n, size);
   if (pointer == NULL) {
