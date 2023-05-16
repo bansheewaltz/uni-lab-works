@@ -24,11 +24,12 @@ bool topsort_recursive(Graph *graph, Stack *stack, int v, int *vertex_state) {
 
   bool result = true;
   for (int i = vertices_count - 1; i >= 0; --i) {
-    if (graph_array[vertices_count * v + i]) {
-      result = topsort_recursive(graph, stack, i, vertex_state);
-      if (result == false) {
-        break;
-      }
+    if (!graph_array[vertices_count * v + i]) {
+      continue;
+    }
+    result = topsort_recursive(graph, stack, i, vertex_state);
+    if (result == false) {
+      break;
     }
   }
 
