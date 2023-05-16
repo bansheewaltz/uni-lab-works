@@ -44,6 +44,7 @@ bool validate_edge(int src, int dst, int vertices_count) {
 bool graph_scan_validate_edges(Graph *graph) {
   int vertices_count = graph->vertices_count;
   int edges_count = graph->edges_count;
+
   int edge_src = 0;
   int edge_dst = 0;
   int scanned_edges_count = 0;
@@ -72,5 +73,6 @@ bool graph_scan_validate_edges(Graph *graph) {
       puts("bad number of lines");
     }
   }
+
   return result;
 }
