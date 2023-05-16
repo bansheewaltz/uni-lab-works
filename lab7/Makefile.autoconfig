@@ -25,6 +25,7 @@ ARCHITECTURE := $(shell uname -m)
 
 PLATFORM := $(BASE)_$(ARCHITECTURE)
 LAB := $(shell pwd | grep -o 'lab[0-9-]\+')
+EXE_NAME := $(LAB)
 
 
 #==============================================================================
