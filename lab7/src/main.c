@@ -43,7 +43,14 @@ Stack *graph_topological_sort(Graph *graph) {
   int vertices_count = graph->vertices_count;
 
   Stack *stack = stack_init(vertices_count);
+  if (stack == NULL) {
+    goto out;
+  }
+
   int *vertex_state = calloc((size_t)vertices_count, sizeof(int));
+  if (vertex_state == NULL) {
+    goto out;
+  }
 
   bool result = false;
   for (int i = 0; i < vertices_count; ++i) {
@@ -58,6 +65,7 @@ Stack *graph_topological_sort(Graph *graph) {
   }
 
   free(vertex_state);
+out:
   return stack;
 }
 
