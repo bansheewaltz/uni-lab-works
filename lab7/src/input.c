@@ -4,7 +4,8 @@
 #include "main.h"
 #include "utils.h"
 
-bool scan_validate_vertices_count(int *vertices_count) {
+bool scan_validate_vertices_count(int *vertices_count)
+{
   int tmp = 0;
   if (scanf("%d", &tmp) && is_in_range(tmp, 0, VERTICES_MAX_COUNT)) {
     *vertices_count = tmp;
@@ -14,7 +15,8 @@ bool scan_validate_vertices_count(int *vertices_count) {
   return FAILURE;
 }
 
-bool scan_validate_edges_count(int *edges_count, int vertices_count) {
+bool scan_validate_edges_count(int *edges_count, int vertices_count)
+{
   int tmp = 0;
   const int EDGES_MAX_COUNT = vertices_count * (vertices_count - 1) / 2;
   if (scanf("%d", &tmp) && is_in_range(tmp, 0, EDGES_MAX_COUNT)) {
@@ -25,7 +27,8 @@ bool scan_validate_edges_count(int *edges_count, int vertices_count) {
   return FAILURE;
 }
 
-bool graph_scan_validate_parameters(int *vertices_count, int *edges_count) {
+bool graph_scan_validate_parameters(int *vertices_count, int *edges_count)
+{
   if (scan_validate_vertices_count(vertices_count) &&
       scan_validate_edges_count(edges_count, *vertices_count)) {
     return SUCCESS;
@@ -33,7 +36,8 @@ bool graph_scan_validate_parameters(int *vertices_count, int *edges_count) {
   return FAILURE;
 }
 
-bool validate_edge(int src, int dst, int vertices_count) {
+bool validate_edge(int src, int dst, int vertices_count)
+{
   if (is_in_range(src, 1, vertices_count) &&
       is_in_range(dst, 1, vertices_count)) {
     return true;
@@ -41,7 +45,8 @@ bool validate_edge(int src, int dst, int vertices_count) {
   return false;
 }
 
-bool graph_scan_validate_edges(Graph *graph) {
+bool graph_scan_validate_edges(Graph *graph)
+{
   int vertices_count = graph->vertices_count;
   int edges_count = graph->edges_count;
 
