@@ -8,9 +8,15 @@
 #include "typehandlers.h"
 #include "utils.h"
 
-enum VertexState { NOT_VISITED, TEMPORARY_MARK, PERMANENT_MARK };
+enum VertexState
+{
+  NOT_VISITED,
+  TEMPORARY_MARK,
+  PERMANENT_MARK
+};
 
-bool topsort_recursive(Graph *graph, Stack *stack, int v, int *vertex_state) {
+bool topsort_recursive(Graph *graph, Stack *stack, int v, int *vertex_state)
+{
   int vertices_count = graph->vertices_count;
   bool *graph_array = graph->graph_array;
 
@@ -40,7 +46,8 @@ bool topsort_recursive(Graph *graph, Stack *stack, int v, int *vertex_state) {
   return result;
 }
 
-Stack *graph_topological_sort(Graph *graph) {
+Stack *graph_topological_sort(Graph *graph)
+{
   int vertices_count = graph->vertices_count;
 
   Stack *stack = stack_init(vertices_count);
@@ -70,7 +77,8 @@ out:
   return stack;
 }
 
-int main(void) {
+int main(void)
+{
 #ifdef DEBUG
   setbuf(stdout, NULL);
 #endif

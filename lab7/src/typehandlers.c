@@ -4,7 +4,8 @@
 #include "main.h"
 #include "utils.h"
 
-Stack *stack_init(int capacity) {
+Stack *stack_init(int capacity)
+{
   Stack *stack = malloc(sizeof(Stack));
   int *stack_array = malloc(sizeof(int) * (size_t)capacity);
   if (stack != NULL && stack_array != NULL) {
@@ -15,7 +16,8 @@ Stack *stack_init(int capacity) {
   return stack;
 }
 
-void stack_free(Stack *stack) {
+void stack_free(Stack *stack)
+{
   if (stack == NULL) {
     return;
   }
@@ -25,7 +27,8 @@ void stack_free(Stack *stack) {
   free(stack);
 }
 
-bool stack_push(Stack *stack, int element) {
+bool stack_push(Stack *stack, int element)
+{
   if (stack == NULL || stack->stack_array == NULL) {
     return FAILURE;
   }
@@ -36,7 +39,8 @@ bool stack_push(Stack *stack, int element) {
   return SUCCESS;
 }
 
-void stack_print(Stack *stack) {
+void stack_print(Stack *stack)
+{
   if (stack == NULL || stack->stack_array == NULL) {
     return;
   }
@@ -46,7 +50,8 @@ void stack_print(Stack *stack) {
   }
 }
 
-Graph *graph_init(int vertices_count, int edges_count) {
+Graph *graph_init(int vertices_count, int edges_count)
+{
   Graph *graph = malloc(sizeof(Graph));
   size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
   bool *graph_array = calloc(graph_matrix_size, sizeof(bool));
@@ -60,7 +65,8 @@ Graph *graph_init(int vertices_count, int edges_count) {
   return graph;
 }
 
-void graph_free(Graph *graph) {
+void graph_free(Graph *graph)
+{
   if (graph == NULL) {
     return;
   }
