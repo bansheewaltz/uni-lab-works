@@ -17,15 +17,16 @@ enum VertexState
 
 bool topsort_recursive(Graph *graph, Stack *stack, int v, int *vertex_state)
 {
-  int vertices_count = graph->vertices_count;
-  bool *graph_array = graph->graph_array;
-
   if (vertex_state[v] == PERMANENT_MARK) {
     return true;
   }
   if (vertex_state[v] == TEMPORARY_MARK) {
     return false;
   }
+
+  int vertices_count = graph->vertices_count;
+  bool *graph_array = graph->graph_array;
+
   vertex_state[v] = TEMPORARY_MARK;
 
   bool result = true;
@@ -52,12 +53,13 @@ Stack *graph_topological_sort(Graph *graph)
 
   Stack *stack = stack_init(vertices_count);
   if (stack == NULL) {
-    goto out;
+    return NULL;
   }
 
   int *vertex_state = calloc((size_t)vertices_count, sizeof(int));
   if (vertex_state == NULL) {
-    goto out;
+    stack_free(stack);
+    return NULL;
   }
 
   bool result = false;
@@ -73,7 +75,6 @@ Stack *graph_topological_sort(Graph *graph)
   }
 
   free(vertex_state);
-out:
   return stack;
 }
 
@@ -84,14 +85,17 @@ int main(void)
 #endif
   int vertices_count = 0;
   int edges_count = 0;
-  Graph *graph = NULL;
 
-  if (!graph_scan_validate_parameters(&vertices_count, &edges_count)) {
-    goto cleanup_and_exit;
+  if (scan_validate_parameters(&vertices_count, &edges_count) == FAILURE) {
+    return EXIT_SUCCESS;
   }
 
-  graph = graph_init(vertices_count, edges_count);
-  if (graph == NULL || graph_scan_validate_edges(graph) == FAILURE) {
+  Graph *graph = graph_init(vertices_count, edges_count);
+  if (graph == NULL) {
+    return EXIT_SUCCESS;
+  }
+
+  if (scan_validate_edges(graph) == FAILURE) {
     goto cleanup_and_exit;
   }
 

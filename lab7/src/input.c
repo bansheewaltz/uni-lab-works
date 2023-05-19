@@ -27,7 +27,7 @@ bool scan_validate_edges_count(int *edges_count, int vertices_count)
   return FAILURE;
 }
 
-bool graph_scan_validate_parameters(int *vertices_count, int *edges_count)
+bool scan_validate_parameters(int *vertices_count, int *edges_count)
 {
   if (scan_validate_vertices_count(vertices_count) &&
       scan_validate_edges_count(edges_count, *vertices_count)) {
@@ -45,7 +45,7 @@ bool validate_edge(int src, int dst, int vertices_count)
   return false;
 }
 
-bool graph_scan_validate_edges(Graph *graph)
+bool scan_validate_edges(Graph *graph)
 {
   int vertices_count = graph->vertices_count;
   int edges_count = graph->edges_count;
