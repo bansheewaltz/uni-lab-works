@@ -21,7 +21,7 @@ ReturnCode read_validate_graph(Graph* graph)
 
   graph = graph_init(vertices_count, edges_count);
   if (graph == NULL) {
-    returnCode = MEMORY_ALLOCATION_FAIL;
+    returnCode = E_MEMORY_ALLOCATION_FAIL;
     return returnCode;
   }
 
@@ -30,7 +30,7 @@ ReturnCode read_validate_graph(Graph* graph)
     return returnCode;
   }
 
-  returnCode = SUCCESS;
+  returnCode = E_SUCCESS;
   return returnCode;
 }
 
@@ -84,7 +84,7 @@ ReturnCode find_mst_prim_naive(Graph* graph, int* st_edges, int st_size)
   bool* used = calloc((size_t)vertices_count, sizeof(bool));
   int* cost = initialize_cost(vertices_count);
   if (is_any_null(2, used, cost)) {
-    returnCode = MEMORY_ALLOCATION_FAIL;
+    returnCode = E_MEMORY_ALLOCATION_FAIL;
     goto out;
   }
   cost[0] = 0;
@@ -95,7 +95,7 @@ ReturnCode find_mst_prim_naive(Graph* graph, int* st_edges, int st_size)
     used[v_dst] = 1;
 
     if (cost[v_dst] == INFINITY) {
-      returnCode = NO_SPANNING_TREE;
+      returnCode = E_NO_SPANNING_TREE;
       break;
     }
     add_st_edge(st_edges, &st_size, v_src, v_dst);
@@ -118,14 +118,14 @@ void print_result(int* st_edges, int st_size)
 int main(void)
 {
   ReturnCode returnCode = 0;
-
   Graph* graph = NULL;
+  int* st_edges = NULL;
+
   returnCode = read_validate_graph(graph);
   if (is_error(returnCode)) {
     goto cleanup_and_exit;
   }
 
-  int* st_edges = NULL;
   int st_size = 0;
   returnCode = find_mst_prim_naive(graph, st_edges, st_size);
   if (is_error(returnCode)) {
