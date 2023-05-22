@@ -10,9 +10,9 @@ ReturnCode scan_validate_vertices_count(int *vertices_count)
   int tmp = 0;
   if (scanf("%d", &tmp) && is_in_range(tmp, 0, VERTICES_MAX_COUNT)) {
     *vertices_count = tmp;
-    return SUCCESS;
+    return E_SUCCESS;
   }
-  return BAD_NUMBER_OF_VERTICES;
+  return E_BAD_NUMBER_OF_VERTICES;
 }
 
 ReturnCode scan_validate_edges_count(int *edges_count, int vertices_count)
@@ -21,16 +21,16 @@ ReturnCode scan_validate_edges_count(int *edges_count, int vertices_count)
   int tmp = 0;
   if (scanf("%d", &tmp) && is_in_range(tmp, 0, EDGES_MAX_COUNT)) {
     *edges_count = tmp;
-    return SUCCESS;
+    return E_SUCCESS;
   }
-  return BAD_NUMBER_OF_EDGES;
+  return E_BAD_NUMBER_OF_EDGES;
 }
 
 ReturnCode scan_validate_parameters(int *vertices_count, int *edges_count)
 {
   if (scan_validate_vertices_count(vertices_count) &&
       scan_validate_edges_count(edges_count, *vertices_count)) {
-    return SUCCESS;
+    return E_SUCCESS;
   }
   return FAILURE;
 }
@@ -52,7 +52,7 @@ ReturnCode scan_validate_edges(Graph *graph)
   int edge_src = 0;
   int edge_dst = 0;
   int scanned_edges_count = 0;
-  bool result = SUCCESS;
+  bool result = E_SUCCESS;
   bool bad_vertex_flag = false;
 
   while (scanf("%d %d", &edge_src, &edge_dst) != EOF) {
