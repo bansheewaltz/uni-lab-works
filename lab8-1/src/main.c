@@ -2,6 +2,7 @@
 #include <limits.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stddef.h>
 #include <string.h>
 
 #include "error.h"
@@ -34,19 +35,19 @@ ReturnCode read_validate_graph(Graph** graph)
   return E_SUCCESS;
 }
 
-uint* initialize_cost(int vertices_count)
+uint* initialize_cost(size_t vertices_count)
 {
   uint* costs = malloc(sizeof(int) * (size_t)vertices_count);
   if (costs == NULL) {
     return NULL;
   }
-  for (int i = 0; i < vertices_count; ++i) {
+  for (size_t i = 0; i < vertices_count; ++i) {
     costs[i] = INFINITY;
   }
   return costs;
 }
 
-void recalculate_smallest_costs(Graph* graph, bool* used, uint* costs,
+void recalculate_smallest_costs(Graph* graph, bool const* used, uint* costs,
                                 int v_src, int* edge_srcs)
 {
   int vertices_count = graph->vertices_count;
@@ -55,7 +56,7 @@ void recalculate_smallest_costs(Graph* graph, bool* used, uint* costs,
     if (used[i]) {
       continue;
     }
-    uint edge_weight = (uint)graph_matrix_array[v_src * vertices_count + i];
+    uint edge_weight = graph_matrix_array[v_src * vertices_count + i];
     if (edge_weight < costs[i]) {
       costs[i] = edge_weight;
       edge_srcs[i] = v_src;
@@ -77,13 +78,14 @@ int find_smallest_cost_vertex(uint const* costs, bool const* used,
 
 void add_st_edge(int* st_edges, int* st_size, int v_src, int v_dst)
 {
-  st_edges[*st_size * 2] = v_src;
-  st_edges[*st_size * 2 + 1] = v_dst;
+  st_edges[(ptrdiff_t)*st_size * 2] = v_src;
+  st_edges[(ptrdiff_t)*st_size * 2 + 1] = v_dst;
   ++(*st_size);
 }
 
 ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
 {
+  assert(graph != NULL);
   int vertices_count = graph->vertices_count;
   int edges_count = graph->edges_count;
 
@@ -125,8 +127,8 @@ cleanup_and_out:
 void print_result(int const* st_edges, int st_size)
 {
   for (int i = 0; i < st_size; ++i) {
-    int edge_src = st_edges[2 * i] + 1;
-    int edge_dst = st_edges[2 * i + 1] + 1;
+    int edge_src = st_edges[(ptrdiff_t)2 * i] + 1;
+    int edge_dst = st_edges[(ptrdiff_t)2 * i + 1] + 1;
     printf("%d %d\n", edge_src, edge_dst);
   }
 }
