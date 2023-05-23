@@ -33,12 +33,12 @@ fi
 container_name="dondarri.${image_os}-temp"
 docker rm -f ${container_name} 2> /dev/null
 dockerfile="Dockerfile.$image_os"
-image="dondarri/$image_os"
+image_name="dondarri/$image_os"
 prompt="$CLR$image_os@container$RST:\W$ "
 command="echo \"export PS1='$prompt'\" >> ~/.bashrc && bash"
 
 
-docker build -t $image $platform_flag -f ${TEST_DIR}/$dockerfile .
+docker build -t $image_name $platform_flag -f ${TEST_DIR}/$dockerfile .
 docker run -it \
   --rm \
   $platform_flag \
@@ -46,8 +46,10 @@ docker run -it \
   -e PS1="$prompt" \
   -v $PWD/../:/usr/project \
   -w /usr/project/${LAB} \
-  $image \
+  $image_name \
   bash -c "$command"
 
 echo "docker: container removed"
-make clean
+if [ "$image" != "native" ]; then
+  make clean
+fi
