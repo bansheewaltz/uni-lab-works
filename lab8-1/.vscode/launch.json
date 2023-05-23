@@ -5,12 +5,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "type": "lldb",
+            "name": "(lldb) Launch current file",
+            "type": "cppdbg",
             "request": "launch",
-            "name": "Debug",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
+            "cwd": "${fileDirname}",
+            "MIMode": "lldb"
+        },
+        {
+            "name": "(lldb) Launch project",
+            "type": "cppdbg",
+            "request": "launch",
             "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
             "args": [],
-            "cwd": "${workspaceFolder}/test"
+            "cwd": "${workspaceFolder}/test",
+            "MIMode": "lldb"
         }
     ]
 }
