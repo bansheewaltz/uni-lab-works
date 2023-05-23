@@ -5,6 +5,12 @@
 #include "main.h"
 #include "utils.h"
 
+typedef struct {
+  int src;
+  int dst;
+  int weight;
+} Edge;
+
 ReturnCode scan_validate_vertices_count(int *vertices_count)
 {
   int tmp = 0;
@@ -28,55 +34,73 @@ ReturnCode scan_validate_edges_count(int *edges_count, int vertices_count)
 
 ReturnCode scan_validate_parameters(int *vertices_count, int *edges_count)
 {
-  if (scan_validate_vertices_count(vertices_count) &&
-      scan_validate_edges_count(edges_count, *vertices_count)) {
-    return E_SUCCESS;
+  ReturnCode returnCode = 0;
+  returnCode = scan_validate_vertices_count(vertices_count);
+  if (returnCode != E_SUCCESS) {
+    return returnCode;
   }
-  return FAILURE;
+  returnCode = scan_validate_edges_count(edges_count, *vertices_count);
+  if (returnCode != E_SUCCESS) {
+    return returnCode;
+  }
+  return E_SUCCESS;
 }
 
-ReturnCode validate_edge(int src, int dst, int vertices_count)
+ReturnCode scan_validate_edge(Edge *edge, int vertices_count)
 {
-  if (is_in_range(src, 1, vertices_count) &&
-      is_in_range(dst, 1, vertices_count)) {
-    return true;
+  int scanf_value = scanf("%d %d %d", &edge->src, &edge->dst, &edge->weight);
+  if (scanf_value == EOF) {
+    return EOF;
   }
-  return false;
+  if (scanf_value != 3) {
+    return E_BAD_INPUT_FORMAT;
+  }
+  if (!is_in_range(edge->src, 1, vertices_count)) {
+    return E_BAD_VERTEX;
+  }
+  if (!is_in_range(edge->dst, 1, vertices_count)) {
+    return E_BAD_VERTEX;
+  }
+  if (!is_in_range(edge->weight, 1, INT_MAX)) {
+    return E_BAD_LENGTH;
+  }
+  return E_SUCCESS;
+}
+
+void graph_add_edge(Graph *graph, Edge *edge)
+{
+  int *graph_array = graph->graph_array;
+  int vertices_count = graph->vertices_count;
+  int src = edge->src;
+  int dst = edge->dst;
+  graph_array[(src - 1) * vertices_count + (dst - 1)] = edge->weight;
+  graph_array[(dst - 1) * vertices_count + (src - 1)] = edge->weight;
 }
 
 ReturnCode scan_validate_edges(Graph *graph)
 {
-  int vertices_count = graph->vertices_count;
-  int edges_count = graph->edges_count;
-
-  int edge_src = 0;
-  int edge_dst = 0;
+  Edge edge;
   int scanned_edges_count = 0;
-  bool result = E_SUCCESS;
-  bool bad_vertex_flag = false;
+  ReturnCode returnCode = E_SUCCESS;
 
-  while (scanf("%d %d", &edge_src, &edge_dst) != EOF) {
-    if (validate_edge(edge_src, edge_dst, vertices_count)) {
-      graph->graph_array[--edge_src * vertices_count + --edge_dst] = 1;
-    } else {
-      puts("bad vertex");
-      result = FAILURE;
-      bad_vertex_flag = true;
+  while (returnCode == E_SUCCESS) {
+    returnCode = scan_validate_edge(&edge, graph->vertices_count);
+    if (returnCode == (ReturnCode)EOF) {
       break;
     }
-
+    if (is_error(returnCode)) {
+      return returnCode;
+    }
     ++scanned_edges_count;
-    if (scanned_edges_count > edges_count) {
-      break;
+    if (scanned_edges_count > graph->edges_count) {
+      return E_BAD_NUMBER_OF_LINES;
     }
+    graph_add_edge(graph, &edge);
   }
 
-  if (scanned_edges_count != edges_count || edges_count == 0) {
-    result = FAILURE;
-    if (bad_vertex_flag == false) {
-      puts("bad number of lines");
-    }
+  if (scanned_edges_count < graph->edges_count) {
+    return E_BAD_NUMBER_OF_LINES;
   }
 
-  return result;
+  return E_SUCCESS;
 }
