@@ -16,7 +16,7 @@
             "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
             "args": [],
             "cwd": "${workspaceFolder}/test",
-            "preLaunchTask": "build debug version of project"
+            "preLaunchTask": "build debug version of the project"
         }
     ]
 }
