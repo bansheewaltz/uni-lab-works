@@ -1,26 +1,22 @@
 {
-    // Use IntelliSense to learn about possible attributes.
-    // Hover to view descriptions of existing attributes.
-    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
         {
             "name": "(lldb) Launch current file",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
             "program": "${fileDirname}/${fileBasenameNoExtension}",
             "args": [],
-            "cwd": "${fileDirname}",
-            "MIMode": "lldb"
+            "cwd": "${fileDirname}"
         },
         {
             "name": "(lldb) Launch project",
-            "type": "cppdbg",
+            "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
             "args": [],
             "cwd": "${workspaceFolder}/test",
-            "MIMode": "lldb"
+            "preLaunchTask": "build debug version of project"
         }
     ]
 }
