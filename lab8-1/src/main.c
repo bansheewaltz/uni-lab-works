@@ -137,23 +137,23 @@ int main(void)
   Graph* graph = NULL;
   returnCode = read_validate_graph(&graph);
   if (is_error(returnCode)) {
-    goto graph_error;
+    goto cleanup_graph;
   }
 
   int* st_edges = NULL;
   int st_size = 0;
   returnCode = find_mst_prim_naive(graph, &st_edges, &st_size);
   if (is_error(returnCode)) {
-    goto spanning_tree_error;
+    goto cleanup_spanning_tree;
   }
 
   print_result(st_edges, st_size);
 
-spanning_tree_error:
+cleanup_spanning_tree:
   free(st_edges);
-graph_error:
+cleanup_graph:
   free(graph);
-  print_error_message(returnCode);
 
+  print_error_message(returnCode);
   return EXIT_SUCCESS;
 }
