@@ -3,9 +3,9 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-void print_error_message(ReturnCode returnCode)
+void print_error_message(ReturnCode return_code)
 {
-  switch (returnCode) {
+  switch (return_code) {
     case E_BAD_NUMBER_OF_LINES:
       puts("bad number of lines");
       break;
