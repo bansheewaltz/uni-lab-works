@@ -49,7 +49,9 @@ docker run -it \
   $image_name \
   bash -c "$command"
 
+status="$?"
+
 echo "docker: container removed"
-if [ "$image" != "native" ]; then
+if [ "$image" != "native" ] || [ "$status" == "0" ]; then
   make clean
 fi
