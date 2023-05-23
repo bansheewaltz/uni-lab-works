@@ -16,7 +16,7 @@ typedef enum
   E_MEMORY_ALLOCATION_FAIL
 } ReturnCode;
 
-void print_error_message(ReturnCode returnCode);
+void print_error_message(ReturnCode return_code);
 bool is_error(ReturnCode result);
 
 #endif  // ERROR_H_

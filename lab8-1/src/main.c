@@ -11,24 +11,24 @@
 
 ReturnCode read_validate_graph(Graph** graph)
 {
-  ReturnCode returnCode = 0;
+  ReturnCode return_value = 0;
 
   int vertices_count = -1;
   int edges_count = -1;
-  returnCode = scan_validate_parameters(&vertices_count, &edges_count);
-  if (is_error(returnCode)) {
-    return returnCode;
+  return_value = scan_validate_parameters(&vertices_count, &edges_count);
+  if (is_error(return_value)) {
+    return return_value;
   }
 
   *graph = graph_init(vertices_count, edges_count);
   if (*graph == NULL) {
-    returnCode = E_MEMORY_ALLOCATION_FAIL;
-    return returnCode;
+    return_value = E_MEMORY_ALLOCATION_FAIL;
+    return return_value;
   }
 
-  returnCode = scan_validate_edges(*graph);
-  if (is_error(returnCode)) {
-    return returnCode;
+  return_value = scan_validate_edges(*graph);
+  if (is_error(return_value)) {
+    return return_value;
   }
 
   return E_SUCCESS;
@@ -86,14 +86,14 @@ ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
   int vertices_count = graph->vertices_count;
   int edges_count = graph->edges_count;
 
-  ReturnCode returnCode = 0;
+  ReturnCode return_value = 0;
 
   *st_edges = calloc((size_t)edges_count * 2, sizeof(int));
   bool* used = calloc(vertices_count, sizeof(bool));
   int* costs = initialize_cost(vertices_count);
   int* edge_srcs = calloc(vertices_count, sizeof(int));
   if (is_any_null(4, st_edges, used, costs, edge_srcs)) {
-    returnCode = E_MEMORY_ALLOCATION_FAIL;
+    return_value = E_MEMORY_ALLOCATION_FAIL;
     goto cleanup_and_out;
   }
 
@@ -103,7 +103,7 @@ ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
     int v_src = edge_srcs[v_dst];
 
     if (costs[v_dst] == INFINITY) {
-      returnCode = E_NO_SPANNING_TREE;
+      return_value = E_NO_SPANNING_TREE;
       goto cleanup_and_out;
     }
     used[v_dst] = 1;
@@ -117,7 +117,7 @@ ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
 cleanup_and_out:
   free(used);
   free(costs);
-  return returnCode;
+  return return_value;
 }
 
 void print_result(int* st_edges, int st_size)
@@ -132,18 +132,18 @@ void print_result(int* st_edges, int st_size)
 /* mst := minimum spanning tree */
 int main(void)
 {
-  ReturnCode returnCode = 0;
+  ReturnCode return_value = 0;
 
   Graph* graph = NULL;
-  returnCode = read_validate_graph(&graph);
-  if (is_error(returnCode)) {
+  return_value = read_validate_graph(&graph);
+  if (is_error(return_value)) {
     goto cleanup_graph;
   }
 
   int* st_edges = NULL;
   int st_size = 0;
-  returnCode = find_mst_prim_naive(graph, &st_edges, &st_size);
-  if (is_error(returnCode)) {
+  return_value = find_mst_prim_naive(graph, &st_edges, &st_size);
+  if (is_error(return_value)) {
     goto cleanup_spanning_tree;
   }
 
@@ -154,6 +154,6 @@ cleanup_spanning_tree:
 cleanup_graph:
   free(graph);
 
-  print_error_message(returnCode);
+  print_error_message(return_value);
   return EXIT_SUCCESS;
 }
