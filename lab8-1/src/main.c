@@ -89,9 +89,9 @@ ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
   ReturnCode return_value = 0;
 
   *st_edges = calloc((size_t)edges_count * 2, sizeof(int));
-  bool* used = calloc(vertices_count, sizeof(bool));
-  int* costs = initialize_cost(vertices_count);
-  int* edge_srcs = calloc(vertices_count, sizeof(int));
+  bool* used = calloc((size_t)vertices_count, sizeof(bool));
+  int* costs = initialize_cost((size_t)vertices_count);
+  int* edge_srcs = calloc((size_t)vertices_count, sizeof(int));
   if (is_any_null(4, st_edges, used, costs, edge_srcs)) {
     return_value = E_MEMORY_ALLOCATION_FAIL;
     goto cleanup_and_out;
