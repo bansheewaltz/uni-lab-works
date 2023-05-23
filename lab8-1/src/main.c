@@ -34,9 +34,9 @@ ReturnCode read_validate_graph(Graph** graph)
   return E_SUCCESS;
 }
 
-int* initialize_cost(int vertices_count)
+uint* initialize_cost(int vertices_count)
 {
-  int* costs = malloc(sizeof(int) * (size_t)vertices_count);
+  uint* costs = malloc(sizeof(int) * (size_t)vertices_count);
   if (costs == NULL) {
     return NULL;
   }
@@ -46,16 +46,16 @@ int* initialize_cost(int vertices_count)
   return costs;
 }
 
-void recalculate_smallest_costs(Graph* graph, bool* used, int* costs,
+void recalculate_smallest_costs(Graph* graph, bool* used, uint* costs,
                                 int v_src, int* edge_srcs)
 {
   int vertices_count = graph->vertices_count;
-  int* graph_matrix_array = graph->graph_array;
+  uint* graph_matrix_array = graph->graph_array;
   for (int i = 0; i < vertices_count; ++i) {
     if (used[i]) {
       continue;
     }
-    int edge_weight = graph_matrix_array[v_src * vertices_count + i];
+    uint edge_weight = (uint)graph_matrix_array[v_src * vertices_count + i];
     if (edge_weight < costs[i]) {
       costs[i] = edge_weight;
       edge_srcs[i] = v_src;
@@ -63,7 +63,8 @@ void recalculate_smallest_costs(Graph* graph, bool* used, int* costs,
   }
 }
 
-int find_smallest_cost_vertex(int* costs, bool* used, int vertices_count)
+int find_smallest_cost_vertex(uint const* costs, bool const* used,
+                              int vertices_count)
 {
   int v_dst = -1;
   for (int i = 0; i < vertices_count; ++i) {
@@ -90,7 +91,7 @@ ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
 
   *st_edges = calloc((size_t)edges_count * 2, sizeof(int));
   bool* used = calloc((size_t)vertices_count, sizeof(bool));
-  int* costs = initialize_cost((size_t)vertices_count);
+  uint* costs = initialize_cost((size_t)vertices_count);
   int* edge_srcs = calloc((size_t)vertices_count, sizeof(int));
   if (is_any_null(4, st_edges, used, costs, edge_srcs)) {
     return_value = E_MEMORY_ALLOCATION_FAIL;
@@ -120,7 +121,7 @@ cleanup_and_out:
   return return_value;
 }
 
-void print_result(int* st_edges, int st_size)
+void print_result(int const* st_edges, int st_size)
 {
   for (int i = 0; i < st_size; ++i) {
     int edge_src = st_edges[2 * i] + 1;
@@ -152,7 +153,7 @@ int main(void)
 cleanup_spanning_tree:
   free(st_edges);
 cleanup_graph:
-  free(graph);
+  graph_free(graph);
 
   print_error_message(return_value);
   return EXIT_SUCCESS;

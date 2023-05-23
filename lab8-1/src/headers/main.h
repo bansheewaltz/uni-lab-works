@@ -5,10 +5,11 @@
 
 #define VERTICES_MAX_COUNT 5000
 
+typedef unsigned int uint;
 typedef struct {
   int vertices_count;
   int edges_count;
-  int *graph_array;
+  uint *graph_array;
 } Graph;
 
 typedef struct {
