@@ -123,7 +123,7 @@ san: clear build_dir
 .PHONY: san
 
 tidy:
-	clang-tidy $(call find_dot_c_h) -- -I$(HDR_DIR)
+	clang-tidy $(call find_dot_c_h) -- -I$(HDR_DIR) $(STDFLAG)
 .PHONY: tidy
 
 linter_fix: LINTFLAGS := -i
