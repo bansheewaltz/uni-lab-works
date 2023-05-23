@@ -118,6 +118,7 @@ ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
 cleanup_and_out:
   free(used);
   free(costs);
+  free(edge_srcs);
   return return_value;
 }
 
