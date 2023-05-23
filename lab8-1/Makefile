@@ -83,7 +83,7 @@ test:
 
 
 #==============================================================================
-### Cmake invokers:
+### Cmake target callers:
 
 cmake: clean
 	cmake -B $(BLD_DIR)
