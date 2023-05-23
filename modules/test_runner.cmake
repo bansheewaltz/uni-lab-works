@@ -1,8 +1,20 @@
+if(APPLE)
+	set(BASE "darwin")
+endif(APPLE)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	set(BASE "linux")
+endif()
+
+if(UNIX)
+	EXECUTE_PROCESS(COMMAND uname -m COMMAND tr -d '\n' OUTPUT_VARIABLE ARCHITECTURE)
+	set(PLATFORM "${BASE}_${ARCHITECTURE}")
+	set(TEST_RUNNER_NAME "test${PROJECT_NAME}_${PLATFORM}")
+endif(UNIX)
+
 if(WIN32)
-	set(EXE ".exe")
+	set(TEST_RUNNER_NAME "test${PROJECT_NAME}_retardedOS.exe")
 endif(WIN32)
 
-set(TEST_RUNNER_NAME "test${PROJECT_NAME}${EXE}")
 set(TEST_RUNNER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/test/${TEST_RUNNER_NAME})
 
 math(EXPR UNLIMITED_MS 60*1000)
