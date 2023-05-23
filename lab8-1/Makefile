@@ -6,6 +6,9 @@ HDR_DIR := $(SRC_DIR)/headers# private headers
 BLD_DIR := build
 EXE_DIR := $(BLD_DIR)
 TEST_DIR := test
+TEST_SCRIPTS_DIR     := $(TEST_DIR)/scripts
+TEST_BINARIES_DIR    := $(TEST_DIR)/binaries
+TEST_DOCKERFILES_DIR := $(TEST_DIR)/Dockerfiles
 # project SRC_FILES
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 # compile options
@@ -75,7 +78,7 @@ run:
 
 t: test
 test:
-	$(TEST_DIR)/test$(LAB)_$(PLATFORM) $(EXE_FILE)
+	$(TEST_BINARIES_DIR)/test$(LAB)_$(PLATFORM) $(EXE_FILE)
 .PHONY: t test
 
 
@@ -136,7 +139,7 @@ find_dot_c_h = $(shell find . -type f -name '*.h' -o -name '*.c')
 ### Docker:
 
 container: clean
-	bash $(TEST_DIR)/run_docker_image.sh
+	bash $(TEST_SCRIPTS_DIR)/run_docker_image.sh
 .PHONY: container
 
 
