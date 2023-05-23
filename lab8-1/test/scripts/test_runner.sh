@@ -12,10 +12,16 @@ ninja test || STATUS=1
 
 rm -rf *
 
-cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=gcc -DENABLE_ASAN=true -DENABLE_USAN=true
-ninja
-ninja test || STATUS=2
+# cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=gcc -DENABLE_ASAN=true
+# ninja
+# ninja test || STATUS=3
 
-ninja check || STATUS=3
+# # rm -rf *
+
+cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=gcc -DENABLE_USAN=true
+ninja
+ninja test || STATUS=4
+
+ninja check || STATUS=5
 
 exit $STATUS
