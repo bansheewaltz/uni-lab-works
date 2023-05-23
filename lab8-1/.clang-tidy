@@ -1,5 +1,4 @@
 # bugprone-easily-swappable-parameters: This warning is loud with no clear advice on how to fix the potential problem
-# bugprone-implicit-widening-of-multiplication-result: too much space
 Checks: >
   cppcoreguidelines-*,
   clang-diagnostic-*,
@@ -13,7 +12,6 @@ Checks: >
   misc-*,
   google-*,
   -bugprone-easily-swappable-parameters,
-#-bugprone-implicit-widening-of-multiplication-result
 WarningsAsErrors: true
 HeaderFilterRegex: >
   "(src/headers).*\\.h$"
