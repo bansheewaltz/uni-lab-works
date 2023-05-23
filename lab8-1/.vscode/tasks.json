@@ -2,7 +2,7 @@
     "tasks": [
         {
             "type": "cppbuild",
-            "label": "build debug version of project",
+            "label": "build debug version of the project",
             "command": "make",
             "args": [
                 "debug"
