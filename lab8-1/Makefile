@@ -93,6 +93,14 @@ ccheck: cmake
 
 
 #==============================================================================
+### Gitlab testrunner copycat:
+
+runner:
+	 image=native platform=linux/amd64 $(MAKE) container
+.PHONY: runner
+
+
+#==============================================================================
 ### Custom checks:
 
 c: cppcheck
