@@ -54,7 +54,7 @@ Graph *graph_init(int vertices_count, int edges_count)
 {
   Graph *graph = malloc(sizeof(Graph));
   size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
-  int *graph_array = calloc(graph_matrix_size, sizeof(bool));
+  int *graph_array = calloc(graph_matrix_size, sizeof(int));
 
   if (graph != NULL && graph_array != NULL) {
     graph->vertices_count = vertices_count;
