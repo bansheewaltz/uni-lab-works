@@ -38,7 +38,7 @@ prompt="$CLR$image_os@container$RST:\W$ "
 command="echo \"export PS1='$prompt'\" >> ~/.bashrc && bash"
 
 
-docker build -t $image_name $platform_flag -f ${TEST_DIR}/$dockerfile .
+docker build -t $image_name $platform_flag -f ${TEST_DOCKERFILES_DIR}/$dockerfile .
 docker run -it \
   --rm \
   $platform_flag \
@@ -54,4 +54,8 @@ status="$?"
 echo "docker: container removed"
 if [ "$image" != "native" ] || [ "$status" == "0" ]; then
   make clean
+fi
+
+if [ "$status" != "0" ]; then
+  echo "you can check test logs at build/Testing/Temporary/LastTest.log"
 fi
