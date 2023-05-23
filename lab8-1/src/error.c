@@ -27,8 +27,7 @@ void print_error_message(ReturnCode returnCode)
     case E_MEMORY_ALLOCATION_FAIL:
       puts("memory allocation fail");
       break;
-    case E_ONE_VERTEX:
-    case E_SUCCESS:
+    default:
       break;
   }
 }
