@@ -143,6 +143,8 @@ cleanmisc:
 	$(RM) in.txt
 	$(RM) out.txt
 	$(RM) a.out
+	$(RM) tmp
+	$(RM) *.dSYM
 cleanall: clean cleanmisc
 .PHONY: clean cleanbuild cleanmisc cleanall
 
