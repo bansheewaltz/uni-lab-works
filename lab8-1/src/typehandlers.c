@@ -4,62 +4,38 @@
 #include "main.h"
 #include "utils.h"
 
-Stack *stack_init(int capacity)
+int *graph_matrix_array_init(int vertices_count)
 {
-  Stack *stack = malloc(sizeof(Stack));
-  int *stack_array = malloc(sizeof(int) * (size_t)capacity);
-  if (stack != NULL && stack_array != NULL) {
-    stack->stack_array = stack_array;
-    stack->stack_top = -1;
-    stack->stack_capacity = capacity;
-  }
-  return stack;
-}
+  size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
+  int *graph_matrix_array = calloc(graph_matrix_size, sizeof(int));
 
-void stack_free(Stack *stack)
-{
-  if (stack == NULL) {
-    return;
+  if (graph_matrix_array == NULL) {
+    return NULL;
   }
-  if (stack->stack_array != NULL) {
-    free(stack->stack_array);
-  }
-  free(stack);
-}
 
-bool stack_push(Stack *stack, int element)
-{
-  if (stack == NULL || stack->stack_array == NULL) {
-    return FAILURE;
+  for (int i = 0; i < vertices_count; ++i) {
+    for (int j = 0; j < vertices_count; ++j) {
+      int idx = i * vertices_count + j;
+      if (i == j) {
+        graph_matrix_array[idx] = 0;
+      } else {
+        graph_matrix_array[idx] = INFINITY;
+      }
+    }
   }
-  if (stack->stack_capacity == stack->stack_top + 1) {
-    return FAILURE;
-  }
-  stack->stack_array[++stack->stack_top] = element;
-  return SUCCESS;
-}
 
-void stack_print(Stack *stack)
-{
-  if (stack == NULL || stack->stack_array == NULL) {
-    return;
-  }
-  int *stack_array = stack->stack_array;
-  for (int i = stack->stack_top; i >= 0; --i) {
-    printf("%d%s", stack_array[i], i == 0 ? "\n" : " ");
-  }
+  return graph_matrix_array;
 }
 
 Graph *graph_init(int vertices_count, int edges_count)
 {
   Graph *graph = malloc(sizeof(Graph));
-  size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
-  int *graph_array = calloc(graph_matrix_size, sizeof(int));
+  int *graph_matrix_array = graph_matrix_array_init(vertices_count);
 
-  if (graph != NULL && graph_array != NULL) {
+  if (graph != NULL && graph_matrix_array != NULL) {
     graph->vertices_count = vertices_count;
     graph->edges_count = edges_count;
-    graph->graph_array = graph_array;
+    graph->graph_array = graph_matrix_array;
   }
 
   return graph;

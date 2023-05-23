@@ -36,6 +36,9 @@ ReturnCode scan_validate_parameters(int *vertices_count, int *edges_count)
 {
   ReturnCode returnCode = 0;
   returnCode = scan_validate_vertices_count(vertices_count);
+  if (*vertices_count == 0) {
+    return E_NO_SPANNING_TREE;
+  }
   if (returnCode != E_SUCCESS) {
     return returnCode;
   }
