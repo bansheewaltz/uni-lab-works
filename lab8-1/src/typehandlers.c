@@ -4,10 +4,10 @@
 #include "main.h"
 #include "utils.h"
 
-int *graph_matrix_array_init(int vertices_count)
+uint *graph_matrix_array_init(int vertices_count)
 {
   size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
-  int *graph_matrix_array = calloc(graph_matrix_size, sizeof(int));
+  uint *graph_matrix_array = calloc(graph_matrix_size, sizeof(int));
 
   if (graph_matrix_array == NULL) {
     return NULL;
@@ -30,7 +30,7 @@ int *graph_matrix_array_init(int vertices_count)
 Graph *graph_init(int vertices_count, int edges_count)
 {
   Graph *graph = malloc(sizeof(Graph));
-  int *graph_matrix_array = graph_matrix_array_init(vertices_count);
+  uint *graph_matrix_array = graph_matrix_array_init(vertices_count);
 
   if (graph != NULL && graph_matrix_array != NULL) {
     graph->vertices_count = vertices_count;
