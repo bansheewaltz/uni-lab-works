@@ -38,7 +38,7 @@ void *alarming_calloc(size_t count, size_t size, char *file, int line)
 
 bool is_any_null(int pointers_count, ...)
 {
-  va_list list = 0;
+  va_list list;  // NOLINT
   va_start(list, pointers_count);
   for (int i = 0; i < pointers_count; ++i) {
     if (va_arg(list, void *) == NULL) {
