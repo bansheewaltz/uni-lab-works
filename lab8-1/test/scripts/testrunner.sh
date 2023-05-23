@@ -1,15 +1,21 @@
 #!/bin/bash
 
+STATUS=0
+
 mkdir build
 cd build
 
 
-cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=gcc
+cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=clang
 ninja
-ninja test
+ninja test || STATUS=1
 
-cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=clang -DENABLE_ASAN=true -DENABLE_ASAN=true
+rm - rf *
+
+cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=gcc -DENABLE_ASAN=true -DENABLE_ASAN=true
 ninja
-ninja test
+ninja test || STATUS=2
 
-ninja check
+ninja check || STATUS=3
+
+exit $STATUS
