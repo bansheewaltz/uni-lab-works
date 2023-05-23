@@ -93,7 +93,7 @@ ccheck: cmake
 
 
 #==============================================================================
-### Gitlab testrunner copycat:
+### Gitlab test_runner copycat:
 
 runner:
 	 image=native platform=linux/amd64 $(MAKE) container
