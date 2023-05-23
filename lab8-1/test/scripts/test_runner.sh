@@ -10,7 +10,7 @@ cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=clang
 ninja
 ninja test || STATUS=1
 
-rm - rf *
+rm -rf *
 
 cmake .. -GNinja -DUNLIMITED=ON -DCMAKE_C_COMPILER=gcc -DENABLE_ASAN=true -DENABLE_USAN=true
 ninja
