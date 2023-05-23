@@ -47,7 +47,7 @@ INPUT_REDIRECTION := < in.txt
 #==============================================================================
 ### Standard targets:
 
-all: static n t
+all: n t
 
 normal: n
 warnings: w
@@ -127,7 +127,7 @@ find_dot_c_h = $(shell find . -type f -name '*.h' -o -name '*.c')
 #==============================================================================
 ### Docker:
 
-container: cleanall
+container: clean
 	bash $(TEST_DIR)/run_docker_image.sh
 .PHONY: container
 
