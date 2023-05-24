@@ -1,53 +1,64 @@
-#include <errno.h>
-#include <stdarg.h>
+#include <stddef.h>
 #include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-
-#define MEMORY_INTERNAL
 
 #include "main.h"
+#include "toolbox.h"
+#include "input.h"
 
-void print_std_errorcode_info(char* file, int line, char* error_msg)
+uint *graph_matrix_array_init(int vertices_count)
 {
-  char* executable_name = getenv("EXE_NAME");
-  if (executable_name != NULL) {
-    fprintf(stderr, "%s: ", executable_name);
+  size_t graph_matrix_size = (size_t)vertices_count * (size_t)vertices_count;
+  uint *graph_matrix_array = calloc(graph_matrix_size, sizeof(int));
+
+  if (graph_matrix_array == NULL) {
+    return NULL;
   }
-  char* msg = "\033[0;31merror:\033[0m";
-  fprintf(stderr, "%s:%d: %s %s\n", file, line, msg, error_msg);
-}
 
-void* alarming_malloc(size_t size, char* file, int line)
-{
-  void* pointer = malloc(size);
-  if (pointer == NULL) {
-    print_std_errorcode_info(file, line, strerror(errno));
-  }
-  return pointer;
-}
-
-void* alarming_calloc(size_t count, size_t size, char* file, int line)
-{
-  void* pointer = calloc(count, size);
-  if (pointer == NULL) {
-    print_std_errorcode_info(file, line, strerror(errno));
-  }
-  return pointer;
-}
-
-bool is_any_null(int pointers_count, ...)
-{
-  bool result = false;
-  va_list list;  // NOLINT
-  va_start(list, pointers_count);
-
-  for (int i = 0; i < pointers_count; ++i) {
-    if (va_arg(list, void*) == NULL) { // NOLINT
-      result = true;
+  for (int i = 0; i < vertices_count; ++i) {
+    for (int j = 0; j < vertices_count; ++j) {
+      int idx = i * vertices_count + j;
+      if (i == j) {
+        graph_matrix_array[idx] = 0;
+      } else {
+        graph_matrix_array[idx] = INFINITY;
+      }
     }
   }
 
-  va_end(list);
-  return result;
+  return graph_matrix_array;
+}
+
+Graph *graph_init(int vertices_count, int edges_count)
+{
+  Graph *graph = malloc(sizeof(Graph));
+  uint *graph_matrix_array = graph_matrix_array_init(vertices_count);
+
+  if (graph != NULL && graph_matrix_array != NULL) {
+    graph->vertices_count = vertices_count;
+    graph->edges_count = edges_count;
+    graph->graph_array = graph_matrix_array;
+  }
+
+  return graph;
+}
+
+void graph_add_edge(Graph *graph, Edge *edge)
+{
+  uint *graph_array = graph->graph_array;
+  int vertices_count = graph->vertices_count;
+  int src = edge->src;
+  int dst = edge->dst;
+  graph_array[(src - 1) * vertices_count + (dst - 1)] = (uint)edge->weight;
+  graph_array[(dst - 1) * vertices_count + (src - 1)] = (uint)edge->weight;
+}
+
+void graph_free(Graph *graph)
+{
+  if (graph == NULL) {
+    return;
+  }
+  if (graph->graph_array != NULL) {
+    free(graph->graph_array);
+  }
+  free(graph);
 }

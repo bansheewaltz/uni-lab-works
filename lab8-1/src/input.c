@@ -3,13 +3,9 @@
 
 #include "error.h"
 #include "main.h"
+#include "toolbox.h"
+#include "input.h"
 #include "utils.h"
-
-typedef struct {
-  int src;
-  int dst;
-  int weight;
-} Edge;
 
 ReturnCode scan_validate_vertices_count(int *vertices_count)
 {
@@ -68,16 +64,6 @@ ReturnCode scan_validate_edge(Edge *edge, int vertices_count)
     return E_BAD_LENGTH;
   }
   return E_SUCCESS;
-}
-
-void graph_add_edge(Graph *graph, Edge *edge)
-{
-  uint *graph_array = graph->graph_array;
-  int vertices_count = graph->vertices_count;
-  int src = edge->src;
-  int dst = edge->dst;
-  graph_array[(src - 1) * vertices_count + (dst - 1)] = (uint)edge->weight;
-  graph_array[(dst - 1) * vertices_count + (src - 1)] = (uint)edge->weight;
 }
 
 ReturnCode scan_validate_edges(Graph *graph)
