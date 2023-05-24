@@ -7,10 +7,10 @@
 
 #include "error.h"
 #include "input.h"
-#include "typehandlers.h"
 #include "utils.h"
+#include "toolbox.h"
 
-ReturnCode read_validate_graph(Graph** graph)
+ReturnCode read_validate_graph(Graph **graph)
 {
   ReturnCode return_value = 0;
 
@@ -35,9 +35,9 @@ ReturnCode read_validate_graph(Graph** graph)
   return E_SUCCESS;
 }
 
-uint* initialize_cost(size_t vertices_count)
+uint *initialize_cost(size_t vertices_count)
 {
-  uint* costs = malloc(sizeof(int) * (size_t)vertices_count);
+  uint *costs = malloc(sizeof(int) * (size_t)vertices_count);
   if (costs == NULL) {
     return NULL;
   }
@@ -47,11 +47,11 @@ uint* initialize_cost(size_t vertices_count)
   return costs;
 }
 
-void recalculate_smallest_costs(Graph* graph, bool const* used, uint* costs,
-                                int v_src, int* edge_srcs)
+void recalculate_smallest_costs(Graph *graph, bool const *used, uint *costs,
+                                int v_src, int *edge_srcs)
 {
   int vertices_count = graph->vertices_count;
-  uint* graph_matrix_array = graph->graph_array;
+  uint *graph_matrix_array = graph->graph_array;
   for (int i = 0; i < vertices_count; ++i) {
     if (used[i]) {
       continue;
@@ -64,7 +64,7 @@ void recalculate_smallest_costs(Graph* graph, bool const* used, uint* costs,
   }
 }
 
-int find_smallest_cost_vertex(uint const* costs, bool const* used,
+int find_smallest_cost_vertex(uint const *costs, bool const *used,
                               int vertices_count)
 {
   int v_dst = -1;
@@ -76,14 +76,14 @@ int find_smallest_cost_vertex(uint const* costs, bool const* used,
   return v_dst;
 }
 
-void add_st_edge(int* st_edges, int* st_size, int v_src, int v_dst)
+void add_st_edge(int *st_edges, int *st_size, int v_src, int v_dst)
 {
   st_edges[(ptrdiff_t)*st_size * 2] = v_src;
   st_edges[(ptrdiff_t)*st_size * 2 + 1] = v_dst;
   ++(*st_size);
 }
 
-ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
+ReturnCode find_mst_prim_naive(Graph *graph, int **st_edges, int *st_size)
 {
   assert(graph != NULL);
   int vertices_count = graph->vertices_count;
@@ -92,9 +92,9 @@ ReturnCode find_mst_prim_naive(Graph* graph, int** st_edges, int* st_size)
   ReturnCode return_value = 0;
 
   *st_edges = calloc((size_t)edges_count * 2, sizeof(int));
-  bool* used = calloc((size_t)vertices_count, sizeof(bool));
-  uint* costs = initialize_cost((size_t)vertices_count);
-  int* edge_srcs = calloc((size_t)vertices_count, sizeof(int));
+  bool *used = calloc((size_t)vertices_count, sizeof(bool));
+  uint *costs = initialize_cost((size_t)vertices_count);
+  int *edge_srcs = calloc((size_t)vertices_count, sizeof(int));
   if (is_any_null(4, st_edges, used, costs, edge_srcs)) {
     return_value = E_MEMORY_ALLOCATION_FAIL;
     goto cleanup_and_out;
@@ -124,7 +124,7 @@ cleanup_and_out:
   return return_value;
 }
 
-void print_result(int const* st_edges, int st_size)
+void print_result(int const *st_edges, int st_size)
 {
   for (int i = 0; i < st_size; ++i) {
     int edge_src = st_edges[(ptrdiff_t)2 * i] + 1;
@@ -138,13 +138,13 @@ int main(void)
 {
   ReturnCode return_value = 0;
 
-  Graph* graph = NULL;
+  Graph *graph = NULL;
   return_value = read_validate_graph(&graph);
   if (is_error(return_value)) {
     goto cleanup_graph;
   }
 
-  int* st_edges = NULL;
+  int *st_edges = NULL;
   int st_size = 0;
   return_value = find_mst_prim_naive(graph, &st_edges, &st_size);
   if (is_error(return_value)) {
