@@ -13,3 +13,4 @@ BraceWrapping:
   AfterEnum: true
   AfterFunction: true
 #RemoveSemicolon: true
+...
