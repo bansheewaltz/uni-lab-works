@@ -43,7 +43,7 @@ bool is_any_null(int pointers_count, ...)
   va_start(list, pointers_count);
 
   for (int i = 0; i < pointers_count; ++i) {
-    if (va_arg(list, void *) == NULL) { // NOLINT
+    if (va_arg(list, void *) == NULL) {  // NOLINT
       result = true;
     }
   }
