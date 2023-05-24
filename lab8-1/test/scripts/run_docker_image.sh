@@ -51,11 +51,11 @@ docker run -it \
 
 status="$?"
 
-echo "docker: container removed"
+echo -e "\ndocker: container removed"
 if [ "$image" != "native" ] || [ "$status" == "0" ]; then
   make clean
 fi
 
 if [ "$status" != "0" ]; then
-  echo "you can check test logs at build/Testing/Temporary/LastTest.log"
+  echo -e "\n\nyou can check test logs at build/Testing/Temporary/LastTest.log"
 fi
