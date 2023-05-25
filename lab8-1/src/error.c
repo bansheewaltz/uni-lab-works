@@ -32,6 +32,10 @@ void print_error_message(ReturnCode return_code)
   }
 }
 
+void print_error_message_if_any(ReturnCode return_code) {
+  print_error_message(return_code);
+}
+
 bool is_error(ReturnCode result)
 {
   if (result == E_SUCCESS) {

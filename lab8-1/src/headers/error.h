@@ -17,6 +17,7 @@ typedef enum
 } ReturnCode;
 
 void print_error_message(ReturnCode return_code);
+void print_error_message_if_any(ReturnCode return_code);
 bool is_error(ReturnCode result);
 
 #endif  // ERROR_H_

@@ -158,6 +158,6 @@ cleanup_spanning_tree:
 cleanup_graph:
   graph_free(graph);
 
-  print_error_message(return_value);
+  print_error_message_if_any(return_value);
   return EXIT_SUCCESS;
 }
