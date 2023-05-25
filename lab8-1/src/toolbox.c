@@ -45,6 +45,7 @@ bool is_any_null(int pointers_count, ...)
   for (int i = 0; i < pointers_count; ++i) {
     if (va_arg(list, void *) == NULL) {  // NOLINT
       result = true;
+      break;
     }
   }
 
