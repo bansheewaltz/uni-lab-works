@@ -1,0 +1,19 @@
+# Language: Cpp         -- works for C as well
+# RemoveSemicolon: true -- works only for clang-format >= 16
+# InsertBraces: true    -- the opinion was not formed
+---
+Language: Cpp
+BasedOnStyle: Google
+UseTab: Never
+IndentWidth: 2
+ColumnLimit: 79
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+AllowShortLoopsOnASingleLine: false
+# InsertBraces: true
+# RemoveSemicolon: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: true
+  AfterFunction: true
+...
