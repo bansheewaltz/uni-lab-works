@@ -110,7 +110,7 @@ size_t print_encoded_file_to_text(CharInfo **chars_info_dictionary,
   return bits_printed;
 }
 
-void print_code(CharInfo *charInfo, FILE *const output)
+void print_code(CharInfo *charInfo, FILE * output)
 {
   fprintf(output, "%d : ", charInfo->character);
   for (size_t i = 0; i < charInfo->code_len; ++i) {

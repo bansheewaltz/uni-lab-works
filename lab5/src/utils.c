@@ -28,7 +28,7 @@ CharInfo *create_and_initialize_char_info(uchar character)
   return charInfo;
 }
 
-CharInfo **get_chars_info_consistent(CharInfo **const chars_info_dictionary,
+CharInfo **get_chars_info_consistent(CharInfo ** chars_info_dictionary,
                                      size_t alphabet_size)
 {
   CharInfo **chars_info_array =
