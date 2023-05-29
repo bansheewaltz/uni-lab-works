@@ -16,6 +16,7 @@ CC := gcc
 STD ?= c99
 STDFLAG := -std=$(STD)
 CFLAGS = -I$(HDR_DIR) $(STDFLAG)
+LDFLAGS := -lm
 
 WFLAGS :=        -Wall \
                  -Werror \
@@ -65,7 +66,7 @@ d: CFLAGS := -D DEBUG -g2 $(CFLAGS)
 o: CFLAGS := -DNDEBUG -O2 $(CFLAGS)
 f: CFLAGS := -DNDEBUG -O3 $(CFLAGS)
 n w o f d: build_dir
-	$(CC) $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE)
+	$(CC) $(CFLAGS) $(SRC_FILES) -o $(EXE_FILE) $(LDFLAGS)
 .PHONY: n normal w warnings o optimised f fast d debug
 
 build_dir:
@@ -120,7 +121,7 @@ valred: clear d
 .PHONY: v valgring valred
 
 san: clear build_dir
-	$(CC) -g $(CFLAGS) $(SANFLAGS) $(SRC_FILES) -o $(EXE_FILE) && $(EXE_FILE)
+	$(CC) -g $(CFLAGS) $(SANFLAGS) $(SRC_FILES) $(LDFLAGS) -o $(EXE_FILE)
 .PHONY: san
 
 tidy:
