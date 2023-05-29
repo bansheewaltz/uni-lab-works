@@ -2,20 +2,48 @@
 #define MAIN_H_
 
 #include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
-#define VERTICES_MAX_COUNT 5000
+#include "tree.h"
+#include "typedefs.h"
 
-typedef unsigned int uint;
-typedef struct {
-  int vertices_count;
-  int edges_count;
-  uint *graph_array;
-} Graph;
+// character set & memory limits
+#define EIGHT_BIT_CHARACTER_SET_SIZE 256
+#define CHARSET_SIZE EIGHT_BIT_CHARACTER_SET_SIZE
+#define BUFFER_SIZE 4096
+// radix sort options
+#define COUNTING_SORT_BASE 10
+#define DESCENDING true
+#define ASCENDING false
+// huffman tree implementation features
+#define MAX_TREE_HEIGHT EIGHT_BIT_CHARACTER_SET_SIZE
+#define INTERNAL_NODE_SYMBOL 'x'
+// huffman tree prefix code bits
+#define LEFT_CHILD 0
+#define RIGHT_CHILD 1
+// huffman tree serialization bits
+#define INTERNAL_NODE 0
+#define LEAF_NODE 1
+// bit-wise writing options
+#define FLUSH_BYTE true
+#define CONTINUE false
+// bit-wise printing options
+#define NEW_LINE true
+#define SAME_LINE false
 
-typedef struct {
-  int *stack_array;
-  int stack_top;
-  int stack_capacity;
-} Stack;
+struct CharInfo {
+  uchar character;
+  size_t freq;
+  uint8_t *huffman_code;
+  size_t code_len;
+};
+
+struct CodingInfo {
+  TreeNode *huffman_tree;
+  CharInfo **chars_info_dictionary;
+  CharInfo **chars_info_consistent;
+  size_t alphabet_size;
+};
 
 #endif  // MAIN_H_

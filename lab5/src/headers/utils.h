@@ -1,10 +1,12 @@
-#ifndef TYPEHANDLERS_H_
-#define TYPEHANDLERS_H_
+#ifndef UTILS_H_
+#define UTILS_H_
 
-#include "main.h"
+#include "stddef.h"
+#include "typedefs.h"
 
-Graph *graph_init(int vertices_count, int edges_count);
-void graph_add_edge(Graph *graph, Edge *edge);
-void graph_free(Graph *graph);
-
-#endif  // TYPEHANDLERS_H_
+int calculate_alphabet_size(int *freq_dictionary);
+void deallocate_chars_info(CharInfo **chars_info_array, size_t alphabet_size);
+CharInfo *create_and_initialize_char_info(uchar character);
+CharInfo **get_chars_info_consistent(CharInfo **chars_info_dictionary,
+                                     size_t alphabet_size);
+#endif  // UTILS_H_
