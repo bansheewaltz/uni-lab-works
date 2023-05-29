@@ -13,7 +13,8 @@ TEST_DOCKERFILES_DIR := $(TEST_DIR)/Dockerfiles
 SRC_FILES := $(wildcard $(SRC_DIR)/*.c)
 # compile options
 CC := gcc
-STDFLAG := -std=c99
+STD ?= c99
+STDFLAG := -std=$(STD)
 CFLAGS = -I$(HDR_DIR) $(STDFLAG)
 
 WFLAGS :=        -Wall \
