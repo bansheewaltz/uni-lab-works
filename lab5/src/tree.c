@@ -26,7 +26,9 @@ TreeNode *build_huffman_tree(CharInfo **chars_info_array, size_t alphabet_size)
                             chars_info_array[0]->freq);
   }
 
-  TreeNode *left, *right, *top;
+  TreeNode *left = NULL;
+  TreeNode *right = NULL;
+  TreeNode *top = NULL;
   Queue *firstQueue = create_queue(alphabet_size);
   Queue *secondQueue = create_queue(alphabet_size);
 

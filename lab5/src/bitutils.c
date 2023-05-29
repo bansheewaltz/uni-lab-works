@@ -5,6 +5,7 @@
 #include <stdlib.h>
 
 #include "main.h"
+#include "output.h"
 
 uchar bit_to_char(int bit)
 {

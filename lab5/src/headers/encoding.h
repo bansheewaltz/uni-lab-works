@@ -5,7 +5,7 @@
 
 #include "typedefs.h"
 
-void archive_file_text_form(TreeNode *tree, CodingInfo *codingInfo,
+void encode_input_text_form(TreeNode *tree, CodingInfo *codingInfo,
                             FILE *input, FILE *output);
 
 #endif  // ENCODING_H_

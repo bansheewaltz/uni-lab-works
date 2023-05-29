@@ -28,11 +28,14 @@ CharInfo *create_and_initialize_char_info(uchar character)
   return charInfo;
 }
 
-CharInfo **get_chars_info_consistent(CharInfo ** chars_info_dictionary,
+CharInfo **get_chars_info_consistent(CharInfo **chars_info_dictionary,
                                      size_t alphabet_size)
 {
   CharInfo **chars_info_array =
       (CharInfo **)malloc(sizeof(CharInfo *) * alphabet_size);
+  if (chars_info_array == NULL) {
+    return NULL;
+  }
 
   for (size_t i = 0, j = 0; j < alphabet_size; ++i) {
     if (chars_info_dictionary[i] != NULL) {

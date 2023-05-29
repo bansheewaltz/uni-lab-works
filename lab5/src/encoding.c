@@ -4,7 +4,7 @@
 #include "main.h"
 #include "output.h"
 
-void archive_file_text_form(TreeNode *tree, CodingInfo *codingInfo,
+void encode_input_text_form(TreeNode *tree, CodingInfo *codingInfo,
                             FILE *input, FILE *output)
 {
   size_t bits_printed = 0;
