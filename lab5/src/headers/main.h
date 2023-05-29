@@ -40,10 +40,10 @@ struct CharInfo {
 };
 
 struct CodingInfo {
-  TreeNode *huffman_tree;
-  CharInfo **chars_info_dictionary;
-  CharInfo **chars_info_consistent;
   size_t alphabet_size;
+  TreeNode *huffman_tree;
+  CharInfo **chars_info_consistent;
+  CharInfo *chars_info_dictionary[CHARSET_SIZE];
 };
 
 #endif  // MAIN_H_

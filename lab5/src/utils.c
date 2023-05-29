@@ -16,15 +16,6 @@ int calculate_alphabet_size(int *freq_dictionary)
   return alph_size;
 }
 
-void deallocate_chars_info(CharInfo **chars_info_array, size_t alphabet_size)
-{
-  for (size_t i = 0; i < alphabet_size; ++i) {
-    free(chars_info_array[i]->huffman_code);
-    free(chars_info_array[i]);
-  }
-  free(chars_info_array);
-}
-
 CharInfo *create_and_initialize_char_info(uchar character)
 {
   CharInfo *charInfo = (CharInfo *)malloc(sizeof(CharInfo));
