@@ -20,12 +20,14 @@ void open_streams(FILE **input, FILE **output)
 {
 #ifdef INPUT_FILE
   *input = fopen(INPUT_FILE, INPUT_READ_MODE);
+  assert(input != NULL);
 #else
   *input = stdin;
 #endif
 
 #ifdef OUTPUT_FILE
   *output = fopen(OUTPUT_FILE, OUTPUT_WRITE_MODE);
+  assert(output != NULL);
 #else
   *output = stdout;
 #endif
