@@ -1,20 +1,13 @@
 #ifndef INPUT_H_
 #define INPUT_H_
 
-#include <stdbool.h>
+// #include <stddef.h>
+#include <stdio.h>
 
-#include "error.h"
-#include "main.h"
-typedef struct {
-  int src;
-  int dst;
-  int weight;
-} Edge;
+#include "typedefs.h"
 
-ReturnCode scan_validate_vertices_count(int *vertices_count);
-ReturnCode scan_validate_edges_count(int *edges_count, int vertices_count);
-ReturnCode scan_validate_parameters(int *vertices_count, int *edges_count);
-ReturnCode validate_edge(int src, int dst, int vertices_count);
-ReturnCode scan_validate_edges(Graph *graph);
+void scan_chars_frequencies_from_file(CharInfo **chars_info, FILE *input);
+int read_alphabet_size(FILE *input);
+size_t get_alphabet_size(CharInfo **chars_info);
 
 #endif  // INPUT_H_

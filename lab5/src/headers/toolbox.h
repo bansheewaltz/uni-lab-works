@@ -2,12 +2,9 @@
 #define UTILS_H_
 
 #include <limits.h>
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
-
-#include "main.h"
-
-#define INFINITY UINT32_MAX
 
 #define SUCCESS true
 #define FAILURE false
