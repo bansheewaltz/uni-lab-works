@@ -4,8 +4,8 @@
 
 #include "main.h"
 
-void counting_sort_nodes(TreeNode **array, size_t const array_size,
-                         size_t const place, bool const order)
+void counting_sort_nodes(TreeNode **array, size_t array_size, size_t place,
+                         bool order)
 {
   assert(array_size > 0);
   int max_digit = COUNTING_SORT_BASE - 1;
@@ -41,8 +41,7 @@ void counting_sort_nodes(TreeNode **array, size_t const array_size,
   free(array_output);
 }
 
-void radix_sort_nodes(TreeNode **array, size_t const array_size,
-                      bool const order)
+void radix_sort_nodes(TreeNode **array, size_t array_size, bool order)
 {
   size_t max = array[0]->freq;
 

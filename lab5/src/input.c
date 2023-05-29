@@ -3,7 +3,7 @@
 #include "main.h"
 #include "utils.h"
 
-void scan_chars_frequencies_from_file(CharInfo **chars_info, FILE *const input)
+void scan_chars_frequencies_from_file(CharInfo **chars_info, FILE *input)
 {
   uchar buffer[BUFFER_SIZE];
   size_t chars_read;
@@ -18,7 +18,7 @@ void scan_chars_frequencies_from_file(CharInfo **chars_info, FILE *const input)
   }
 }
 
-int read_alphabet_size(FILE *const input)
+int read_alphabet_size(FILE *input)
 {
   byte alph_size;
   fread(&alph_size, sizeof(uchar), 1, input);
