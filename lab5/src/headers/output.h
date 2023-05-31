@@ -12,7 +12,7 @@ void preorder_traversal_printing(TreeNode *root, FILE *output,
 size_t print_huffman_tree_to_text(TreeNode *tree, FILE *output);
 void print_byte_in_binary(uchar byte, bool formatting, FILE *output);
 void print_char_in_binary(uchar character, bool formatting, FILE *output);
-void print_bits(void *ptr, size_t size, FILE *output);
+void print_bits(void *ptr, size_t bytes_count, FILE *output);
 void array_int_print(int array[], int len, FILE *output);
 void array_char_print(uchar array[], int len, FILE *output);
 void print_code_array(CharInfo *charInfo, FILE *output);

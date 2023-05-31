@@ -1,5 +1,6 @@
 #include "output.h"
 
+#include <assert.h>
 #include <inttypes.h>
 #include <limits.h>
 #include <math.h>
@@ -34,8 +35,8 @@ size_t print_huffman_tree_to_text(TreeNode *tree, FILE *output)
   if (tree == NULL) {
     return 0;
   }
-  size_t bits_printed = 0;
 
+  size_t bits_printed = 0;
   preorder_traversal_printing(tree, output, &bits_printed);
 
   return bits_printed;
@@ -56,15 +57,15 @@ void print_char_in_binary(uchar character, bool formatting, FILE *output)
   print_byte_in_binary(character, formatting, output);
 }
 
-void print_bits(void *ptr, size_t size, FILE *output)
+void print_bits(void *ptr, size_t bytes_count, FILE *output)
 {
-  uint8_t *b = (uint8_t *)ptr;
-  uint8_t byte;
+  uint8_t *byte_array = (uint8_t *)ptr;
 
-  for (int j, i = size - 1; i >= 0; --i) {
-    for (j = CHAR_BIT - 1; j >= 0; --j) {
-      byte = (b[i] >> j) & 0b00000001;
-      fprintf(output, "%" PRIu8, byte);
+  for (size_t i = bytes_count - 1; i < bytes_count; --i) {
+    for (unsigned int j = CHAR_BIT - 1; j < CHAR_BIT; --j) {
+      unsigned int bit = ((unsigned int)byte_array[i] >> j) & 0x1U;
+      int rc = fprintf(output, "%" PRIu8, (uint8_t)bit);
+      assert(rc != -1);
     }
   }
 }
@@ -95,11 +96,10 @@ void print_code_array(CharInfo *charInfo, FILE *output)
 size_t print_encoded_file_to_text(CharInfo **chars_info_dictionary,
                                   FILE *input, FILE *output)
 {
-  rewind(input);
   uchar buffer[BUFFER_SIZE];
-  size_t chars_read;
-  size_t bits_printed = 0;
 
+  size_t chars_read = 0;
+  size_t bits_printed = 0;
   while ((chars_read = fread(buffer, sizeof(uchar), BUFFER_SIZE, input)) > 0) {
     for (size_t i = 0; i < chars_read; ++i) {
       print_code_array(chars_info_dictionary[buffer[i]], output);
@@ -110,7 +110,7 @@ size_t print_encoded_file_to_text(CharInfo **chars_info_dictionary,
   return bits_printed;
 }
 
-void print_code(CharInfo *charInfo, FILE * output)
+void print_code(CharInfo *charInfo, FILE *output)
 {
   fprintf(output, "%d : ", charInfo->character);
   for (size_t i = 0; i < charInfo->code_len; ++i) {

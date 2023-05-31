@@ -30,6 +30,10 @@ void scan_chars_frequencies_from_input(CharInfo **dictionary, FILE *input)
       dictionary[i] = NULL;
     }
   }
+
+  // set input pointer at the beginning
+  int rc = fseek(input, 1, SEEK_SET);
+  assert(rc == 0);
 }
 
 int read_alphabet_size_checked(FILE *input)
