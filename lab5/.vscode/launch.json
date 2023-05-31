@@ -24,10 +24,9 @@
             "request": "launch",
             "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
             "args": [
-                "int.txt",
-                "fuck.txt"
+                "in.txt",
             ],
-            "cwd": "${workspaceFolder}",
+            "cwd": "${workspaceFolder}/test",
             "preLaunchTask": "build debug version of the project"
         }
     ]
