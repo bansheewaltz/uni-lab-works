@@ -17,6 +17,18 @@
             "args": [],
             "cwd": "${workspaceFolder}/test",
             "preLaunchTask": "build debug version of the project"
+        },
+        {
+            "name": "(lldb) Launch project with input",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [
+                "int.txt",
+                "fuck.txt"
+            ],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "build debug version of the project"
         }
     ]
 }
