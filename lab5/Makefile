@@ -108,6 +108,10 @@ runner:
 #==============================================================================
 ### Custom checks:
 
+in:
+	$(EXE_FILE) $(TEST_DIR)/in.txt
+.PHONY: in
+
 c: cppcheck
 cppcheck: clear
 	cppcheck $(CPPCHECKFLAGS) -I$(HDR_DIR) $(SRC_FILES)
