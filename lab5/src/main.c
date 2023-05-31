@@ -11,6 +11,10 @@
 #include "typedefs.h"
 #include "utils.h"
 
+#ifdef DEBUG
+#include "debug.h"
+#endif
+
 /// input/output specification
 // #define INPUT_FILE "input.bin"
 #define INPUT_READ_MODE "r"
@@ -24,30 +28,32 @@ typedef enum
   MODE_UNDEFINED
 } ProgramMode;
 
-void open_streams_checked(FILE **input, FILE **output)
+void open_streams_checked(FILE **input, FILE **output, int argc, char *argv[])
 {
-#ifdef INPUT_FILE
-  *input = fopen(INPUT_FILE, INPUT_READ_MODE);
-  assert(input != NULL);
-#else
-  *input = stdin;
-#endif
+  if (argc > 1)
+    *input = fopen(argv[1], INPUT_READ_MODE);
+  else
+    *input = stdin;
+  assert(*input != NULL);
 
-#ifdef OUTPUT_FILE
-  *output = fopen(OUTPUT_FILE, OUTPUT_WRITE_MODE);
-  assert(output != NULL);
-#else
-  *output = stdout;
-#endif
+  if (argc > 2)
+    *output = fopen(argv[2], OUTPUT_WRITE_MODE);
+  else
+    *output = stdout;
+  assert(*output != NULL);
 }
 
 void close_streams_checked(FILE *input, FILE *output)
 {
   int rc = 0;
-  rc = fclose(input);
-  assert(rc != -1);
-  rc = fclose(output);
-  assert(rc != -1);
+  if (input != stdin) {
+    rc = fclose(input);
+    assert(rc != -1);
+  }
+  if (output != stdout) {
+    rc = fclose(output);
+    assert(rc != -1);
+  }
 }
 
 ProgramMode read_operating_mode()
@@ -107,7 +113,7 @@ void codinginfo_free(CodingInfo *condingInfo)
   free(chars_info_array);
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 #ifdef DEBUG
   setbuf(stdout, NULL);
@@ -115,7 +121,7 @@ int main()
   FILE *input = NULL;
   FILE *output = NULL;
 
-  open_streams_checked(&input, &output);
+  open_streams_checked(&input, &output, argc, argv);
 
   ProgramMode mode = read_operating_mode();
   if (mode == MODE_UNDEFINED) {
