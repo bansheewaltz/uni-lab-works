@@ -56,9 +56,9 @@ void close_streams_checked(FILE *input, FILE *output)
   }
 }
 
-ProgramMode read_operating_mode()
+ProgramMode read_operating_mode(FILE *input)
 {
-  char mode_parameter = (char)getchar();
+  int mode_parameter = getc(input);
   if (mode_parameter == 'c') {
     return MODE_ENCODING;
   }
@@ -82,7 +82,7 @@ void encoding(CodingInfo *codingInfo, FILE *input, FILE *output)
   TreeNode *tree = build_huffman_tree(chars_info_array, alphabet_size);
 
   codingInfo->huffman_tree = tree;
-  codingInfo->chars_info_consistent = chars_info_array;
+  codingInfo->chars_info_array = chars_info_array;
 
   scan_codes_from_huffman_tree(tree, chars_info_dictionary);
 #ifdef DEBUG
@@ -96,7 +96,7 @@ void codinginfo_initialize(CodingInfo *codingInfo)
 {
   codingInfo->huffman_tree = NULL;
   codingInfo->alphabet_size = 0;
-  codingInfo->chars_info_consistent = NULL;
+  codingInfo->chars_info_array = NULL;
   for (int i = 0; i < CHARSET_SIZE; ++i) {
     codingInfo->chars_info_dictionary[i] = NULL;
   }
@@ -104,7 +104,7 @@ void codinginfo_initialize(CodingInfo *codingInfo)
 
 void codinginfo_free(CodingInfo *condingInfo)
 {
-  CharInfo **chars_info_array = condingInfo->chars_info_consistent;
+  CharInfo **chars_info_array = condingInfo->chars_info_array;
   destroy_tree(condingInfo->huffman_tree);
   for (int i = 0; i < condingInfo->alphabet_size; ++i) {
     free(chars_info_array[i]->huffman_code);
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
 
   open_streams_checked(&input, &output, argc, argv);
 
-  ProgramMode mode = read_operating_mode();
+  ProgramMode mode = read_operating_mode(input);
   if (mode == MODE_UNDEFINED) {
     puts("the operating mode is entered incorrectly or is not specified");
     close_streams_checked(input, output);
