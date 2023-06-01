@@ -19,7 +19,7 @@
             "preLaunchTask": "build debug version of the project"
         },
         {
-            "name": "(lldb) Launch project with input",
+            "name": "(lldb) Launch project encoding",
             "type": "lldb",
             "request": "launch",
             "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
@@ -28,6 +28,20 @@
             ],
             "cwd": "${workspaceFolder}/test",
             "preLaunchTask": "build debug version of the project"
+        },
+        {
+            "name": "(lldb) Launch project decoding",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [
+                "encoded.txt",
+            ],
+            "cwd": "${workspaceFolder}/test",
+            "preLaunchTask": "build debug version of the project",
+            "env": {
+                "DEBUG": ""
+            }
         }
     ]
 }
