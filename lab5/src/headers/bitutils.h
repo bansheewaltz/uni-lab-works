@@ -8,6 +8,7 @@
 #include "main.h"
 
 uchar bit_to_char(int bit);
+bool char_to_bit(int bit_ascii);
 void set_bit(uchar *byte, bool bit, int position);
 void reset_byte(uchar *byte, int *bit_position);
 bool get_bit(uchar byte, int position);
@@ -15,5 +16,7 @@ bool readbit_buffered(FILE *input);
 void fill_last_byte(size_t *bits_printed, FILE *output);
 void serialize_char(uchar character, FILE *output);
 void writebit_buffered(int bit, bool flush_flag, FILE *output);
+uint64_t read_bits_ascii(FILE *input, size_t bytes_count);
+bool readbit_ascii(FILE *input);
 
 #endif  // BITUTILS_H_
