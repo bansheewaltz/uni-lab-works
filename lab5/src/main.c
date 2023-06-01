@@ -3,8 +3,9 @@
 #include <assert.h>
 #include <stdlib.h>
 
+#include "decoding.h"
+#include "deserialization.h"
 #include "encoding.h"
-#include "input.h"
 #include "output.h"
 #include "queue.h"
 #include "tools.h"
@@ -92,6 +93,27 @@ void encoding(CodingInfo *codingInfo, FILE *input, FILE *output)
   encode_input_text_form(tree, codingInfo, input, output);
 }
 
+void decoding(CodingInfo *codingInfo, FILE *input, FILE *output)
+{
+  uint32_t file_size = read_file_size_checked(input);
+
+  size_t alphabet_size = read_alphabet_size_checked(input);
+  assert(alphabet_size > 0);
+  codingInfo->alphabet_size = alphabet_size;
+
+  // CharInfo **chars_info_dictionary = codingInfo->chars_info_dictionary;
+
+  TreeNode *tree = read_huffman_tree_text_form(alphabet_size, input);
+  codingInfo->huffman_tree = tree;
+
+  // scan_codes_from_huffman_tree(tree, chars_info_dictionary);
+  // #ifdef DEBUG
+  //   print_codes_lexicographically(chars_info_array, alphabet_size, stdout);
+  //   print_coding_stats(chars_info_array, alphabet_size, stdout);
+  // #endif
+  print_decoded_file_to_text(tree, input, output);
+}
+
 void codinginfo_initialize(CodingInfo *codingInfo)
 {
   codingInfo->huffman_tree = NULL;
@@ -137,7 +159,7 @@ int main(int argc, char *argv[])
     encoding(&codingInfo, input, output);
   }
   if (mode == MODE_DECODING) {
-    // decoding(&codingInfo, input, output);
+    decoding(&codingInfo, input, output);
   }
 
   codinginfo_free(&codingInfo);

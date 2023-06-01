@@ -90,11 +90,11 @@ void preoder_traversal_codes_scan(TreeNode *root, CharInfo **chars_info,
                                   uint8_t code[], size_t depth)
 {
   if (root->left) {
-    code[depth] = LEFT_CHILD;
+    code[depth] = TREE_LEFT_CHILD_BIT;
     preoder_traversal_codes_scan(root->left, chars_info, code, depth + 1);
   }
   if (root->right) {
-    code[depth] = RIGHT_CHILD;
+    code[depth] = TREE_RIGHT_CHILD_BIT;
     preoder_traversal_codes_scan(root->right, chars_info, code, depth + 1);
   }
 

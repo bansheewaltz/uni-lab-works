@@ -20,8 +20,8 @@
 #define MAX_TREE_HEIGHT EIGHT_BIT_CHARACTER_SET_SIZE
 #define INTERNAL_NODE_SYMBOL 'x'
 // huffman tree prefix code bits
-#define LEFT_CHILD 0
-#define RIGHT_CHILD 1
+#define TREE_LEFT_CHILD_BIT 0
+#define TREE_RIGHT_CHILD_BIT 1
 // huffman tree serialization bits
 #define INTERNAL_NODE 0
 #define LEAF_NODE 1
