@@ -7,7 +7,7 @@
 #include <stddef.h>
 #include <stdio.h>
 
-#include "bitutils.h"
+#include "bitstringutils.h"
 #include "main.h"
 
 void preorder_traversal_printing(TreeNode *root, FILE *output,
@@ -26,7 +26,7 @@ void preorder_traversal_printing(TreeNode *root, FILE *output,
   if (is_node_leaf(root)) {
     putc(bit_to_char(LEAF_NODE), output);
     *bits_printed += 1;
-    print_char_in_binary(root->character, SAME_LINE, output);
+    print_char_in_bitstring(root->character, SAME_LINE, output);
     *bits_printed += CHAR_BIT;
   }
 }
@@ -41,34 +41,6 @@ size_t print_huffman_tree_to_text(TreeNode *tree, FILE *output)
   preorder_traversal_printing(tree, output, &bits_printed);
 
   return bits_printed;
-}
-
-void print_byte_in_binary(uchar byte, bool formatting, FILE *output)
-{
-  for (int i = CHAR_BIT - 1; i >= 0; --i) {
-    fprintf(output, "%d", (byte >> i) & 1 ? 1 : 0);
-  }
-  if (formatting == NEW_LINE) {
-    fprintf(output, "\n");
-  }
-}
-
-void print_char_in_binary(uchar character, bool formatting, FILE *output)
-{
-  print_byte_in_binary(character, formatting, output);
-}
-
-void print_bits(void *ptr, size_t bytes_count, FILE *output)
-{
-  uint8_t *byte_array = (uint8_t *)ptr;
-
-  for (size_t i = bytes_count - 1; i < bytes_count; --i) {
-    for (unsigned int j = CHAR_BIT - 1; j < CHAR_BIT; --j) {
-      unsigned int bit = ((unsigned int)byte_array[i] >> j) & 0x1U;
-      int rc = fprintf(output, "%" PRIu8, (uint8_t)bit);
-      assert(rc != -1);
-    }
-  }
 }
 
 void array_int_print(int array[], int len, FILE *output)
