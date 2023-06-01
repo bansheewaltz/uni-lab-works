@@ -3,11 +3,9 @@
 
 #include <stdio.h>
 
-#include "typedefs.h"
+#include "tree.h"
 
-void encode_input_text_form(TreeNode *tree, CodingInfo *codingInfo,
-                            FILE *input, FILE *output);
-void scan_chars_frequencies_from_input(CharInfo **dictionary, FILE *input);
-size_t get_alphabet_size(CharInfo **dictionary);
+void serialize_huffman_tree(TreeNode *tree, size_t alph_size, FILE *output);
+void preorder_traversal_serialization(TreeNode *root, FILE *output);
 
 #endif  // ENCODING_H_

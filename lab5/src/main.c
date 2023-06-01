@@ -4,8 +4,8 @@
 #include <stdlib.h>
 
 #include "decoding.h"
-#include "deserialization.h"
-#include "encoding.h"
+#include "decoding_bitstring.h"
+#include "encoding_bitstring.h"
 #include "output.h"
 #include "queue.h"
 #include "tools.h"

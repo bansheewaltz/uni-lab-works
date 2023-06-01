@@ -1,15 +1,16 @@
 #ifndef DECODING_H_
 #define DECODING_H_
 
-#include <stdint.h>
-#include <stdio.h>
-#include <tree.h>
+#include <stdlib.h>
 
-int read_alphabet_size_checked(FILE *input);
-uint32_t read_file_size_checked(FILE *input);
-TreeNode *read_huffman_tree_text_form(int alph_size, FILE *input);
-uchar read_char_binary_text_form(FILE *input);
-void preorder_traversal_read_text_form(TreeNode *root, int alph_size,
-                                       FILE *input, int depth);
+#include "stdio.h"
+#include "tree.h"
+
+TreeNode *deserialize_huffman_tree(int alph_size, FILE *input,
+                                   uchar **characters_array);
+uchar deserialize_char(FILE *input);
+void preorder_traversal_deserialization(TreeNode *root, int alph_size,
+                                        FILE *input, uchar *characters_array,
+                                        int depth);
 
 #endif  // DECODING_H_
