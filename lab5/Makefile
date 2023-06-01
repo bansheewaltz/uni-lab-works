@@ -109,8 +109,12 @@ runner:
 ### Custom checks:
 
 in:
-	$(EXE_FILE) $(TEST_DIR)/in.txt
+	$(EXE_FILE) $(TEST_DIR)/in.txt $(TEST_DIR)/encoded_ref.txt
 .PHONY: in
+
+out:
+	$(EXE_FILE) $(TEST_DIR)/encoded.txt $(TEST_DIR)/decoded.txt
+.PHONY: out
 
 c: cppcheck
 cppcheck: clear
