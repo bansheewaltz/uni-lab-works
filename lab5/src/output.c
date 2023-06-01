@@ -4,6 +4,7 @@
 #include <inttypes.h>
 #include <limits.h>
 #include <math.h>
+#include <stddef.h>
 #include <stdio.h>
 
 #include "bitutils.h"
@@ -108,6 +109,44 @@ size_t print_encoded_file_to_text(CharInfo **chars_info_dictionary,
   }
 
   return bits_printed;
+}
+
+int huffman_tree_get_character_by_code(TreeNode *node, uchar *code,
+                                       int code_len, int current_level)
+{
+  if (current_level != code_len) {
+    if (char_to_bit(code[current_level]) == TREE_LEFT_CHILD_BIT)
+      huffman_tree_get_character_by_code(node->left, code, code_len,
+                                         ++current_level);
+    if (char_to_bit(code[current_level]) == TREE_RIGHT_CHILD_BIT)
+      huffman_tree_get_character_by_code(node->right, code, code_len,
+                                         ++current_level);
+  }
+  if (node->character == INTERNAL_NODE_SYMBOL)
+    return -1;
+
+  return node->character;
+}
+
+void print_decoded_file_to_text(TreeNode *tree, FILE *input, FILE *output)
+{
+  uchar buffer[BUFFER_SIZE];
+  uchar current_code[MAX_TREE_HEIGHT];
+  int current_code_len = 0;
+
+  size_t chars_read = 0;
+  while ((chars_read = fread(buffer, sizeof(uchar), BUFFER_SIZE, input)) > 0) {
+    for (size_t i = 0; i < chars_read; ++i) {
+      current_code[current_code_len++] = buffer[i];
+      int symbol = huffman_tree_get_character_by_code(tree, current_code,
+                                                      current_code_len, 0);
+
+      if (symbol == -1)
+        continue;
+      int rc = putc(symbol, output);
+      assert(rc != -1);
+    }
+  }
 }
 
 void print_code(CharInfo *charInfo, FILE *output)

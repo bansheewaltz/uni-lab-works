@@ -4,7 +4,7 @@
 #include "stdint.h"
 
 typedef unsigned char uchar;
-typedef uint8_t byte;
+typedef unsigned int uint;
 
 typedef struct TreeNode TreeNode;
 typedef struct CharInfo CharInfo;
