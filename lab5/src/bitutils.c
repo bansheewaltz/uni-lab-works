@@ -15,7 +15,9 @@ uchar bit_to_char(int bit)
     return '0';
   if (bit == 1)
     return '1';
+
   assert(false);
+  return false;
 }
 
 bool char_to_bit(int bit_ascii)
@@ -24,7 +26,9 @@ bool char_to_bit(int bit_ascii)
     return 0;
   if (bit_ascii == '1')
     return 1;
+
   assert(false);
+  return false;
 }
 
 void set_bit(uchar *byte, bool bit, int position)

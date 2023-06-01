@@ -21,8 +21,8 @@ TreeNode *deserialize_huffman_tree(int alph_size, FILE *input,
 
 uchar deserialize_char(FILE *input)
 {
-  int bit_position = 1;  // in byte, from left
-  byte character = 0b00000000;
+  int bit_position = 1;  // in uchar, from left
+  uchar character = 0b00000000;
 
   for (; bit_position <= CHAR_BIT; ++bit_position) {
     set_bit(&character, readbit_buffered(input), bit_position);
