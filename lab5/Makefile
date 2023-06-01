@@ -18,7 +18,7 @@ STDFLAG := -std=$(STD)
 CFLAGS = -I$(HDR_DIR) $(STDFLAG)
 LDFLAGS := -lm
 
-WFLAGS :=        -Wall \
+WFLAGS        := -Wall \
                  -Werror \
                  -Wextra \
                  -Wconversion \
@@ -26,7 +26,7 @@ WFLAGS :=        -Wall \
                  -pedantic \
                  -pedantic-errors
 
-SANFLAGS :=      -fsanitize=address \
+SANFLAGS      := -fsanitize=address \
                  -fsanitize=leak \
                  -fsanitize=undefined
 
