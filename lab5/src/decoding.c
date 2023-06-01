@@ -53,7 +53,7 @@ void preorder_traversal_read_text_form(TreeNode *root, int alph_size,
   bool bit = readbit_ascii(input);
   bits_read_count += 1;
   if (bit == INTERNAL_NODE) {
-    root->character = INTERNAL_NODE_SYMBOL;
+    root->character = '\0';
 
     TreeNode *left = (TreeNode *)malloc(sizeof(TreeNode));
     root->left = left;
@@ -69,9 +69,9 @@ void preorder_traversal_read_text_form(TreeNode *root, int alph_size,
     root->character = read_char_binary_text_form(input);
     bits_read_count += CHAR_BIT;
     recovered_characters_count += 1;
-#ifdef DEBUG
-    printf("%d\n", root->character);
-#endif
+    // #ifdef DEBUG
+    //     printf("%d\n", root->character);
+    // #endif
   }
 
   assert(bit == LEAF_NODE || bit == INTERNAL_NODE);
