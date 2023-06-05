@@ -18,8 +18,7 @@ void encoding(CodingInfo *codingInfo, FILE *input, FILE *output)
   codingInfo->alphabet_size = alph_size;
 
   CharInfo **chars_info_dictionary = codingInfo->chars_info_dictionary;
-  CharInfo **chars_info_array =
-      get_chars_info_consistent(chars_info_dictionary, alph_size);
+  CharInfo **chars_info_array = get_chars_info_consistent(chars_info_dictionary, alph_size);
   TreeNode *tree = build_huffman_tree(chars_info_array, alph_size);
 
   codingInfo->huffman_tree = tree;
@@ -29,8 +28,7 @@ void encoding(CodingInfo *codingInfo, FILE *input, FILE *output)
   encode_input(tree, codingInfo, input, output);
 }
 
-void encode_input(TreeNode *tree, CodingInfo *codingInfo, FILE *input,
-                  FILE *output)
+void encode_input(TreeNode *tree, CodingInfo *codingInfo, FILE *input, FILE *output)
 {
   size_t rc = 0;
 
@@ -56,8 +54,7 @@ void write_binary_array_to_bin(uint8_t *array, size_t code_len, FILE *output)
   }
 }
 
-void write_encoded_input(CharInfo **chars_info_dictionary, FILE *input,
-                         FILE *output)
+void write_encoded_input(CharInfo **chars_info_dictionary, FILE *input, FILE *output)
 {
   uchar buffer[BUFFER_SIZE];
   size_t chars_read = 0;
@@ -91,7 +88,14 @@ void huffman_tree_write_encoded(TreeNode *tree, FILE *output)
 {
   if (tree == NULL)
     return;
+  if (tree->left == NULL && tree->right == NULL) {
+    writebit_buffered(LEAF_NODE, CONTINUE, output);
+    serialize_char(tree->character, output);
+    goto flush_byte;
+  }
 
   huffman_tree_preorder_traversal_writing(tree, output);
+
+flush_byte:
   writebit_buffered(0, FLUSH_BYTE, output);
 }

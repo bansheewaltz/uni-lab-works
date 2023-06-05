@@ -21,23 +21,26 @@ void decoding(CodingInfo *codingInfo, FILE *input, FILE *output)
 
   TreeNode *tree = huffman_tree_read_binary(alphabet_size, input);
 
-  print_decoded_bitstring_file(tree, file_size, input, output);
+  print_decoded_file(tree, file_size, alphabet_size, input, output);
 }
 
-void print_decoded_bitstring_file(TreeNode *tree_root, size_t file_size,
-                                  FILE *input, FILE *output)
+void print_decoded_file(TreeNode *tree_root, size_t file_size, size_t alph_size, FILE *input,
+                        FILE *output)
 {
   size_t characteres_decoded = 0;
 
   TreeNode *current_node = tree_root;
   while (characteres_decoded != file_size) {
     bool bit = readbit_buffered(input, false);
+    if (alph_size == 1)
+      goto print_char;
 
     if (bit == TREE_LEFT_CHILD_BIT)
       current_node = current_node->left;
     if (bit == TREE_RIGHT_CHILD_BIT)
       current_node = current_node->right;
 
+  print_char:
     if (current_node->character) {
       int rc = putc(current_node->character, output);  // NOLINT
       assert(rc != -1);
@@ -82,12 +85,11 @@ uchar deserialize_char(FILE *input)
   return character;
 }
 
-void preorder_traversal_read_binary(TreeNode *root, int alph_size, FILE *input,
-                                    int depth)
+void preorder_traversal_read_binary(TreeNode *root, int alph_size, FILE *input, int depth)
 {
-  if (root == NULL) {
+  if (root == NULL)
     return;
-  }
+
   static int recovered_characters_count = 0;
 
   bool bit = readbit_buffered(input, false);

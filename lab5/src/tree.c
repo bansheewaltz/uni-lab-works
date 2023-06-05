@@ -22,8 +22,7 @@ TreeNode *create_tree_node(uchar character, size_t freq)
 TreeNode *build_huffman_tree(CharInfo **chars_info_array, size_t alphabet_size)
 {
   if (alphabet_size == 1) {
-    return create_tree_node(chars_info_array[0]->character,
-                            chars_info_array[0]->freq);
+    return create_tree_node(chars_info_array[0]->character, chars_info_array[0]->freq);
   }
 
   TreeNode *left = NULL;
@@ -33,8 +32,8 @@ TreeNode *build_huffman_tree(CharInfo **chars_info_array, size_t alphabet_size)
   Queue *secondQueue = create_queue(alphabet_size);
 
   for (size_t i = 0; i < alphabet_size; ++i) {
-    enqueue(firstQueue, create_tree_node(chars_info_array[i]->character,
-                                         chars_info_array[i]->freq));
+    enqueue(firstQueue,
+            create_tree_node(chars_info_array[i]->character, chars_info_array[i]->freq));
   }
 
 #ifdef DEBUG
@@ -86,8 +85,8 @@ void destroy_tree(struct TreeNode *root)
   free(root);
 }
 
-void preoder_traversal_codes_scan(TreeNode *root, CharInfo **chars_info,
-                                  uint8_t code[], size_t depth)
+void preoder_traversal_codes_scan(TreeNode *root, CharInfo **chars_info, uint8_t code[],
+                                  size_t depth)
 {
   if (root->left) {
     code[depth] = TREE_LEFT_CHILD_BIT;
@@ -99,9 +98,14 @@ void preoder_traversal_codes_scan(TreeNode *root, CharInfo **chars_info,
   }
 
   if (is_node_leaf(root)) {
-    chars_info[root->character]->huffman_code =
-        array_uint8_duplicate(code, depth);
-    chars_info[root->character]->code_len = depth;
+    size_t code_len = depth;
+    if (depth == 0) {
+      code_len = 1;
+      code[0] = 0;
+    }
+
+    chars_info[root->character]->huffman_code = array_uint8_duplicate(code, code_len);
+    chars_info[root->character]->code_len = code_len;
   }
 }
 

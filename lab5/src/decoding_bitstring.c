@@ -21,8 +21,7 @@ void decoding_bitstring(CodingInfo *codingInfo, FILE *input, FILE *output)
   print_bitstring_decoded_file(tree, file_size, input, output);
 }
 
-void print_bitstring_decoded_file(TreeNode *tree_root, size_t file_size,
-                                  FILE *input, FILE *output)
+void print_bitstring_decoded_file(TreeNode *tree_root, size_t file_size, FILE *input, FILE *output)
 {
   size_t characteres_decoded = 0;
 
@@ -82,8 +81,7 @@ uchar read_char_binary_text_form(FILE *input)
   return (uchar)character;
 }
 
-void preorder_traversal_read_text_form(TreeNode *root, int alph_size,
-                                       FILE *input, int depth)
+void preorder_traversal_read_text_form(TreeNode *root, int alph_size, FILE *input, int depth)
 {
   if (root == NULL) {
     return;
