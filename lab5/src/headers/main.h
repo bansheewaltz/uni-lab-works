@@ -41,6 +41,7 @@ struct CharInfo {
 
 struct CodingInfo {
   size_t alphabet_size;
+  size_t file_size;
   TreeNode *huffman_tree;
   CharInfo **chars_info_array;
   CharInfo *chars_info_dictionary[CHARSET_SIZE];
