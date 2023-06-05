@@ -70,7 +70,7 @@ TreeNode *build_huffman_tree(CharInfo **chars_info_array, size_t alphabet_size)
 
 bool is_node_leaf(TreeNode *node)
 {
-  return !(node->left) && !(node->right);
+  return !node->left && !node->right;
 }
 
 void destroy_tree(struct TreeNode *root)
