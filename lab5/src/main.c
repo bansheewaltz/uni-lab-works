@@ -88,8 +88,17 @@ void codinginfo_initialize(CodingInfo *codingInfo)
 
 void codinginfo_free(CodingInfo *condingInfo)
 {
-  CharInfo **chars_info_array = condingInfo->chars_info_array;
+  if (condingInfo == NULL) {
+    return;
+  }
+
   destroy_tree(condingInfo->huffman_tree);
+
+  CharInfo **chars_info_array = condingInfo->chars_info_array;
+  if (chars_info_array == NULL) {
+    return;
+  }
+
   for (int i = 0; i < condingInfo->alphabet_size; ++i) {
     free(chars_info_array[i]->huffman_code);
     free(chars_info_array[i]);

@@ -12,27 +12,31 @@
 void decoding(CodingInfo *codingInfo, FILE *input, FILE *output)
 {
   size_t file_size = (size_t)read_file_size_binary(input);
+  codingInfo->file_size = file_size;
   if (file_size == 0)
     return;
 
   size_t alphabet_size = (size_t)read_alphabet_size_binary(input);
+  codingInfo->alphabet_size = alphabet_size;
   if (alphabet_size == 0)
     return;
 
   TreeNode *tree = huffman_tree_read_binary(alphabet_size, input);
+  codingInfo->huffman_tree = tree;
+  assert(tree != NULL);
 
-  print_decoded_file(tree, file_size, alphabet_size, input, output);
+  print_decoded_file(codingInfo, input, output);
 }
 
-void print_decoded_file(TreeNode *tree_root, size_t file_size, size_t alph_size, FILE *input,
-                        FILE *output)
+void print_decoded_file(CodingInfo *coding_info, FILE *input, FILE *output)
 {
   size_t characteres_decoded = 0;
+  TreeNode *tree_root = coding_info->huffman_tree;
 
   TreeNode *current_node = tree_root;
-  while (characteres_decoded != file_size) {
+  while (characteres_decoded != coding_info->file_size) {
     bool bit = readbit_buffered(input, false);
-    if (alph_size == 1)
+    if (coding_info->alphabet_size == 1)
       goto print_char;
 
     if (bit == TREE_LEFT_CHILD_BIT)
@@ -41,7 +45,7 @@ void print_decoded_file(TreeNode *tree_root, size_t file_size, size_t alph_size,
       current_node = current_node->right;
 
   print_char:
-    if (current_node->character || alph_size == 1) {
+    if (current_node->freq) {
       int rc = putc(current_node->character, output);  // NOLINT
       assert(rc != -1);
       characteres_decoded += 1;
@@ -108,6 +112,7 @@ void preorder_traversal_read_binary(TreeNode *root, int alph_size, FILE *input, 
     root->left = NULL;
     root->right = NULL;
     root->character = deserialize_char(input);
+    root->freq = 1;
     ++recovered_characters_count;
 #ifdef DEBUG
     printf("%d\n", root->character);

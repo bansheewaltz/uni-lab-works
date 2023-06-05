@@ -8,8 +8,7 @@
 #include "typedefs.h"
 
 void decoding(CodingInfo *codingInfo, FILE *input, FILE *output);
-void print_decoded_file(TreeNode *tree_root, size_t file_size, size_t alph_size, FILE *input,
-                        FILE *output);
+void print_decoded_file(CodingInfo *coding_info, FILE *input, FILE *output);
 uint32_t read_file_size_binary(FILE *input);
 uint8_t read_alphabet_size_binary(FILE *input);
 TreeNode *huffman_tree_read_binary(int alph_size, FILE *input);
