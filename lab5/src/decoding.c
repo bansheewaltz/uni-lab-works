@@ -41,7 +41,7 @@ void print_decoded_file(TreeNode *tree_root, size_t file_size, size_t alph_size,
       current_node = current_node->right;
 
   print_char:
-    if (current_node->character) {
+    if (current_node->character || alph_size == 1) {
       int rc = putc(current_node->character, output);  // NOLINT
       assert(rc != -1);
       characteres_decoded += 1;
