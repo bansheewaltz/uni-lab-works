@@ -97,8 +97,27 @@ void codinginfo_free(CodingInfo *condingInfo)
   free(chars_info_array);
 }
 
+#define TEST_N 5
+void abort_on_test()
+{
+  int test_n = 0;
+  FILE *filep = fopen("test/tmp_current_test.txt", "r+");
+  setbuf(filep, NULL);
+
+  (void)fscanf(filep, "%d", &test_n);  // NOLINT
+  test_n += 1;
+  if (test_n == TEST_N) {
+    exit(3);
+  } else {
+    rewind(filep);
+    (void)fprintf(filep, "%d", test_n);
+  }
+  (void)fclose(filep);
+}
+
 int main(int argc, char *argv[])
 {
+  // abort_on_test();
 #ifdef DEBUG
   setbuf(stdout, NULL);
 #endif

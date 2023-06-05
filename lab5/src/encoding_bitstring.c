@@ -13,14 +13,12 @@ void encoding_bitstring(CodingInfo *codingInfo, FILE *input, FILE *output)
 {
   scan_chars_frequencies_from_input(codingInfo->chars_info_dictionary, input);
 
-  size_t alphabet_size =
-      count_alphabet_size(codingInfo->chars_info_dictionary);
+  size_t alphabet_size = count_alphabet_size(codingInfo->chars_info_dictionary);
   assert(alphabet_size > 0);
   codingInfo->alphabet_size = alphabet_size;
 
   CharInfo **chars_info_dictionary = codingInfo->chars_info_dictionary;
-  CharInfo **chars_info_array =
-      get_chars_info_consistent(chars_info_dictionary, alphabet_size);
+  CharInfo **chars_info_array = get_chars_info_consistent(chars_info_dictionary, alphabet_size);
   TreeNode *tree = build_huffman_tree(chars_info_array, alphabet_size);
 
   codingInfo->huffman_tree = tree;
@@ -34,8 +32,7 @@ void encoding_bitstring(CodingInfo *codingInfo, FILE *input, FILE *output)
   encode_input_text_form(tree, codingInfo, input, output);
 }
 
-void encode_input_text_form(TreeNode *tree, CodingInfo *codingInfo,
-                            FILE *input, FILE *output)
+void encode_input_text_form(TreeNode *tree, CodingInfo *codingInfo, FILE *input, FILE *output)
 {
   size_t bits_printed = 0;
   uint8_t alphabet_size = (uint8_t)codingInfo->alphabet_size;
@@ -63,8 +60,7 @@ void encode_input_text_form(TreeNode *tree, CodingInfo *codingInfo,
 #ifdef DEBUG
   fprintf(output, "\n%17s", "encoded input: ");
 #endif
-  bits_printed = print_encoded_file_to_text(codingInfo->chars_info_dictionary,
-                                            input, output);
+  bits_printed = print_encoded_file_to_text(codingInfo->chars_info_dictionary, input, output);
   fill_last_byte(&bits_printed, output);
 }
 
@@ -109,20 +105,19 @@ size_t count_alphabet_size(CharInfo **dictionary)
   return alph_size;
 }
 
-void preorder_traversal_printing(TreeNode *root, FILE *output,
-                                 size_t *bits_printed)
+void preorder_traversal_printing(TreeNode *root, FILE *output, size_t *bits_printed)
 {
   if (root == NULL)
     return;
 
   if (!is_node_leaf(root)) {
-    putc(bit_to_char(INTERNAL_NODE), output);
+    (void)putc(bit_to_char(INTERNAL_NODE), output);
     *bits_printed += 1;
     preorder_traversal_printing(root->left, output, bits_printed);
     preorder_traversal_printing(root->right, output, bits_printed);
   }
   if (is_node_leaf(root)) {
-    putc(bit_to_char(LEAF_NODE), output);
+    (void)putc(bit_to_char(LEAF_NODE), output);
     *bits_printed += 1;
     print_char_in_bitstring(root->character, SAME_LINE, output);
     *bits_printed += CHAR_BIT;
@@ -133,6 +128,10 @@ size_t print_huffman_tree_to_text(TreeNode *tree, FILE *output)
 {
   if (tree == NULL)
     return 0;
+  if (tree->left == NULL && tree->right == NULL) {
+    (void)putc(bit_to_char(LEAF_NODE), output);
+    return 1;
+  }
 
   size_t bits_printed = 0;
   preorder_traversal_printing(tree, output, &bits_printed);
@@ -140,8 +139,7 @@ size_t print_huffman_tree_to_text(TreeNode *tree, FILE *output)
   return bits_printed;
 }
 
-size_t print_encoded_file_to_text(CharInfo **chars_info_dictionary,
-                                  FILE *input, FILE *output)
+size_t print_encoded_file_to_text(CharInfo **chars_info_dictionary, FILE *input, FILE *output)
 {
   uchar buffer[BUFFER_SIZE];
 
