@@ -6,7 +6,7 @@ Language: Cpp
 BasedOnStyle: Google
 UseTab: Never
 IndentWidth: 2
-ColumnLimit: 79
+ColumnLimit: 99
 AllowShortIfStatementsOnASingleLine: Never
 AllowShortFunctionsOnASingleLine: None
 AllowShortLoopsOnASingleLine: false
