@@ -38,7 +38,7 @@ uint64_t read_bits_ascii(FILE *input, size_t bytes_count)
 {
   assert(bytes_count <= sizeof(int64_t));
 
-  uint64_t value = 0x0U;
+  uint64_t value = 0x0000000000000000U;
   uint64_t power_of_2 = 1;
   size_t bits_count = bytes_count * CHAR_BIT;
 

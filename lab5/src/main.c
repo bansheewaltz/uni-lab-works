@@ -5,6 +5,7 @@
 
 #include "decoding.h"
 #include "decoding_bitstring.h"
+#include "encoding.h"
 #include "encoding_bitstring.h"
 #include "output.h"
 #include "queue.h"
@@ -26,6 +27,8 @@ typedef enum
 {
   MODE_ENCODING,
   MODE_DECODING,
+  MODE_ENCODING_BITSTRING,
+  MODE_DECODING_BITSTRING,
   MODE_UNDEFINED
 } ProgramMode;
 
@@ -42,6 +45,10 @@ void open_streams_checked(FILE **input, FILE **output, int argc, char *argv[])
   else
     *output = stdout;
   assert(*output != NULL);
+
+#ifdef DEBUG
+  setbuf(*output, NULL);
+#endif
 }
 
 void close_streams_checked(FILE *input, FILE *output)
@@ -67,43 +74,6 @@ ProgramMode read_operating_mode(FILE *input)
     return MODE_DECODING;
   }
   return MODE_UNDEFINED;
-}
-
-void encoding(CodingInfo *codingInfo, FILE *input, FILE *output)
-{
-  scan_chars_frequencies_from_input(codingInfo->chars_info_dictionary, input);
-
-  size_t alphabet_size = get_alphabet_size(codingInfo->chars_info_dictionary);
-  assert(alphabet_size > 0);
-  codingInfo->alphabet_size = alphabet_size;
-
-  CharInfo **chars_info_dictionary = codingInfo->chars_info_dictionary;
-  CharInfo **chars_info_array =
-      get_chars_info_consistent(chars_info_dictionary, alphabet_size);
-  TreeNode *tree = build_huffman_tree(chars_info_array, alphabet_size);
-
-  codingInfo->huffman_tree = tree;
-  codingInfo->chars_info_array = chars_info_array;
-
-  scan_codes_from_huffman_tree(tree, chars_info_dictionary);
-#ifdef DEBUG
-  print_codes_lexicographically(chars_info_array, alphabet_size, stdout);
-  print_coding_stats(chars_info_array, alphabet_size, stdout);
-#endif
-  encode_input_text_form(tree, codingInfo, input, output);
-}
-
-void decoding(CodingInfo *codingInfo, FILE *input, FILE *output)
-{
-  size_t file_size = (size_t)read_file_size_checked(input);
-  assert(file_size > 0);
-
-  size_t alphabet_size = (size_t)read_alphabet_size_checked(input);
-  assert(alphabet_size > 0);
-
-  TreeNode *tree = read_huffman_tree_text_form(alphabet_size, input);
-
-  print_decoded_file_to_text(tree, file_size, input, output);
 }
 
 void codinginfo_initialize(CodingInfo *codingInfo)
@@ -148,9 +118,11 @@ int main(int argc, char *argv[])
   codinginfo_initialize(&codingInfo);
 
   if (mode == MODE_ENCODING) {
+    // encoding_bitstring(&codingInfo, input, output);
     encoding(&codingInfo, input, output);
   }
   if (mode == MODE_DECODING) {
+    // decoding_bitstring(&codingInfo, input, output);
     decoding(&codingInfo, input, output);
   }
 

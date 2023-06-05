@@ -16,33 +16,40 @@ void set_bit(uchar *byte, bool bit, int position)
 
 void reset_byte(uchar *byte, int *bit_position)
 {
-  *byte = 0b00000000;
+  *byte = 0x00U;
   *bit_position = 1;
 }
 
-bool get_bit(uchar byte, int position)
+bool get_bit(uint8_t byte, unsigned int position)
 {
-  return (byte >> (CHAR_BIT - position)) & 0b00000001;
-  // return ((uint)byte >> (CHAR_BIT - (uint)position)) & 0x0001U;
+  assert(position <= CHAR_BIT);
+  unsigned int shift = (unsigned int)CHAR_BIT - position;
+  return (unsigned int)(byte >> shift) & 0x01U;
 }
 
-bool readbit_buffered(FILE *input)
+bool readbit_buffered(FILE *input, bool flush_byte_flag)
 {
-  static int bit_position = 1;  // in byte, from left
+  static unsigned int bit_position = 1;  // in byte, from left
   static uchar byte;
 
+  if (flush_byte_flag == true && bit_position == 1) {
+    return 0;
+  }
+
   if (bit_position == 1) {
-    fread(&byte, sizeof(uchar), 1, input);
+    size_t rc = fread(&byte, sizeof(uchar), 1, input);
+    assert(rc != -1);
   }
 
   uint8_t bit = get_bit(byte, bit_position++);
+
   if (bit_position % CHAR_BIT == 1) {
     bit_position = 1;
   }
 
-#ifdef DEBUG
-  // printf("%d", bit);
-#endif
+  if (flush_byte_flag == true) {
+    bit_position = 1;
+  }
 
   return bit;
 }
@@ -57,7 +64,7 @@ void serialize_char(uchar character, FILE *output)
 void writebit_buffered(int bit, bool flush_flag, FILE *output)
 {
   static int bit_position = 1;  // in byte, from left
-  static uchar byte = 0b00000000;
+  static uint8_t byte = 0x00U;
 
   if (flush_flag == FLUSH_BYTE) {
     if (bit_position == 1) {
@@ -65,12 +72,6 @@ void writebit_buffered(int bit, bool flush_flag, FILE *output)
     }
     for (; bit_position < CHAR_BIT; ++bit_position) {
       set_bit(&byte, bit, bit_position);
-#ifdef DEBUG
-      print_byte_in_binary(byte, NEW_LINE, stdout);
-      if (bit_position == 8) {
-        printf("flush\n");
-      }
-#endif
     }
     fwrite(&byte, sizeof(uchar), 1, output);
     reset_byte(&byte, &bit_position);
@@ -78,12 +79,6 @@ void writebit_buffered(int bit, bool flush_flag, FILE *output)
 
   if (flush_flag == CONTINUE) {
     set_bit(&byte, bit, bit_position);
-#ifdef DEBUG
-    print_byte_in_binary(byte, NEW_LINE, stdout);
-    if (bit_position == 8) {
-      printf("flush\n");
-    }
-#endif
     if (bit_position % CHAR_BIT == 0) {
       fwrite(&byte, sizeof(uchar), 1, output);
       reset_byte(&byte, &bit_position);

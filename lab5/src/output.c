@@ -10,39 +10,6 @@
 #include "bitstringutils.h"
 #include "main.h"
 
-void preorder_traversal_printing(TreeNode *root, FILE *output,
-                                 size_t *bits_printed)
-{
-  if (root == NULL) {
-    return;
-  }
-
-  if (!is_node_leaf(root)) {
-    putc(bit_to_char(INTERNAL_NODE), output);
-    *bits_printed += 1;
-    preorder_traversal_printing(root->left, output, bits_printed);
-    preorder_traversal_printing(root->right, output, bits_printed);
-  }
-  if (is_node_leaf(root)) {
-    putc(bit_to_char(LEAF_NODE), output);
-    *bits_printed += 1;
-    print_char_in_bitstring(root->character, SAME_LINE, output);
-    *bits_printed += CHAR_BIT;
-  }
-}
-
-size_t print_huffman_tree_to_text(TreeNode *tree, FILE *output)
-{
-  if (tree == NULL) {
-    return 0;
-  }
-
-  size_t bits_printed = 0;
-  preorder_traversal_printing(tree, output, &bits_printed);
-
-  return bits_printed;
-}
-
 void array_int_print(int array[], int len, FILE *output)
 {
   for (int i = 0; i < len; ++i) {
@@ -63,53 +30,6 @@ void print_code_array(CharInfo *charInfo, FILE *output)
 {
   for (size_t i = 0; i < charInfo->code_len; ++i) {
     fprintf(output, "%" PRIu8, charInfo->huffman_code[i]);
-  }
-}
-
-size_t print_encoded_file_to_text(CharInfo **chars_info_dictionary,
-                                  FILE *input, FILE *output)
-{
-  uchar buffer[BUFFER_SIZE];
-
-  size_t chars_read = 0;
-  size_t bits_printed = 0;
-  while ((chars_read = fread(buffer, sizeof(uchar), BUFFER_SIZE, input)) > 0) {
-    for (size_t i = 0; i < chars_read; ++i) {
-      print_code_array(chars_info_dictionary[buffer[i]], output);
-      bits_printed += chars_info_dictionary[buffer[i]]->code_len;
-    }
-  }
-
-  return bits_printed;
-}
-
-void print_decoded_file_to_text(TreeNode *tree_root, size_t file_size,
-                                FILE *input, FILE *output)
-{
-  size_t characteres_decoded = 0;
-
-  size_t chars_read = 0;
-  uchar buffer[BUFFER_SIZE];
-  TreeNode *current_node =
-
-      tree_root;
-  while ((chars_read = fread(buffer, sizeof(uchar), BUFFER_SIZE, input)) > 0) {
-    for (size_t i = 0; i < chars_read; ++i) {
-      if (char_to_bit(buffer[i]) == TREE_LEFT_CHILD_BIT)
-        current_node = current_node->left;
-      if (char_to_bit(buffer[i]) == TREE_RIGHT_CHILD_BIT)
-        current_node = current_node->right;
-
-      if (current_node->character) {
-        int rc = putc(current_node->character, output);
-        assert(rc != -1);
-        characteres_decoded += 1;
-        if (characteres_decoded == file_size)
-          return;
-
-        current_node = tree_root;
-      }
-    }
   }
 }
 
