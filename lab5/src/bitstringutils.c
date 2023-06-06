@@ -73,7 +73,7 @@ void fill_last_byte(size_t *bits_printed, FILE *output)
 void print_byte_in_bitstring(char byte, bool new_line_flag, FILE *output)
 {
   int rc = 0;
-  for (size_t i = CHAR_BIT - 1; i >= 0; --i) {
+  for (size_t i = CHAR_BIT - 1; i < CHAR_BIT; --i) {
     rc = fprintf(output, "%d", ((unsigned int)byte >> i) & 1U ? 1 : 0);
   }
   assert(rc != -1);

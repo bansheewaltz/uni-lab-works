@@ -35,23 +35,21 @@ void print_code_array(CharInfo *charInfo, FILE *output)
 
 void print_code(CharInfo *charInfo, FILE *output)
 {
-  fprintf(output, "%d : ", charInfo->character);
+  fprintf(output, "%2d : ", charInfo->character);
   for (size_t i = 0; i < charInfo->code_len; ++i) {
     fprintf(output, "%" PRIu8, charInfo->huffman_code[i]);
   }
   fprintf(output, "\n");
 }
 
-void print_codes_lexicographically(CharInfo **chars_info_array,
-                                   size_t alphabet_size, FILE *output)
+void print_codes_lexicographically(CharInfo **chars_info_array, size_t alphabet_size, FILE *output)
 {
   for (size_t i = 0; i < alphabet_size; ++i) {
     print_code(chars_info_array[i], output);
   }
 }
 
-void print_coding_stats(CharInfo **chars_info_array, size_t alphabet_size,
-                        FILE *output)
+void print_coding_stats(CharInfo **chars_info_array, size_t alphabet_size, FILE *output)
 {
   int file_size = 0;
   int code_length = 0;
@@ -62,12 +60,10 @@ void print_coding_stats(CharInfo **chars_info_array, size_t alphabet_size,
     code_length += chars_info_array[i]->code_len * chars_info_array[i]->freq;
   }
   for (size_t i = 0; i < alphabet_size; ++i) {
-    information_capacity +=
-        (double)chars_info_array[i]->freq / file_size *
-        log2((double)file_size / chars_info_array[i]->freq);
+    information_capacity += (double)chars_info_array[i]->freq / file_size *
+                            log2((double)file_size / chars_info_array[i]->freq);
   }
-  double redundancy =
-      1.0 - (double)file_size / code_length * information_capacity;
+  double redundancy = 1.0 - (double)file_size / code_length * information_capacity;
 
   fprintf(output, "Information capacity = %.6f\n", information_capacity);
   fprintf(output, "Input file size = %d\n", file_size);
