@@ -91,11 +91,11 @@ void huffman_tree_write_encoded(TreeNode *tree, FILE *output)
   if (tree->left == NULL && tree->right == NULL) {
     writebit_buffered(LEAF_NODE, CONTINUE, output);
     serialize_char(tree->character, output);
-    goto flush_byte;
+    // goto flush_byte;
   }
 
   huffman_tree_preorder_traversal_writing(tree, output);
 
-flush_byte:
-  writebit_buffered(0, FLUSH_BYTE, output);
+// flush_byte:
+//   writebit_buffered(0, FLUSH_BYTE, output);
 }

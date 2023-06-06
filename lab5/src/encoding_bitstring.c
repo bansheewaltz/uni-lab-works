@@ -120,6 +120,7 @@ void preorder_traversal_printing(TreeNode *root, FILE *output, size_t *bits_prin
     (void)putc(bit_to_char(LEAF_NODE), output);
     *bits_printed += 1;
     print_char_in_bitstring(root->character, SAME_LINE, output);
+    fprintf(output, "\n%17s", "");
     *bits_printed += CHAR_BIT;
   }
 }
