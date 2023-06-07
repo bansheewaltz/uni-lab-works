@@ -1,4 +1,4 @@
-#include <stdint.h>
+#include <inttypes.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -76,7 +76,7 @@ void kmp(FILE *in, int templateLen, const int *prefixes, const uchar *template,
         while (counter < templateLen && buffer[index + counter] == template[counter]) {
           counter++;
         }
-        printf("%lli %i ", (*globalIndex) + index - templateLen + 1, counter);
+        printf("%" PRIu64 " %i ", (*globalIndex) + index - templateLen + 1, counter);
       }
       if (counter >= 1) {
         index += (counter - prefixes[counter - 1]);
