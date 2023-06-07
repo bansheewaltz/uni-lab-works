@@ -1,0 +1,36 @@
+#==============================================================================
+### Retard guard / reality check:
+
+ifeq "$(OS)" "Windows_NT"
+$(error You are not welcome here. Get out with that Windows-thong)
+endif
+
+
+#==============================================================================
+### Platform detection:
+
+UNAME_S := $(shell uname -s)
+ifeq "$(UNAME_S)" "Darwin"
+	OS := macOS
+	BASE := darwin
+endif
+ifeq "$(UNAME_S)" "Linux"
+	OS := Linux
+	BASE := linux
+endif
+ARCHITECTURE := $(shell uname -m)
+
+#==============================================================================
+### Environmentalish variables:
+
+PLATFORM := $(BASE)_$(ARCHITECTURE)
+LAB := $(shell pwd | grep -o 'lab[0-9-]\+')
+EXE_NAME := $(LAB)
+
+
+#==============================================================================
+### Macros:
+
+RM := rm -rf
+MK := mkdir -p
+CLEAR_SCREEN := printf "\033c"
