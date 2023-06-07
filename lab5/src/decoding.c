@@ -157,42 +157,6 @@ static TreeNode *ht_read_binary_preorder_traversal(FILE *input)
   } while (!stack_is_empty(&stack));
   TreeNode *tree_root = last_completed_innner_node;
 
-  discard_pending_byte_bits(input);
+  // discard_pending_byte_bits(input);
   return tree_root;
 }
-
-// void preorder_traversal_read_binary(TreeNode *root, int alph_size, FILE *input, int depth)
-// {
-//   if (root == NULL)
-//     return;
-
-//   static int recovered_characters_count = 0;
-
-//   bool bit = readbit_buffered(input, false);
-//   if (bit == INTERNAL_NODE) {
-//     root->character = '\0';
-
-//     TreeNode *left = (TreeNode *)malloc(sizeof(TreeNode));
-//     root->left = left;
-//     TreeNode *right = (TreeNode *)malloc(sizeof(TreeNode));
-//     root->right = right;
-
-//     preorder_traversal_read_binary(left, alph_size, input, depth + 1);
-//     preorder_traversal_read_binary(right, alph_size, input, depth + 1);
-//   }
-//   if (bit == LEAF_NODE) {
-//     root->left = NULL;
-//     root->right = NULL;
-//     root->character = deserialize_char(input);
-//     root->freq = 1;
-//     ++recovered_characters_count;
-// #ifdef DEBUG
-//     printf("%d\n", root->character);
-// #endif
-//   }
-//   assert(bit == LEAF_NODE || bit == INTERNAL_NODE);
-//   if (recovered_characters_count == alph_size) {
-//     (void)readbit_buffered(input, true);
-//     return;
-//   }
-// }
