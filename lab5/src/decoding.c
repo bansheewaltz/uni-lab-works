@@ -120,7 +120,7 @@ void preorder_traversal_read_binary(TreeNode *root, int alph_size, FILE *input, 
   }
   assert(bit == LEAF_NODE || bit == INTERNAL_NODE);
   if (recovered_characters_count == alph_size) {
-    // (void)readbit_buffered(input, true);
+    (void)readbit_buffered(input, true);
     return;
   }
 }
