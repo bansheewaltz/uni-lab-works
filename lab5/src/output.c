@@ -35,7 +35,7 @@ void print_code_array(CharInfo *charInfo, FILE *output)
 
 void print_code(CharInfo *charInfo, FILE *output)
 {
-  fprintf(output, "%2d : ", charInfo->character);
+  fprintf(output, "%3d: ", charInfo->character);
   for (size_t i = 0; i < charInfo->code_len; ++i) {
     fprintf(output, "%" PRIu8, charInfo->huffman_code[i]);
   }
