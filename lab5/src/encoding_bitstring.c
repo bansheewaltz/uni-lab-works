@@ -14,15 +14,16 @@ void encoding_bitstring(CodingInfo *codingInfo, FILE *input, FILE *output)
   scan_chars_frequencies_from_input(codingInfo->chars_info_dictionary, input);
 
   size_t alphabet_size = count_alphabet_size(codingInfo->chars_info_dictionary);
-  assert(alphabet_size > 0);
   codingInfo->alphabet_size = alphabet_size;
+  assert(alphabet_size > 0);
 
   CharInfo **chars_info_dictionary = codingInfo->chars_info_dictionary;
-  CharInfo **chars_info_array = get_chars_info_consistent(chars_info_dictionary, alphabet_size);
-  TreeNode *tree = build_huffman_tree(chars_info_array, alphabet_size);
 
-  codingInfo->huffman_tree = tree;
+  CharInfo **chars_info_array = get_chars_info_consistent(chars_info_dictionary, alphabet_size);
   codingInfo->chars_info_array = chars_info_array;
+
+  TreeNode *tree = build_huffman_tree(chars_info_array, alphabet_size);
+  codingInfo->huffman_tree = tree;
 
   scan_codes_from_huffman_tree(tree, chars_info_dictionary);
 #ifdef DEBUG
