@@ -39,10 +39,6 @@ void encode_input(TreeNode *tree, CodingInfo *codingInfo, FILE *input, FILE *out
   rc = fwrite(&input_file_length, sizeof(uint32_t), 1, output);
   assert(rc != -1);
 
-  uint8_t alphabet_size = (uint8_t)codingInfo->alphabet_size;
-  rc = fwrite(&alphabet_size, sizeof(uint8_t), 1, output);
-  assert(rc != -1);
-
   huffman_tree_write_encoded(tree, output);
   write_encoded_input(codingInfo->chars_info_dictionary, input, output);
 }

@@ -106,7 +106,7 @@ void codinginfo_free(CodingInfo *condingInfo)
   free(chars_info_array);
 }
 
-#define STOP_ON_TEST_N 23
+#define STOP_ON_TEST_N 5
 void abort_on_test()
 {
   int test_n = 0;
