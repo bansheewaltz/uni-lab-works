@@ -1,0 +1,16 @@
+# 'Language: Cpp' works for C as well
+---
+Language: Cpp
+BasedOnStyle: Google
+UseTab: Never
+IndentWidth: 2
+ColumnLimit: 79
+AllowShortIfStatementsOnASingleLine: Never
+AllowShortFunctionsOnASingleLine: None
+InsertBraces: true
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterEnum: true
+  AfterFunction: true
+#RemoveSemicolon: true
+...
