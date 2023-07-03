@@ -5,8 +5,3 @@
 **/*dSYM
 **/*.out
 **/.DS*
-
-/*
-!modules
-!.gitignore
-!lab8-1
