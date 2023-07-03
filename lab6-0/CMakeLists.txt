@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.5.1)
 project(lab6-0 C)
 
-set(SRC src/main.c)
+file(GLOB SRC "src/*")
 
 add_executable(${PROJECT_NAME} ${SRC})
 

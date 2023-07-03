@@ -14,6 +14,12 @@ endif(UNIX)
 if(WIN32)
 	set(TEST_RUNNER_NAME "test${PROJECT_NAME}_retardedOS.exe")
 endif(WIN32)
+if(APPLE)
+	set(BASE "darwin")
+endif(APPLE)
+if(${CMAKE_SYSTEM_NAME} STREQUAL "Linux")
+	set(BASE "linux")
+endif()
 
 set(TEST_RUNNER_PATH ${CMAKE_CURRENT_SOURCE_DIR}/test/binaries/${TEST_RUNNER_NAME})
 
