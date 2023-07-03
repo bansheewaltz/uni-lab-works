@@ -1,13 +1,22 @@
-﻿# Как сдавать лабораторные работы через gitlab.ccfit.nsu.ru
-* Сделайте форк (fork) этого репозитория (repository) в свое рабочее пространство (workspace)
-* Для лабораторной работы номер 0, 1-0, 1-1 и т.д. нужно создать ветку с именем lab0, lab1-0, lab1-1 и т.д.
-# Следите за тем, чтобы ветки лабораторных работ начинались от мастера
-# Перед созданием ветки для очередной лабораторной работы убедитесь, текущая ветка в рабочей копии -- мастер
-# При необходимости переключитесь на мастер
-# Это избавит от неожиданных конфликтов в мерж-реквестах
-* Переключитесь на ветку нужной лабораторной работы
-* Напишите код лабораторной работы в её директории, почаще заливайте ваши правки в соотв. ветку
-* Создайте мерж-реквест (merge request) из ветки с лабораторной работой в master
-* Назначьте исполнителем мерж-реквеста Вашего преподавателя по программированию
-* Исправьте все замечания
-* PROFIT!!!
+﻿# Algorithms and Data Structures in C
+|No.| labwork | algorithm | 
+|---| -------- | ------ |
+|01 | lab-begin| sum of array |
+|02 | lab0     | number converter from one base to another |
+|03 | lab1-0   | Boyer–Moore string-search algorithm |
+|04 | lab1-1   | Rabin-Karp  string-search algorithm |
+|05 | lab1-2   | Knuth–Morris–Pratt string-search algorithm |
+|06 | lab2     | permutations |
+|07 | lab3-0   | heapsort |
+|08 | lab3-1   | quicksort |
+|09 | lab4     | reverse Polish notation calculator |
+|10 | lab5     | Huffman coding |
+|11 | lab6-0   | AVL tree |
+|12 | lab6-1   | red–black tree |
+|13 | lab6-2   | B–tree |
+|14 | lab7     | topological sort |
+|15 | lab8-0   | Kruskal's minimum spanning tree algorithm |
+|16 | lab8-1   | Prim's minimum spanning tree algorithm |
+|17 | lab9     | Dijkstra's shortest paths algorithm |
+|18 | lab10    | Andrew's monotone chain convex hull algorithm |
+|19 | lab11    | 0/1 knapsack problem |
