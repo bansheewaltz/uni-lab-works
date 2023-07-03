@@ -1,0 +1,11 @@
+FROM ubuntu
+
+WORKDIR /usr/project
+
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y \
+    gcc \ 
+    make \
+    cmake \
+    valgrind \
+    cppcheck
