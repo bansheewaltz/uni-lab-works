@@ -1,0 +1,89 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch current file",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${fileDirname}/${fileBasenameNoExtension}",
+            "args": [],
+            "cwd": "${fileDirname}"
+        },
+        {
+            "name": "(lldb) Launch project",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [],
+            "cwd": "${workspaceFolder}/test",
+            "preLaunchTask": "build debug version of the project"
+        },
+        {
+            "name": "(lldb) Launch project encoding bitstring",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [
+                "in_normal.txt",
+            ],
+            "cwd": "${workspaceFolder}/test",
+            "preLaunchTask": "build debug version of the project"
+        },
+        {
+            "name": "(lldb) Launch project encoding binary",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [
+                "in_normal.txt",
+                "encoded.bin"
+            ],
+            "cwd": "${workspaceFolder}/test",
+            "preLaunchTask": "build debug version of the project"
+        },
+        {
+            "name": "(lldb) Launch project decoding bitstring",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [
+                "encoded.txt",
+            ],
+            "cwd": "${workspaceFolder}/test",
+            "preLaunchTask": "build debug version of the project",
+            "env": {
+                "DEBUG": ""
+            }
+        },
+        {
+            "name": "(lldb) Launch project decoding binary",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [
+                "encoded.bin",
+                "decoded_frombin.txt"
+            ],
+            "cwd": "${workspaceFolder}/test",
+            "preLaunchTask": "build debug version of the project",
+            "env": {
+                "DEBUG": ""
+            }
+        },
+        {
+            "name": "(lldb) Launch project in.txt",
+            "type": "lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/${workspaceFolderBasename}",
+            "args": [
+                "in.txt",
+                "out.txt"
+            ],
+            "cwd": "${workspaceFolder}/",
+            "preLaunchTask": "build debug version of the project",
+            "env": {
+                "DEBUG": ""
+            }
+        }
+    ]
+}
